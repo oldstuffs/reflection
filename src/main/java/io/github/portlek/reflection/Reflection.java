@@ -1,22 +1,21 @@
 package io.github.portlek.reflection;
 
 import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Reflection {
+public final class Reflection {
 
     private final Logger log;
 
-    public Reflection(Logger log) {
+    public Reflection(@NotNull final Logger log) {
         this.log = log;
     }
 
@@ -24,8 +23,8 @@ public class Reflection {
         return cb().split("\\.")[3];
     }
 
-    public String getNMSVersion(Object nmsObject) {
-        return nmsObject != null ? nmsObject.getClass().getPackage().getName().split("\\.")[3] : "";
+    public String getNMSVersion(@NotNull final Object nmsObject) {
+        return nmsObject.getClass().getPackage().getName().split("\\.")[3];
     }
 
     public String getNMSVersion() {
@@ -41,19 +40,21 @@ public class Reflection {
         return Bukkit.getServer().getClass().getPackage().getName();
     }
 
-    public String getPackageName(Object nmsObject) {
-        return nmsObject != null ? nmsObject.getClass().getPackage().getName() : "";
+    public String getPackageName(@NotNull final Object nmsObject) {
+        return nmsObject.getClass().getPackage().getName();
     }
 
-    public Class<?> getBukkitClass(Object craftObject) {
-        Class clazz = craftObject != null ? craftObject.getClass() : null;
+    public Class<?> getBukkitClass(@NotNull final Object craftObject) {
+        Class clazz = craftObject.getClass();
         while (clazz != null && clazz.getCanonicalName().contains(".craftbukkit.")) {
             clazz = clazz.getSuperclass();
         }
         return clazz;
     }
 
-    public <T> T execStatic(Class<?> clazz, String methodName, Object... args) {
+    public <T> T execStatic(@NotNull final Class<?> clazz,
+                            @NotNull final String methodName,
+                            @NotNull final Object... args) {
         try {
             Class[] argTypes = new Class[args.length];
             int ix = 0;
@@ -76,10 +77,10 @@ public class Reflection {
         return null;
     }
 
-    public <T> T exec(Object obj, String methodName, Class[] argTypes, Object... args) {
-        if (obj == null) {
-            return null;
-        }
+    public <T> T exec(@NotNull final Object obj,
+                      @NotNull final String methodName,
+                      @NotNull final Class[] argTypes,
+                      @NotNull final Object... args) {
         Class<?> aClass = obj.getClass();
         try {
             Method method = getMethod(aClass, methodName, argTypes);
@@ -98,7 +99,9 @@ public class Reflection {
         return null;
     }
 
-    public Method getMethod(Class<?> aClass, String methodName, Class... argTypes) throws NoSuchMethodException {
+    public Method getMethod(@NotNull final Class<?> aClass,
+                            @NotNull final String methodName,
+                            @NotNull final Class... argTypes) throws NoSuchMethodException {
         try {
             return aClass.getDeclaredMethod(methodName, argTypes);
         } catch (NoSuchMethodException e) {
@@ -106,47 +109,19 @@ public class Reflection {
         }
     }
 
-    public Method findMethod(Class<?> aClass, Class returnType, Class... argTypes) throws NoSuchMethodException {
-        List<Method> methods = findMethods(aClass, returnType, argTypes);
-        if (methods.isEmpty()) {
-            throw new NoSuchMethodException("No method matching " + returnType + " ?(" + Arrays.toString(argTypes) + ")");
-        }
-        if (methods.size() > 1) {
-            throw new NoSuchMethodException("More than 1 method matching " + returnType + " ?(" + Arrays.toString(argTypes) + ") : " + methods);
-        }
-        return methods.get(0);
-    }
-
-    public List<Method> findMethods(Class<?> aClass, Class returnType, Class... argTypes) throws NoSuchMethodException {
-        List<Method> methods = new ArrayList<>();
-        for (Method m : aClass.getDeclaredMethods()) {
-            if (m.getReturnType() == returnType && m.getParameterTypes().length == argTypes.length) {
-                try {
-                    Method mLookup = aClass.getMethod(m.getName(), argTypes);
-                    if (mLookup != null) {
-                        methods.add(mLookup);
-                    }
-                } catch (NoSuchMethodException e) {
-                    // ignore...
-                }
-            }
-        }
-        return methods;
-    }
-
-    public <T> T exec(Object obj, String methodName, Object... args) {
-        if (obj == null) {
-            return null;
-        }
+    public <T> T exec(@NotNull final Object obj,
+                      @NotNull final String methodName,
+                      @NotNull final Object... args) {
         Class[] argTypes = new Class[args.length];
         int ix = 0;
         for (Object arg : args) {
-            argTypes[ix++] = arg != null ? arg.getClass() : null;
+            argTypes[ix++] = arg.getClass();
         }
         return exec(obj, methodName, argTypes, args);
     }
 
-    public <T> T getField(Object obj, String fieldName) {
+    public <T> T getField(@NotNull final Object obj,
+                          @NotNull final String fieldName) {
         try {
             Field field = getFieldInternal(obj, fieldName);
             boolean wasAccessible = field.isAccessible();
@@ -162,14 +137,13 @@ public class Reflection {
         return null;
     }
 
-    private Field getFieldInternal(Object obj, String fieldName) throws NoSuchFieldException {
+    private Field getFieldInternal(@NotNull final Object obj,
+                                   @NotNull final String fieldName) throws NoSuchFieldException {
         return getFieldFromClass(obj.getClass(), fieldName);
     }
 
-    private Field getFieldFromClass(Class<?> aClass, String fieldName) throws NoSuchFieldException {
-        if (aClass == null) {
-            throw new NoSuchFieldException("Unable to locate field " + fieldName);
-        }
+    private Field getFieldFromClass(@NotNull final Class<?> aClass,
+                                    @NotNull final String fieldName) throws NoSuchFieldException {
         try {
             return aClass.getDeclaredField(fieldName);
         } catch (NoSuchFieldException e) {
@@ -183,7 +157,9 @@ public class Reflection {
         return getFieldFromClass(aClass.getSuperclass(), fieldName);
     }
 
-    public <T> void setField(Object obj, String fieldName, T field) {
+    public <T> void setField(@NotNull final Object obj,
+                             @NotNull final String fieldName,
+                             @NotNull final T field) {
         try {
             Field declaredField = getFieldInternal(obj, fieldName);
             boolean wasAccessible = declaredField.isAccessible();
@@ -198,11 +174,14 @@ public class Reflection {
         }
     }
 
-    public <T> T newInstance(Class<?> clazz, Object... args) {
+    public <T> T newInstance(@NotNull final Class<?> clazz,
+                             @NotNull final Object... args) {
         return newInstance(clazz.getName(), args);
     }
 
-    public <T> T newInstance(String className, Class<?>[] argTypes, Object... args) {
+    public <T> T newInstance(@NotNull final String className,
+                             @NotNull final Class<?>[] argTypes,
+                             @NotNull final Object... args) {
         try {
             Class<?> aClass = Class.forName(className);
             Constructor<?> constructor = aClass.getDeclaredConstructor(argTypes);
@@ -213,7 +192,8 @@ public class Reflection {
         }
     }
 
-    public <T> T newInstance(String className, Object... args) {
+    public <T> T newInstance(@NotNull final String className,
+                             @NotNull final Object... args) {
         Class[] argTypes = new Class[args.length];
         int ix = 0;
         for (Object arg : args) {

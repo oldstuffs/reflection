@@ -12,7 +12,7 @@ Simple reflection library to manage minecraft plugins.
 
 <dependency>
     <groupId>io.github.portlek</groupId>
-    <artifactId>version-matched</artifactId>
+    <artifactId>reflection</artifactId>
     <version>1.0</version>
 </dependency>
 ```

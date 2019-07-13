@@ -93,6 +93,7 @@ public final class Reflection {
      * @since 1.8
      */
     @Nullable
+    @SuppressWarnings("unchecked")
     public <T> T execStatic(@NotNull final Class<?> clazz,
                             @NotNull final String methodName,
                             @NotNull final Object... args) {
@@ -130,6 +131,7 @@ public final class Reflection {
      * @since 1.8
      */
     @Nullable
+    @SuppressWarnings("unchecked")
     public <T> T exec(@NotNull final Object obj,
                       @NotNull final String methodName,
                       @NotNull final Class[] argTypes,
@@ -184,6 +186,7 @@ public final class Reflection {
      * @since 1.9
      */
     @Nullable
+    @SuppressWarnings("unchecked")
     public <T> T getField(@NotNull final Object obj,
                           @NotNull final String fieldName) {
         try {
@@ -273,6 +276,7 @@ public final class Reflection {
      * @since 1.9
      */
     @Nullable
+    @SuppressWarnings("unchecked")
     public <T> T newInstance(@NotNull final String className,
                              @NotNull final Class<?>[] argTypes,
                              @NotNull final Object... args) {
@@ -306,11 +310,13 @@ public final class Reflection {
         return newInstance(className, argTypes, args);
     }
 
+    @NotNull
     private String nms() {
         Object nmsServer = exec(Bukkit.getServer(), "getServer");
         return nmsServer != null ? nmsServer.getClass().getPackage().getName() : "net.minecraft.server";
     }
 
+    @NotNull
     private String cb() {
         return Bukkit.getServer().getClass().getPackage().getName();
     }

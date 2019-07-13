@@ -195,7 +195,7 @@ public final class Reflection {
             } finally {
                 field.setAccessible(wasAccessible);
             }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             log.fine("Unable to find field " + fieldName + " on " + obj);
         }
         return null;
@@ -222,9 +222,29 @@ public final class Reflection {
             } finally {
                 declaredField.setAccessible(wasAccessible);
             }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             log.fine("Unable to find field " + fieldName + " on " + obj);
         }
+    }
+
+    public Field getFieldInternal(@NotNull final Object obj,
+                                  @NotNull final String fieldName) {
+        return getFieldFromClass(obj.getClass(), fieldName);
+    }
+
+    public Field getFieldFromClass(@NotNull final Class<?> aClass,
+                                   @NotNull final String fieldName) {
+        try {
+            return aClass.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            // Ignore...
+        }
+        try {
+            return aClass.getField(fieldName);
+        } catch (NoSuchFieldException e) {
+            // Ignore...
+        }
+        return getFieldFromClass(aClass.getSuperclass(), fieldName);
     }
 
     /**
@@ -281,7 +301,7 @@ public final class Reflection {
         Class[] argTypes = new Class[args.length];
         int ix = 0;
         for (Object arg : args) {
-            argTypes[ix++] = arg != null ? arg.getClass() : null;
+            argTypes[ix++] = arg.getClass();
         }
         return newInstance(className, argTypes, args);
     }
@@ -293,26 +313,6 @@ public final class Reflection {
 
     private String cb() {
         return Bukkit.getServer().getClass().getPackage().getName();
-    }
-
-    private Field getFieldInternal(@NotNull final Object obj,
-                                   @NotNull final String fieldName) throws NoSuchFieldException {
-        return getFieldFromClass(obj.getClass(), fieldName);
-    }
-
-    private Field getFieldFromClass(@NotNull final Class<?> aClass,
-                                    @NotNull final String fieldName) throws NoSuchFieldException {
-        try {
-            return aClass.getDeclaredField(fieldName);
-        } catch (NoSuchFieldException e) {
-            // Ignore...
-        }
-        try {
-            return aClass.getField(fieldName);
-        } catch (NoSuchFieldException e) {
-            // Ignore...
-        }
-        return getFieldFromClass(aClass.getSuperclass(), fieldName);
     }
 
 }

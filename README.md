@@ -2,7 +2,7 @@
 
 Simple reflection library to manage minecraft plugins.
 
-## Using
+### Using
 
 ```java
 private final Reflection reflection = new Reflection(java.util.logging.Logger);

@@ -290,9 +290,6 @@ public final class Reflection {
             | NoSuchMethodException
             | InvocationTargetException e) {
 
-            if (args.length == 1)
-                return newInstance(className, args[0].getClass().getSuperclass());
-
             log.warning("Unable to instantiate object of type " + className + ":" + e);
             return null;
         }

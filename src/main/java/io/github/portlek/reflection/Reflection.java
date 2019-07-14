@@ -284,7 +284,15 @@ public final class Reflection {
             Class<?> aClass = Class.forName(className);
             Constructor<?> constructor = aClass.getDeclaredConstructor(argTypes);
             return (T) constructor.newInstance(args);
-        } catch (InstantiationException | ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (InstantiationException
+            | ClassNotFoundException
+            | IllegalAccessException
+            | NoSuchMethodException
+            | InvocationTargetException e) {
+
+            if (args.length == 1)
+                return newInstance(className, args[0].getClass().getSuperclass());
+
             log.warning("Unable to instantiate object of type " + className + ":" + e);
             return null;
         }

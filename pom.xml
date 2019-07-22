@@ -46,9 +46,9 @@
 
     <distributionManagement>
         <repository>
-            <id>bintray-portlek-portlek</id>
-            <name>portlek-portlek</name>
-            <url>https://api.bintray.com/maven/portlek/maven/io.github.portlek:reflection/;publish=1</url>
+            <id>bintray-portlek-maven</id>
+            <name>portlek-maven</name>
+            <url>https://api.bintray.com/maven/portlek/maven/reflection/;publish=1</url>
         </repository>
     </distributionManagement>
 

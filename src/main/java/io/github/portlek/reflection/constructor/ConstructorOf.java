@@ -2,7 +2,6 @@ package io.github.portlek.reflection.constructor;
 
 import io.github.portlek.reflection.LoggerOf;
 import io.github.portlek.reflection.RefConstructed;
-import io.github.portlek.reflection.RefParameter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,9 +21,9 @@ public class ConstructorOf implements RefConstructed {
 
     @Nullable
     @Override
-    public Object create(@NotNull final RefParameter parameters) {
+    public Object create(@NotNull final Object... parameters) {
         try {
-            return parameters.apply((first, second) -> constructor.newInstance(second));
+            return constructor.newInstance(parameters);
         } catch (Exception e) {
             LOGGER.warning("create(Object[]) -> " + e.getMessage());
             return null;

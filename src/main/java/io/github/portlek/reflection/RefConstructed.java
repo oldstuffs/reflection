@@ -12,6 +12,6 @@ public interface RefConstructed {
      * @return new object
      */
     @Nullable
-    Object create(@NotNull final RefParameter parameters);
+    Object create(@NotNull final Object... parameters);
 
 }

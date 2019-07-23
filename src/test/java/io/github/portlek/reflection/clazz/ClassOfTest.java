@@ -24,7 +24,7 @@ class ClassOfTest {
     void getConstructor() {
         MatcherAssert.assertThat(
             "Cannot find constructor!",
-            CLASS.getConstructor(1),
+            CLASS.getConstructor(true, 1),
             CoreMatchers.instanceOf(ConstructorOf.class)
         );
     }
@@ -33,7 +33,7 @@ class ClassOfTest {
 
         private final int integer;
 
-        public TestClass(Integer integer) {
+        public TestClass(int integer) {
             this.integer = integer;
         }
 

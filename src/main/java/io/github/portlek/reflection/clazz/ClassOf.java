@@ -33,6 +33,10 @@ public class ClassOf implements RefClass {
         this.clazz = clazz;
     }
 
+    public ClassOf(@NotNull final Object object) {
+        this(object.getClass());
+    }
+
     public ClassOf(@NotNull final String className) throws ClassNotFoundException {
         this(Class.forName(className));
     }

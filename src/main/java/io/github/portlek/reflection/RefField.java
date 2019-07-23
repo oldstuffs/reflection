@@ -8,7 +8,7 @@ public interface RefField {
      * apply fiend for object
      *
      * @param object applied object
-     * @return RefExecutor with getter and setter
+     * @return RefFieldExecuted with getter and setter
      */
     @NotNull
     RefFieldExecuted of(@NotNull Object object);

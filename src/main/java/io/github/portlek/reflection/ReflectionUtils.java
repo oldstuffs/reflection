@@ -7,6 +7,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -86,7 +87,7 @@ public class ReflectionUtils {
      * @param clazz class
      * @return RefClass based on passed class
      */
-    public static RefClass getRefClass(Class clazz) {
+    private static RefClass getRefClass(Class clazz) {
         return new RefClass(clazz);
     }
 
@@ -101,7 +102,7 @@ public class ReflectionUtils {
          *
          * @return class
          */
-        public Class<?> getRealClass() {
+        Class<?> getRealClass() {
             return clazz;
         }
 
@@ -198,7 +199,7 @@ public class ReflectionUtils {
                 Class<?>[] methodTypes = m.getParameterTypes();
                 if (methodTypes.length != classes.length) continue;
                 for (int i = 0; i < classes.length; i++) {
-                    if (!classes.equals(methodTypes)) continue findMethod;
+                    if (!Arrays.equals(classes, methodTypes)) continue findMethod;
                     return new RefMethod(m);
                 }
             }
@@ -244,7 +245,7 @@ public class ReflectionUtils {
          * @return RefMethod
          * @throws RuntimeException if method not found
          */
-        public RefMethod findMethodByReturnType(Class type) {
+        RefMethod findMethodByReturnType(Class type) {
             if (type == null) type = void.class;
             List<Method> methods = new ArrayList<>();
             Collections.addAll(methods, clazz.getMethods());
@@ -311,7 +312,7 @@ public class ReflectionUtils {
          * @return RefField
          * @throws RuntimeException if field not found
          */
-        public RefField findField(Class type) {
+        RefField findField(Class type) {
             if (type == null) type = void.class;
             List<Field> fields = new ArrayList<>();
             Collections.addAll(fields, clazz.getFields());
@@ -384,7 +385,7 @@ public class ReflectionUtils {
         public class RefExecutor {
             Object e;
 
-            public RefExecutor(Object e) {
+            RefExecutor(Object e) {
                 this.e = e;
             }
 
@@ -488,7 +489,7 @@ public class ReflectionUtils {
         public class RefExecutor {
             Object e;
 
-            public RefExecutor(Object e) {
+            RefExecutor(Object e) {
                 this.e = e;
             }
 

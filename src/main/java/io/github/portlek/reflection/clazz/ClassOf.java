@@ -8,14 +8,15 @@ import org.jetbrains.annotations.NotNull;
 
 public class ClassOf implements RefClass {
 
+    @NotNull
     private final Class<?> clazz;
 
-    public ClassOf(Class<?> clazz) {
+    public ClassOf(@NotNull final Class<?> clazz) {
         this.clazz = clazz;
     }
 
     @Override
-    public boolean isInstance(@NotNull Object object) {
+    public boolean isInstance(@NotNull final Object object) {
         return clazz.isInstance(object);
     }
 

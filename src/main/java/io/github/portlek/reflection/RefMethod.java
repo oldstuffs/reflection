@@ -9,7 +9,7 @@ public interface RefMethod {
      * apply method to object
      *
      * @param object object to which the method is applied
-     * @return RefExecutor with method call(...)
+     * @return RefMethodExecuted with method call(...)
      */
     @NotNull
     RefMethodExecuted of(@NotNull final Object object);

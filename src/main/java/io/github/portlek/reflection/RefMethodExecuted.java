@@ -1,5 +1,6 @@
 package io.github.portlek.reflection;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface RefMethodExecuted {
@@ -11,6 +12,6 @@ public interface RefMethodExecuted {
      * @return return value
      */
     @Nullable
-    Object call(Object... objects);
+    Object call(@NotNull final Object... objects);
 
 }

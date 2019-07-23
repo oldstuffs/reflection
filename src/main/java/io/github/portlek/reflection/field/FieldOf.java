@@ -16,25 +16,28 @@ public class FieldOf implements RefField {
         FieldExecuted.class
     );
 
+    @NotNull
     private final Field field;
+
     private final boolean isAccessible;
 
-    public FieldOf(Field field) {
+    public FieldOf(@NotNull final Field field) {
         this.field = field;
         this.isAccessible = field.isAccessible();
     }
 
     @NotNull
     @Override
-    public RefFieldExecuted of(@NotNull Object object) {
+    public RefFieldExecuted of(@NotNull final Object object) {
         return new FieldExecuted(object);
     }
 
     private class FieldExecuted implements RefFieldExecuted {
 
+        @NotNull
         private final Object object;
 
-        FieldExecuted(Object object) {
+        FieldExecuted(@NotNull final Object object) {
             this.object = object;
         }
 

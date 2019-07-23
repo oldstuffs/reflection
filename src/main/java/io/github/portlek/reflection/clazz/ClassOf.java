@@ -15,43 +15,43 @@ public class ClassOf implements RefClass {
     }
 
     @Override
-    public boolean isInstance(Object object) {
+    public boolean isInstance(@NotNull Object object) {
         return clazz.isInstance(object);
     }
 
     @NotNull
     @Override
-    public RefMethod getMethod(String name, Object... types) {
+    public RefMethod getMethod(@NotNull String name, @NotNull Object... types) {
         return null;
     }
 
     @NotNull
     @Override
-    public RefConstructed getConstructor(Object... types) {
+    public RefConstructed getConstructor(@NotNull Object... types) {
         return null;
     }
 
     @NotNull
     @Override
-    public RefMethod findMethod(Object... types) {
+    public RefMethod findMethod(@NotNull Object... types) {
         return null;
     }
 
     @NotNull
     @Override
-    public RefMethod findMethodByName(String... names) {
+    public RefMethod findMethodByName(@NotNull String... names) {
         return null;
     }
 
     @NotNull
     @Override
-    public RefMethod findMethodByReturnType(RefClass type) {
+    public RefMethod findMethodByReturnType(@NotNull RefClass type) {
         return null;
     }
 
     @NotNull
     @Override
-    public RefMethod findMethodByReturnType(Class type) {
+    public RefMethod findMethodByReturnType(@NotNull Class type) {
         return null;
     }
 
@@ -63,19 +63,19 @@ public class ClassOf implements RefClass {
 
     @NotNull
     @Override
-    public RefField getField(String name) {
+    public RefField getField(@NotNull String name) {
         return null;
     }
 
     @NotNull
     @Override
-    public RefField findField(RefClass type) {
+    public RefField findField(@NotNull RefClass type) {
         return null;
     }
 
     @NotNull
     @Override
-    public RefField findField(Class type) {
+    public RefField findField(@NotNull Class type) {
         return null;
     }
 

@@ -17,7 +17,9 @@ public class MethodOf implements RefMethod {
         MethodExecuted.class
     );
 
+    @NotNull
     private final Method method;
+
     private final boolean isAccessible;
 
     public MethodOf(@NotNull final Method method) {
@@ -25,9 +27,15 @@ public class MethodOf implements RefMethod {
         this.isAccessible = method.isAccessible();
     }
 
+    @NotNull
+    @Override
+    public RefMethodExecuted of(@NotNull final Object object) {
+        return new MethodExecuted(object);
+    }
+
     @Nullable
     @Override
-    public Object call(Object... objects) {
+    public Object call(@NotNull final Object... objects) {
         try {
             return method.invoke(null, objects);
         } catch (Exception e) {
@@ -40,15 +48,16 @@ public class MethodOf implements RefMethod {
 
     private class MethodExecuted implements RefMethodExecuted {
 
+        @NotNull
         private final Object object;
 
-        public MethodExecuted(Object object) {
+        MethodExecuted(@NotNull final Object object) {
             this.object = object;
         }
 
         @Nullable
         @Override
-        public Object call(Object... objects) {
+        public Object call(@NotNull final Object... objects) {
             try {
                 return method.invoke(object, objects);
             } catch (Exception e) {

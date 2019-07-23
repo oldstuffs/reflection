@@ -10,7 +10,7 @@ public interface RefClass {
      * @param object the object to check
      * @return true if object is an instance of this class
      */
-    boolean isInstance(Object object);
+    boolean isInstance(@NotNull final Object object);
 
     /**
      * get existing method by name and types
@@ -20,7 +20,7 @@ public interface RefClass {
      * @return RefMethod object
      */
     @NotNull
-    RefMethod getMethod(String name, Object... types);
+    RefMethod getMethod(@NotNull final String name, @NotNull final Object... types);
 
     /**
      * get existing constructor by types
@@ -29,7 +29,7 @@ public interface RefClass {
      * @return RefMethod object
      */
     @NotNull
-    RefConstructed getConstructor(Object... types);
+    RefConstructed getConstructor(@NotNull final Object... types);
 
     /**
      * find method by type parameters
@@ -38,7 +38,7 @@ public interface RefClass {
      * @return RefMethod object
      */
     @NotNull
-    RefMethod findMethod(Object... types);
+    RefMethod findMethod(@NotNull final Object... types);
 
     /**
      * find method by name
@@ -47,7 +47,7 @@ public interface RefClass {
      * @return RefMethod object
      */
     @NotNull
-    RefMethod findMethodByName(String... names);
+    RefMethod findMethodByName(@NotNull final String... names);
 
     /**
      * find method by return value
@@ -56,7 +56,7 @@ public interface RefClass {
      * @return RefMethod
      */
     @NotNull
-    RefMethod findMethodByReturnType(RefClass type);
+    RefMethod findMethodByReturnType(@NotNull final RefClass type);
 
     /**
      * find method by return value
@@ -65,7 +65,7 @@ public interface RefClass {
      * @return RefMethod
      */
     @NotNull
-    RefMethod findMethodByReturnType(Class type);
+    RefMethod findMethodByReturnType(@NotNull final Class type);
 
     /**
      * find constructor by number of arguments
@@ -74,7 +74,7 @@ public interface RefClass {
      * @return RefConstructor
      */
     @NotNull
-    RefConstructed findConstructor(int number);
+    RefConstructed findConstructor(final int number);
 
     /**
      * get field by name
@@ -83,7 +83,7 @@ public interface RefClass {
      * @return RefField
      */
     @NotNull
-    RefField getField(String name);
+    RefField getField(@NotNull final String name);
 
     /**
      * find field by type
@@ -92,7 +92,7 @@ public interface RefClass {
      * @return RefField
      */
     @NotNull
-    RefField findField(RefClass type);
+    RefField findField(@NotNull final RefClass type);
 
     /**
      * find field by type
@@ -101,6 +101,6 @@ public interface RefClass {
      * @return RefField
      */
     @NotNull
-    RefField findField(Class type);
+    RefField findField(@NotNull final Class type);
 
 }

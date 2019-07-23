@@ -13,7 +13,7 @@ public class LoggerOf extends Logger {
     private final String prefix;
 
     private LoggerOf(String prefix) {
-        super(prefix.replaceAll(", ", "#") + "] ", null);
+        super(prefix.replaceAll(", ", "#"), null);
         this.prefix = "[" + getName() + "] ";
     }
 

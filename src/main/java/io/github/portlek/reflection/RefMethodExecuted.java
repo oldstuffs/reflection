@@ -8,10 +8,10 @@ public interface RefMethodExecuted {
     /**
      * apply method for selected object
      *
-     * @param objects sent parameters
+     * @param parameters sent parameters
      * @return return value
      */
     @Nullable
-    Object call(@NotNull final Object... objects);
+    Object call(@NotNull final Object... parameters);
 
 }

@@ -35,9 +35,9 @@ public class MethodOf implements RefMethod {
 
     @Nullable
     @Override
-    public Object call(@NotNull final Object... objects) {
+    public Object call(@NotNull final Object... parameters) {
         try {
-            return method.invoke(null, objects);
+            return method.invoke(null, parameters);
         } catch (Exception e) {
             LOGGER_METHOD_OF.warning("call(Object[]) -> " + e.getMessage());
             return null;
@@ -57,9 +57,9 @@ public class MethodOf implements RefMethod {
 
         @Nullable
         @Override
-        public Object call(@NotNull final Object... objects) {
+        public Object call(@NotNull final Object... parameters) {
             try {
-                return method.invoke(object, objects);
+                return method.invoke(object, parameters);
             } catch (Exception e) {
                 LOGGER.warning("call(Object[]) -> " + e.getMessage());
                 return null;

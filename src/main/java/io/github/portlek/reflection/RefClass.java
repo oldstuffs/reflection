@@ -5,6 +5,14 @@ import org.jetbrains.annotations.NotNull;
 public interface RefClass {
 
     /**
+     * get passed class
+     *
+     * @return class
+     */
+    @NotNull
+    Class<?> getRealClass();
+
+    /**
      * see {@link Class#isInstance(Object)}
      *
      * @param object the object to check

@@ -17,10 +17,10 @@ public interface RefMethod {
     /**
      * call static method
      *
-     * @param objects sent parameters
+     * @param parameters sent parameters
      * @return return value
      */
     @Nullable
-    Object call(@NotNull final Object... objects);
+    Object call(@NotNull final Object... parameters);
 
 }

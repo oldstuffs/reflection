@@ -1,8 +1,5 @@
 package io.github.portlek.reflection;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -17,79 +14,6 @@ import java.util.List;
  */
 @SuppressWarnings("UnusedDeclaration")
 public class ReflectionUtils {
-
-    /**
-     * prefix of bukkit classes
-     */
-    private static String preClassB = "org.bukkit.craftbukkit";
-    /**
-     * prefix of minecraft classes
-     */
-    private static String preClassM = "net.minecraft.server";
-    /**
-     * boolean value, TRUE if server uses forge or MCPC+
-     */
-    private static boolean forge = false;
-
-    static {
-        if (Bukkit.getVersion().contains("MCPC") || Bukkit.getVersion().contains("Forge")) forge = true;
-        Server server = Bukkit.getServer();
-        Class<?> bukkitServerClass = server.getClass();
-        String[] pas = bukkitServerClass.getName().split("\\.");
-        if (pas.length == 5) {
-            String verB = pas[3];
-            preClassB += "." + verB;
-        }
-        try {
-            Method getHandle = bukkitServerClass.getDeclaredMethod("getHandle");
-            Object handle = getHandle.invoke(server);
-            Class handleServerClass = handle.getClass();
-            pas = handleServerClass.getName().split("\\.");
-            if (pas.length == 5) {
-                String verM = pas[3];
-                preClassM += "." + verM;
-            }
-        } catch (Exception ignored) {
-        }
-    }
-
-    /**
-     * @return true if server has forge classes
-     */
-    public static boolean isForge() {
-        return forge;
-    }
-
-    /**
-     * Get class for name.
-     * Replace {nms} to net.minecraft.server.V*.
-     * Replace {cb} to org.bukkit.craftbukkit.V*.
-     *
-     * @param classes possible class paths
-     * @return RefClass object
-     * @throws RuntimeException if no class found
-     */
-    public static RefClass getRefClass(String... classes) {
-        for (String className : classes)
-            try {
-                className = className
-                    .replace("{cb}", preClassB)
-                    .replace("{nms}", preClassM);
-                return getRefClass(Class.forName(className));
-            } catch (ClassNotFoundException ignored) {
-            }
-        throw new RuntimeException("no class found");
-    }
-
-    /**
-     * get RefClass object by real class
-     *
-     * @param clazz class
-     * @return RefClass based on passed class
-     */
-    private static RefClass getRefClass(Class clazz) {
-        return new RefClass(clazz);
-    }
 
     /**
      * RefClass - utility to simplify work with reflections.
@@ -108,16 +32,6 @@ public class ReflectionUtils {
 
         private RefClass(Class<?> clazz) {
             this.clazz = clazz;
-        }
-
-        /**
-         * see {@link Class#isInstance(Object)}
-         *
-         * @param object the object to check
-         * @return true if object is an instance of this class
-         */
-        public boolean isInstance(Object object) {
-            return clazz.isInstance(object);
         }
 
         /**
@@ -182,14 +96,11 @@ public class ReflectionUtils {
          */
         public RefMethod findMethod(Object... types) {
             Class[] classes = new Class[types.length];
-            int t = 0;
+            int ci = 0;
             for (Object e : types) {
-                if (e instanceof Class)
-                    classes[t++] = (Class) e;
-                else if (e instanceof RefClass)
-                    classes[t++] = ((RefClass) e).getRealClass();
-                else
-                    classes[t++] = e.getClass();
+                if (e instanceof Class) classes[ci++] = (Class) e;
+                else if (e instanceof RefClass) classes[ci++] = ((RefClass) e).getRealClass();
+                else classes[ci++] = e.getClass();
             }
             List<Method> methods = new ArrayList<>();
             Collections.addAll(methods, clazz.getMethods());

@@ -22,12 +22,7 @@ public class LoggerOf extends Logger {
             ).toString(),
             null
         );
-        this.prefix = "[" + new TextOf(
-            new Mapped<>(
-                Class::getSimpleName,
-                new IterableOf<>(classes)
-            )
-        ).toString() + "] ";
+        this.prefix = "[" + getName() + "] ";
     }
 
     @Override

@@ -2,10 +2,10 @@ package io.github.portlek.reflection;
 
 import org.jetbrains.annotations.Nullable;
 
-public interface RefMethod {
+public interface RefMethodExecuted {
 
     /**
-     * call static method
+     * apply method for selected object
      *
      * @param objects sent parameters
      * @return return value

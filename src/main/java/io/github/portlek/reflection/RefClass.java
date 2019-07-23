@@ -18,7 +18,6 @@ public interface RefClass {
      * @param name  name
      * @param types method parameters. can be Class or RefClass
      * @return RefMethod object
-     * @throws RuntimeException if method not found
      */
     @NotNull
     RefMethod getMethod(String name, Object... types);
@@ -28,7 +27,6 @@ public interface RefClass {
      *
      * @param types parameters. can be Class or RefClass
      * @return RefMethod object
-     * @throws RuntimeException if constructor not found
      */
     @NotNull
     RefConstructed getConstructor(Object... types);
@@ -38,7 +36,6 @@ public interface RefClass {
      *
      * @param types parameters. can be Class or RefClass
      * @return RefMethod object
-     * @throws RuntimeException if method not found
      */
     @NotNull
     RefMethod findMethod(Object... types);
@@ -48,7 +45,6 @@ public interface RefClass {
      *
      * @param names possible names of method
      * @return RefMethod object
-     * @throws RuntimeException if method not found
      */
     @NotNull
     RefMethod findMethodByName(String... names);
@@ -58,7 +54,6 @@ public interface RefClass {
      *
      * @param type type of returned value
      * @return RefMethod
-     * @throws RuntimeException if method not found
      */
     @NotNull
     RefMethod findMethodByReturnType(RefClass type);
@@ -68,7 +63,6 @@ public interface RefClass {
      *
      * @param type type of returned value
      * @return RefMethod
-     * @throws RuntimeException if method not found
      */
     @NotNull
     RefMethod findMethodByReturnType(Class type);
@@ -78,7 +72,6 @@ public interface RefClass {
      *
      * @param number number of arguments
      * @return RefConstructor
-     * @throws RuntimeException if constructor not found
      */
     @NotNull
     RefConstructed findConstructor(int number);
@@ -88,7 +81,6 @@ public interface RefClass {
      *
      * @param name field name
      * @return RefField
-     * @throws RuntimeException if field not found
      */
     @NotNull
     RefField getField(String name);
@@ -98,7 +90,6 @@ public interface RefClass {
      *
      * @param type field type
      * @return RefField
-     * @throws RuntimeException if field not found
      */
     @NotNull
     RefField findField(RefClass type);
@@ -108,7 +99,6 @@ public interface RefClass {
      *
      * @param type field type
      * @return RefField
-     * @throws RuntimeException if field not found
      */
     @NotNull
     RefField findField(Class type);

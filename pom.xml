@@ -55,6 +55,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.cactoos</groupId>
+            <artifactId>cactoos</artifactId>
+            <version>0.42</version>
+        </dependency>
+        <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <version>1.14.3-R0.1-SNAPSHOT</version>

@@ -19,10 +19,9 @@ import java.util.logging.Logger;
  */
 public final class Reflection {
 
-    private final Logger log;
+    private static final Logger LOGGER = new RefLogger(Reflection.class);
 
-    public Reflection(@NotNull final Logger log) {
-        this.log = log;
+    public Reflection() {
     }
 
     /**
@@ -112,9 +111,9 @@ public final class Reflection {
                 method.setAccessible(wasAccessible);
             }
         } catch (NoSuchMethodException e) {
-            log.fine("Unable to locate method " + methodName + " on " + clazz);
+            LOGGER.info("Unable to locate method " + methodName + " on " + clazz);
         } catch (InvocationTargetException | IllegalAccessException e) {
-            log.log(Level.INFO, "Calling " + methodName + " on " + clazz + " threw an exception", e);
+            LOGGER.log(Level.INFO, "Calling " + methodName + " on " + clazz + " threw an exception", e);
         }
         return null;
     }
@@ -147,9 +146,9 @@ public final class Reflection {
                 method.setAccessible(wasAccessible);
             }
         } catch (NoSuchMethodException | AbstractMethodError e) {
-            log.fine("Unable to locate method " + methodName + "(" + Arrays.asList(argTypes) + ") on " + aClass);
+            LOGGER.fine("Unable to locate method " + methodName + "(" + Arrays.asList(argTypes) + ") on " + aClass);
         } catch (InvocationTargetException | IllegalAccessException e) {
-            log.log(Level.INFO, "Calling " + methodName + " on " + obj + " threw an exception", e);
+            LOGGER.log(Level.INFO, "Calling " + methodName + " on " + obj + " threw an exception", e);
         }
         return null;
     }
@@ -199,7 +198,7 @@ public final class Reflection {
                 field.setAccessible(wasAccessible);
             }
         } catch (IllegalAccessException e) {
-            log.fine("Unable to find field " + fieldName + " on " + obj);
+            LOGGER.fine("Unable to find field " + fieldName + " on " + obj);
         }
         return null;
     }
@@ -226,7 +225,7 @@ public final class Reflection {
                 declaredField.setAccessible(wasAccessible);
             }
         } catch (IllegalAccessException e) {
-            log.fine("Unable to find field " + fieldName + " on " + obj);
+            LOGGER.fine("Unable to find field " + fieldName + " on " + obj);
         }
     }
 
@@ -290,7 +289,7 @@ public final class Reflection {
             | NoSuchMethodException
             | InvocationTargetException e) {
 
-            log.warning("Unable to instantiate object of type " + className + ":" + e);
+            LOGGER.warning("Unable to instantiate object of type " + className + ":" + e);
             return null;
         }
     }

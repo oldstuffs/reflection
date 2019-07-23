@@ -34,12 +34,11 @@ public interface RefClass {
     /**
      * get existing constructor by types
      *
-     * @param primitive if parameters are primitive
      * @param types parameters. can be Class or RefClass
      * @return RefMethod object
      */
     @NotNull
-    RefConstructed getConstructor(final boolean primitive, @NotNull final Object... types);
+    RefConstructed getPrimitiveConstructor(@NotNull final Object... types);
 
     /**
      * get existing constructor by types

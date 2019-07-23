@@ -33,25 +33,28 @@ public class ParameterOf<T> implements RefParameter<T> {
     }
 
     @NotNull
-    private static Class[] of(final boolean primitive, @NotNull final Object... args) {
+    public static Class[] of(final boolean primitive, @NotNull final Object... args) {
         @NotNull Class[] classes = new Class[args.length];
         int i = 0;
 
-        for (Object e : args) {
+        for (Object arg : args) {
             if (!primitive) {
-                classes[i++] = e.getClass();
+                classes[i++] = arg.getClass();
                 continue;
             }
 
-            if (!e.getClass().isPrimitive()) {
-                classes[i++] = e.getClass();
+            System.out.println("class: " + arg.getClass().getName());
+            System.out.println("isPrimitive: " + arg.getClass().isPrimitive());
+
+            if (!arg.getClass().isPrimitive()) {
+                classes[i++] = arg.getClass();
                 continue;
             }
 
-            Class primitiveClass = primitive(e.getClass());
+            Class primitiveClass = primitive(arg.getClass());
 
             if (primitiveClass == null) {
-                classes[i++] = e.getClass();
+                classes[i++] = arg.getClass();
                 continue;
             }
 

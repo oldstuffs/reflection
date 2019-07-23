@@ -1,7 +1,6 @@
 package io.github.portlek.reflection.clazz;
 
 import io.github.portlek.reflection.RefClass;
-import io.github.portlek.reflection.RefConstructed;
 import io.github.portlek.reflection.constructor.ConstructorOf;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
@@ -24,7 +23,7 @@ class ClassOfTest {
     void getConstructor() {
         MatcherAssert.assertThat(
             "Cannot find constructor!",
-            CLASS.getConstructor(true, 1),
+            CLASS.getPrimitiveConstructor(1),
             CoreMatchers.instanceOf(ConstructorOf.class)
         );
     }

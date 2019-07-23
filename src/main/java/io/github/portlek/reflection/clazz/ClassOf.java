@@ -73,7 +73,18 @@ public class ClassOf implements RefClass {
 
     @NotNull
     @Override
-    public RefConstructed getConstructor(boolean primitive, @NotNull Object... types) {
+    public RefConstructed getPrimitiveConstructor(@NotNull Object... types) {
+        return getConstructor0(true, types);
+    }
+
+    @NotNull
+    @Override
+    public RefConstructed getConstructor(@NotNull final Object... types) {
+        return getConstructor0(false, types);
+    }
+
+    @NotNull
+    private RefConstructed getConstructor0(final boolean primitive, @NotNull Object... types) {
         final RefParameter<RefConstructed> parameter = new ParameterOf<>(primitive, types);
 
         try {
@@ -89,12 +100,6 @@ public class ClassOf implements RefClass {
                 + exception.getMessage());
             return new MckConstructed();
         }
-    }
-
-    @NotNull
-    @Override
-    public RefConstructed getConstructor(@NotNull final Object... types) {
-        return getConstructor(false, types);
     }
 
     @NotNull

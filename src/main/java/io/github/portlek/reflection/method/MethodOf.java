@@ -39,7 +39,8 @@ public class MethodOf implements RefMethod {
         try {
             return method.invoke(null, parameters);
         } catch (Exception e) {
-            LOGGER_METHOD_OF.warning("call(Object[]) -> " + e.getMessage());
+            LOGGER_METHOD_OF.warning("call(Object[]) -> \n"
+                + e.getMessage());
             return null;
         } finally {
             method.setAccessible(isAccessible);
@@ -61,7 +62,8 @@ public class MethodOf implements RefMethod {
             try {
                 return method.invoke(object, parameters);
             } catch (Exception e) {
-                LOGGER.warning("call(Object[]) -> " + e.getMessage());
+                LOGGER.warning("call(Object[]) -> \n"
+                    + e.getMessage());
                 return null;
             } finally {
                 method.setAccessible(isAccessible);

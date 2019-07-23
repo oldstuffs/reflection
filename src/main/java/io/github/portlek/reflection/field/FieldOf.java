@@ -47,7 +47,8 @@ public class FieldOf implements RefField {
             try {
                 field.set(object, value);
             } catch (Exception exception) {
-                LOGGER.warning("set(Object) -> " + exception.getMessage());
+                LOGGER.warning("set(Object) -> \n"
+                    + exception.getMessage());
             } finally {
                 field.setAccessible(isAccessible);
             }
@@ -60,7 +61,8 @@ public class FieldOf implements RefField {
             try {
                 return field.get(object);
             } catch (Exception exception) {
-                LOGGER.warning("get() -> " + exception.getMessage());
+                LOGGER.warning("get() -> \n"
+                    + exception.getMessage());
                 return null;
             } finally {
                 field.setAccessible(isAccessible);

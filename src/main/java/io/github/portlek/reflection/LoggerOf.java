@@ -12,17 +12,20 @@ public class LoggerOf extends Logger {
 
     private final String prefix;
 
+    private LoggerOf(String prefix) {
+        super(prefix.replaceAll(", ", "#") + "] ", null);
+        this.prefix = "[" + getName() + "] ";
+    }
+
     public LoggerOf(@NotNull final Class<?>... classes) {
-        super(
+        this(
             new TextOf(
                 new Mapped<>(
                     Class::getSimpleName,
                     new IterableOf<>(classes)
                 )
-            ).toString(),
-            null
+            ).toString()
         );
-        this.prefix = "[" + getName() + "] ";
     }
 
     @Override

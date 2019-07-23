@@ -25,7 +25,8 @@ public class ConstructorOf implements RefConstructed {
         try {
             return constructor.newInstance(parameters);
         } catch (Exception e) {
-            LOGGER.warning("create(Object[]) -> " + e.getMessage());
+            LOGGER.warning("create(Object[]) -> \n"
+                + e.getMessage());
             return null;
         }
     }

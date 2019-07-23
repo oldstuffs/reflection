@@ -7,6 +7,11 @@ import io.github.portlek.reflection.RefMethod;
 import org.jetbrains.annotations.NotNull;
 
 public class MckClass implements RefClass {
+    @NotNull
+    @Override
+    public Class<?> getRealClass() {
+        return getClass();
+    }
 
     @Override
     public boolean isInstance(@NotNull Object object) {

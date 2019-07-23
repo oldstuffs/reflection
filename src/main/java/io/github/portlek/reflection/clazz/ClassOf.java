@@ -140,8 +140,12 @@ public class ClassOf implements RefClass {
                     input -> true,
                     new Filtered<>(
                         method -> {
+                            if (method == null)
+                                return false;
+
                             for (String name : names)
                                 return method.getName().equals(name);
+
                             return false;
                         },
                         new Joined<>(

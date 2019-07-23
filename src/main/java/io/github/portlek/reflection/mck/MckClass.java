@@ -26,6 +26,12 @@ public class MckClass implements RefClass {
 
     @NotNull
     @Override
+    public RefConstructed getConstructor(boolean primitive, @NotNull Object... types) {
+        return new MckConstructed();
+    }
+
+    @NotNull
+    @Override
     public RefConstructed getConstructor(@NotNull Object... types) {
         return new MckConstructed();
     }

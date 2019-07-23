@@ -59,13 +59,6 @@
                             <goal>compile</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>testCompile</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
                 </executions>
                 <configuration>
                     <source>1.8</source>
@@ -103,7 +96,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>RELEASE</version>
+            <version>5.5.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

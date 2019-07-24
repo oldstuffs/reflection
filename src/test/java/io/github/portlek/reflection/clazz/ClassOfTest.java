@@ -246,8 +246,7 @@ class ClassOfTest {
             CLASS.getConstructor(String.class, int.class),
             new IsInstanceOf(ConstructorOf.class)
         ).affirm();
-
-
+        
         new Assertion<>(
             "Cannot find constructor!",
             CLASS.getConstructor(),

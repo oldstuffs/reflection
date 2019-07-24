@@ -3,9 +3,9 @@ package io.github.portlek.reflection.constructor;
 import io.github.portlek.reflection.RefClass;
 import io.github.portlek.reflection.RefConstructed;
 import io.github.portlek.reflection.clazz.ClassOf;
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.jupiter.api.Test;
+import org.llorllale.cactoos.matchers.Assertion;
 
 class ConstructorOfTest {
 
@@ -14,11 +14,11 @@ class ConstructorOfTest {
         final RefClass refClass = new ClassOf(ConstructorTest.class);
         final RefConstructed refConstructed = refClass.getPrimitiveConstructor(String.class, int.class);
 
-        MatcherAssert.assertThat(
+        new Assertion<>(
             "Cannot created object from the Constructed!",
             refConstructed.create("Hasan", 21),
             new IsInstanceOf(ConstructorTest.class)
-        );
+        ).affirm();
     }
 
     private static class ConstructorTest {

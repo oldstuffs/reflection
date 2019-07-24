@@ -20,6 +20,12 @@ public class MckClass implements RefClass {
 
     @NotNull
     @Override
+    public RefMethod getPrimitiveMethod(@NotNull String name, @NotNull Object... types) {
+        return new MckMethod();
+    }
+
+    @NotNull
+    @Override
     public RefMethod getMethod(@NotNull String name, @NotNull Object... types) {
         return new MckMethod();
     }
@@ -38,7 +44,13 @@ public class MckClass implements RefClass {
 
     @NotNull
     @Override
-    public RefMethod findMethod(@NotNull Object... types) {
+    public RefMethod findPrimitiveMethodByParameter(@NotNull Object... types) {
+        return new MckMethod();
+    }
+
+    @NotNull
+    @Override
+    public RefMethod findMethodByParameter(@NotNull Object... types) {
         return new MckMethod();
     }
 

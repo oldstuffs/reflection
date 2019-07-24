@@ -20,6 +20,17 @@ public interface RefClass {
      */
     boolean isInstance(@NotNull final Object object);
 
+
+    /**
+     * get existing method by name and types
+     *
+     * @param name  name
+     * @param types method parameters. can be Class or RefClass
+     * @return RefMethod object
+     */
+    @NotNull
+    RefMethod getPrimitiveMethod(@NotNull final String name, @NotNull final Object... types);
+
     /**
      * get existing method by name and types
      *
@@ -56,7 +67,16 @@ public interface RefClass {
      * @return RefMethod object
      */
     @NotNull
-    RefMethod findMethod(@NotNull final Object... types);
+    RefMethod findPrimitiveMethodByParameter(@NotNull final Object... types);
+
+    /**
+     * find method by type parameters
+     *
+     * @param types parameters. can be Class or RefClass
+     * @return RefMethod object
+     */
+    @NotNull
+    RefMethod findMethodByParameter(@NotNull final Object... types);
 
     /**
      * find method by name

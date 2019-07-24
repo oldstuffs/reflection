@@ -36,11 +36,12 @@ public class MethodOf implements RefMethod {
     @Nullable
     @Override
     public Object call(@NotNull final Object... parameters) {
+        method.setAccessible(true);
         try {
             return method.invoke(null, parameters);
         } catch (Exception e) {
             LOGGER_METHOD_OF.warning("call(Object[]) -> \n"
-                + e.getMessage());
+                + e.toString());
             return null;
         } finally {
             method.setAccessible(isAccessible);
@@ -59,11 +60,12 @@ public class MethodOf implements RefMethod {
         @Nullable
         @Override
         public Object call(@NotNull final Object... parameters) {
+            method.setAccessible(true);
             try {
                 return method.invoke(object, parameters);
             } catch (Exception e) {
                 LOGGER.warning("call(Object[]) -> \n"
-                    + e.getMessage());
+                    + e.toString());
                 return null;
             } finally {
                 method.setAccessible(isAccessible);

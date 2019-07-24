@@ -53,8 +53,19 @@ public class ClassOf implements RefClass {
 
     @NotNull
     @Override
+    public RefMethod getPrimitiveMethod(@NotNull final String name, @NotNull final Object... types) {
+        return getMethod0( name, true, types);
+    }
+
+    @NotNull
+    @Override
     public RefMethod getMethod(@NotNull final String name, @NotNull final Object... types) {
-        final RefParameter<RefMethod> parameter = new ParameterOf<>(types);
+        return getMethod0( name, false, types);
+    }
+
+    @NotNull
+    private RefMethod getMethod0(@NotNull final String name, final boolean primitive, @NotNull final Object... types) {
+        final RefParameter<RefMethod> parameter = new ParameterOf<>(primitive, types);
 
         try {
             try {
@@ -65,8 +76,8 @@ public class ClassOf implements RefClass {
                     new MethodOf(clazz.getDeclaredMethod(name, classes)));
             }
         } catch (Exception exception) {
-            LOGGER.warning("getMethod(String, Object[]) -> \n"
-                + exception.getMessage());
+            LOGGER.warning("getMethod0(String, boolean, Object[]) -> \n"
+                + exception.toString());
             return new MckMethod();
         }
     }
@@ -96,16 +107,25 @@ public class ClassOf implements RefClass {
                     new ConstructorOf(clazz.getDeclaredConstructor(classes)));
             }
         } catch (Exception exception) {
-            LOGGER.warning("getConstructor(Object[]) -> \n"
-                + exception.getMessage());
+            LOGGER.warning("getConstructor0(boolean, Object[]) -> \n"
+                + exception.toString());
             return new MckConstructed();
         }
     }
 
     @NotNull
-    @Override
-    public RefMethod findMethod(@NotNull final Object... types) {
-        final RefParameter<RefMethod> parameter = new ParameterOf<>(types);
+    public RefMethod findPrimitiveMethodByParameter(@NotNull final Object... types) {
+        return findMethod0(true, types);
+    }
+
+    @NotNull
+    public RefMethod findMethodByParameter(@NotNull final Object... types) {
+        return findMethod0(false, types);
+    }
+
+    @NotNull
+    private RefMethod findMethod0(final boolean primitive, @NotNull final Object... types) {
+        final RefParameter<RefMethod> parameter = new ParameterOf<>(primitive, types);
 
         final List<Method> methods = new ListOf<>(
             new Joined<>(
@@ -141,8 +161,8 @@ public class ClassOf implements RefClass {
                 return new MethodOf(method);
         }
 
-        LOGGER.warning("findMethod(Object[]) -> \n"
-            + new NoSuchMethodException().getMessage());
+        LOGGER.warning("findMethod0(boolean, Object[]) -> \n"
+            + new NoSuchMethodException().toString());
         return new MckMethod();
     }
 
@@ -174,14 +194,14 @@ public class ClassOf implements RefClass {
                     ),
                     () -> {
                         LOGGER.warning("findMethodByName(String[]) -> \n"
-                            + new NoSuchMethodException().getMessage());
+                            + new NoSuchMethodException().toString());
                         return null;
                     }
                 ).value()
             );
         } catch (Exception exception) {
             LOGGER.warning("findMethodByName(String[]) -> \n"
-                + exception.getMessage());
+                + exception.toString());
             return new MckMethod();
         }
     }
@@ -212,7 +232,7 @@ public class ClassOf implements RefClass {
             );
         } catch (Exception exception) {
             LOGGER.warning("findMethodByReturnType(Class) -> \n"
-                + exception.getMessage());
+                + exception.toString());
             return new MckMethod();
         }
     }
@@ -238,7 +258,7 @@ public class ClassOf implements RefClass {
             );
         } catch (Exception exception) {
             LOGGER.warning("findConstructor(int) -> \n"
-                + exception.getMessage());
+                + exception.toString());
             return new MckConstructed();
         }
     }
@@ -254,7 +274,7 @@ public class ClassOf implements RefClass {
             }
         } catch (Exception exception) {
             LOGGER.warning("getField(String) -> \n"
-                + exception.getMessage());
+                + exception.toString());
             return new MckField();
         }
     }
@@ -286,7 +306,7 @@ public class ClassOf implements RefClass {
             );
         } catch (Exception exception) {
             LOGGER.warning("findField(Class) -> \n"
-                + exception.getMessage());
+                + exception.toString());
             return new MckField();
         }
     }

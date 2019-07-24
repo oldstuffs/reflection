@@ -22,14 +22,11 @@ public void clearKnownCommands() {
     final RefClass refClass = new ClassOf(Bukkit.getServer());
     final RefMethod refMethod = refClass.findMethodByName("getCommandMap");
     
-    if (refMethod instanceof MckMethod)
-        return;
-    
-    final SimpleCommandMap commandMap = (SimpleCommandMap) refMethod.of(Bukkit.getServer()).call();
+    final Object commandMap = refMethod.of(Bukkit.getServer()).call();
     
     if (commandMap == null)
         return;
     
-    commandMap.clearCommands();
+    ((SimpleCommandMap)commandMap).clearCommands();
 }
 ```

@@ -11,20 +11,10 @@ import java.util.Map;
 
 class ParameterOfTest {
 
-    private final String text = "test";
-    private final int x = 1;
-
-    @Test
-    void of() {
-        new Assertion<>(
-            "Primitive method not working!",
-            ParameterOf.of(true, text, x),
-            new IsEqual<>(new Class[] {String.class, int.class})
-        ).affirm();
-    }
-
     @Test
     void apply() throws Exception {
+        String text = "test";
+        int x = 1;
         final RefParameter<Map.Entry<String, Integer>> parameter = new ParameterOf<>(text, x);
 
         new Assertion<>(

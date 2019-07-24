@@ -33,7 +33,7 @@ public class ParameterOf<T> implements RefParameter<T> {
     }
 
     @NotNull
-    public static Class[] of(final boolean primitive, @NotNull final Object... args) {
+    private static Class[] of(final boolean primitive, @NotNull final Object... args) {
         @NotNull Class[] classes = new Class[args.length];
         int i = 0;
 

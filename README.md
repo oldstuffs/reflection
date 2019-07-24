@@ -20,7 +20,7 @@ Simple and powerfull class/method/field/constructor manipulation!
 <dependency>
     <groupId>io.github.portlek</groupId>
     <artifactId>reflection</artifactId>
-    <version>2.5</version>
+    <version>2.6</version>
 </dependency>
 ```
 
@@ -28,15 +28,15 @@ Simple and powerfull class/method/field/constructor manipulation!
 public void clearKnownCommands() {
     final RefClass refClass = new ClassOf(Bukkit.getServer());
     final RefMethod refMethod = refClass.findMethodByName("getCommandMap");
-    
+
     final Object commandMap = refMethod.of(Bukkit.getServer()).call();
-    
+
     if (commandMap == null)
         return;
 
     final RefClass simpleCommandClass = new ClassOf(commandMap);
     final RefMethod clearCommandsMethod = simpleCommandClass.findMethodByName("clearCommands");
-    
+
     clearCommandsMethod.call();
 }
 ```

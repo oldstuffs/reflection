@@ -40,15 +40,6 @@ class ClassOfTest {
     }
 
     @Test
-    void getPrimitiveConstructor() {
-        new Assertion<>(
-            "Cannot find constructor!",
-            CLASS.getPrimitiveConstructor(String.class, Integer.class),
-            new IsInstanceOf(ConstructorOf.class)
-        ).affirm();
-    }
-
-    @Test
     void getMethod() {
         new Assertion<>(
             "Cannot find method",
@@ -227,6 +218,15 @@ class ClassOfTest {
                 new ClassOf(int.class)
             ),
             new IsInstanceOf(MethodOf.class)
+        ).affirm();
+    }
+
+    @Test
+    void getPrimitiveConstructor() {
+        new Assertion<>(
+            "Cannot find constructor!",
+            CLASS.getPrimitiveConstructor(String.class, Integer.class),
+            new IsInstanceOf(ConstructorOf.class)
         ).affirm();
     }
 

@@ -20,7 +20,6 @@ public interface RefClass {
      */
     boolean isInstance(@NotNull final Object object);
 
-
     /**
      * get existing method by name and types
      *
@@ -40,25 +39,6 @@ public interface RefClass {
      */
     @NotNull
     RefMethod getMethod(@NotNull final String name, @NotNull final Object... types);
-
-
-    /**
-     * get existing constructor by types
-     *
-     * @param types parameters. can be Class or RefClass
-     * @return RefMethod object
-     */
-    @NotNull
-    RefConstructed getPrimitiveConstructor(@NotNull final Object... types);
-
-    /**
-     * get existing constructor by types
-     *
-     * @param types parameters. can be Class or RefClass
-     * @return RefMethod object
-     */
-    @NotNull
-    RefConstructed getConstructor(@NotNull final Object... types);
 
     /**
      * find method by type parameters
@@ -104,6 +84,24 @@ public interface RefClass {
      */
     @NotNull
     RefMethod findMethodByReturnType(@NotNull final Class type);
+
+    /**
+     * get existing constructor by types
+     *
+     * @param types parameters. can be Class or RefClass
+     * @return RefMethod object
+     */
+    @NotNull
+    RefConstructed getPrimitiveConstructor(@NotNull final Object... types);
+
+    /**
+     * get existing constructor by types
+     *
+     * @param types parameters. can be Class or RefClass
+     * @return RefMethod object
+     */
+    @NotNull
+    RefConstructed getConstructor(@NotNull final Object... types);
 
     /**
      * find constructor by number of arguments

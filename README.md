@@ -8,6 +8,7 @@ Simple and powerfull class/method/field/constructor manipulation!
 - No public static methods
 - No public methods without contract (interface)
 - No implementation inheritance
+- Null-safety as much as possible (mock object)
 
 ### Using
 ```

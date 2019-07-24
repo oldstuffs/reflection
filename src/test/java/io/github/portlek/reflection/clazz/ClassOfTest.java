@@ -2,48 +2,41 @@ package io.github.portlek.reflection.clazz;
 
 import io.github.portlek.reflection.RefClass;
 import io.github.portlek.reflection.constructor.ConstructorOf;
+import io.github.portlek.reflection.field.FieldOf;
 import io.github.portlek.reflection.method.MethodOf;
+import org.hamcrest.core.IsEqual;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.jupiter.api.Test;
 import org.llorllale.cactoos.matchers.Assertion;
+import org.llorllale.cactoos.matchers.IsTrue;
 
 class ClassOfTest {
 
     private static final RefClass CLASS = new ClassOf(TestClass.class);
 
     @Test
-    void findConstructor() {
+    void getRealClass() {
         new Assertion<>(
-            "Cannot find constructor!",
-            CLASS.findConstructor(2),
-            new IsInstanceOf(ConstructorOf.class)
-        );
+            "Class is not equal to real class!",
+            CLASS.getRealClass(),
+            new IsEqual<>(TestClass.class)
+        ).affirm();;
     }
 
     @Test
-    void getConstructor() {
+    void isInstance() {
         new Assertion<>(
-            "Cannot find constructor!",
-            CLASS.getConstructor(String.class, int.class),
-            new IsInstanceOf(ConstructorOf.class)
-        );
+            "Class is not instance of the object",
+            CLASS.isInstance(new TestTestClass("Hasan", 21)),
+            new IsTrue()
+        ).affirm();
     }
 
-    @Test
-    void getField() {
-        CLASS.getField("text");
-    }
+    private static class TestTestClass extends TestClass {
 
-    @Test
-    void findFieldFromClass() {
-        CLASS.findField(String.class);
-    }
-
-    @Test
-    void findFieldFromRefClass() {
-        CLASS.findField(
-            new ClassOf(String.class)
-        );
+        TestTestClass(String text, int age) {
+            super(text, age);
+        }
     }
 
     @Test
@@ -52,7 +45,7 @@ class ClassOfTest {
             "Cannot find constructor!",
             CLASS.getPrimitiveConstructor(String.class, Integer.class),
             new IsInstanceOf(ConstructorOf.class)
-        );
+        ).affirm();
     }
 
     @Test
@@ -237,12 +230,59 @@ class ClassOfTest {
         ).affirm();
     }
 
-    private static final class TestClass {
+    @Test
+    void findConstructor() {
+        new Assertion<>(
+            "Cannot find constructor!",
+            CLASS.findConstructor(2),
+            new IsInstanceOf(ConstructorOf.class)
+        ).affirm();
+    }
+
+    @Test
+    void getConstructor() {
+        new Assertion<>(
+            "Cannot find constructor!",
+            CLASS.getConstructor(String.class, int.class),
+            new IsInstanceOf(ConstructorOf.class)
+        ).affirm();
+    }
+
+    @Test
+    void getField() {
+        new Assertion<>(
+            "Cannot find field!",
+            CLASS.getField("text"),
+            new IsInstanceOf(FieldOf.class)
+        ).affirm();
+    }
+
+    @Test
+    void findFieldFromClass() {
+        new Assertion<>(
+            "Cannot find field!",
+            CLASS.findField(String.class),
+            new IsInstanceOf(FieldOf.class)
+        ).affirm();
+    }
+
+    @Test
+    void findFieldFromRefClass() {
+        new Assertion<>(
+            "Cannot find field!",
+            CLASS.findField(
+                new ClassOf(String.class)
+            ),
+            new IsInstanceOf(FieldOf.class)
+        ).affirm();
+    }
+
+    private static class TestClass {
 
         private final String text;
         private final int age;
 
-        public TestClass(String text, int age) {
+        TestClass(String text, int age) {
             this.text = text;
             this.age = age;
         }

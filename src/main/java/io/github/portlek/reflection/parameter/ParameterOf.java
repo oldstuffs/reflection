@@ -2,7 +2,7 @@ package io.github.portlek.reflection.parameter;
 
 import io.github.portlek.reflection.RefClass;
 import io.github.portlek.reflection.RefParameter;
-import org.cactoos.BiFunc;
+import org.cactoos.Func;
 import org.jetbrains.annotations.NotNull;
 
 public class ParameterOf<T> implements RefParameter<T> {
@@ -10,16 +10,12 @@ public class ParameterOf<T> implements RefParameter<T> {
     @NotNull
     private final Class[] classes;
 
-    @NotNull
-    private final Object[] objects;
-
-    public ParameterOf(@NotNull final Class[] classes, @NotNull final Object[] objects) {
+    public ParameterOf(@NotNull final Class[] classes) {
         this.classes = classes;
-        this.objects = objects;
     }
 
     public ParameterOf(final boolean primitive, @NotNull final Object... objects) {
-        this(of(primitive, objects), objects);
+        this(of(primitive, objects));
     }
 
     public ParameterOf(@NotNull final Object... objects) {
@@ -28,13 +24,13 @@ public class ParameterOf<T> implements RefParameter<T> {
 
     @NotNull
     @Override
-    public T apply(@NotNull BiFunc<Class[], Object[], T> func) throws Exception {
-        return func.apply(classes, objects);
+    public T apply(@NotNull Func<Class[], T> func) throws Exception {
+        return func.apply(classes);
     }
 
     @NotNull
     private static Class[] of(final boolean primitive, @NotNull final Object... args) {
-        @NotNull Class[] classes = new Class[args.length];
+        Class[] classes = new Class[args.length];
         int i = 0;
 
         for (Object arg : args) {

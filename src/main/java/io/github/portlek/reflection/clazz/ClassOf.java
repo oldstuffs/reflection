@@ -69,10 +69,10 @@ public class ClassOf implements RefClass {
 
         try {
             try {
-                return parameter.apply((classes, objects) ->
+                return parameter.apply(classes ->
                     new MethodOf(clazz.getMethod(name, classes)));
             } catch (NoSuchMethodException ignored) {
-                return parameter.apply((classes, objects) ->
+                return parameter.apply(classes ->
                     new MethodOf(clazz.getDeclaredMethod(name, classes)));
             }
         } catch (Exception exception) {
@@ -100,11 +100,29 @@ public class ClassOf implements RefClass {
 
         try {
             try {
-                return parameter.apply((classes, objects) ->
-                    new ConstructorOf(clazz.getConstructor(classes)));
-            } catch (NoSuchMethodException ignored) {
-                return parameter.apply((classes, objects) ->
-                    new ConstructorOf(clazz.getDeclaredConstructor(classes)));
+                try {
+                    return parameter.apply(classes ->
+                        new ConstructorOf(clazz.getConstructor(classes)));
+                } catch (Exception ignored) {
+                    return parameter.apply(classes ->
+                        new ConstructorOf(clazz.getDeclaredConstructor(classes)));
+                }
+            } catch (Exception ignored) {
+                return parameter.apply(classes -> {
+                    return new ConstructorOf(
+                            clazz.getDeclaredConstructor(
+                                new ListOf<>(
+                                    new Joined<>(
+                                        clazz.getDeclaredField("this$0").getType(),
+                                        new ListOf<>(
+                                            classes
+                                        )
+                                    )
+                                ).toArray(new Class[0])
+                            )
+                        );
+                    }
+                );
             }
         } catch (Exception exception) {
             LOGGER.warning("getConstructor0(boolean, Object[]) -> \n"
@@ -141,7 +159,7 @@ public class ClassOf implements RefClass {
         final List<Class> classList = new ArrayList<>();
 
         try {
-            parameter.apply((classes, objects) -> {
+            parameter.apply(classes -> {
                 classList.addAll(new ListOf<>(classes));
                 return new MckMethod();
             });

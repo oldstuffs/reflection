@@ -32,7 +32,7 @@ class ClassOfTest {
         ).affirm();
     }
 
-    private static class TestTestClass extends TestClass {
+    private class TestTestClass extends TestClass {
 
         TestTestClass(String text, int age) {
             super(text, age);
@@ -234,7 +234,7 @@ class ClassOfTest {
     void findConstructor() {
         new Assertion<>(
             "Cannot find constructor!",
-            CLASS.findConstructor(2),
+            CLASS.findConstructor(3),
             new IsInstanceOf(ConstructorOf.class)
         ).affirm();
     }
@@ -284,10 +284,7 @@ class ClassOfTest {
         ).affirm();
     }
 
-    private interface ITest {
-    }
-
-    private static class TestClass implements ITest {
+    private class TestClass {
 
         private final String text;
         private final int age;

@@ -18,7 +18,7 @@ public class MckMethod implements RefMethod {
         return null;
     }
 
-    private static class MckMethodExecuted implements RefMethodExecuted {
+    public static class MckMethodExecuted implements RefMethodExecuted {
         @Nullable
         @Override
         public Object call(@NotNull Object... parameters) {

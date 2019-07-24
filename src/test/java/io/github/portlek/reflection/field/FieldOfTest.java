@@ -2,7 +2,6 @@ package io.github.portlek.reflection.field;
 
 import io.github.portlek.reflection.RefClass;
 import io.github.portlek.reflection.clazz.ClassOf;
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.IsEqual;
 import org.junit.jupiter.api.Test;
 import org.llorllale.cactoos.matchers.Assertion;
@@ -32,11 +31,12 @@ class FieldOfTest {
     void set() {
         refClass.getField("text").of(FIELD_TEST).set("Edited Test Text");
 
-        MatcherAssert.assertThat(
+        new Assertion<>(
+
             "Couldn't set the field!",
             refClass.getField("text").of(FIELD_TEST).get(),
             new IsEqual<>("Edited Test Text")
-        );
+        ).affirm();
     }
 
     private static final class FieldTest {

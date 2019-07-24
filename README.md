@@ -2,7 +2,16 @@
 
 Simple and powerfull class/method/field/constructor manipulation!
 
+### Principles
+
 ### Using
+
+- No code in constructors (why?)
+- No mutable objects (why?)
+- No public static methods (why?)
+- No type casting, or reflection (why?)
+- No public methods without contract (interface) (why?)
+- No implementation inheritance (why? and why?)
 
 ```
 <repository>

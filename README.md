@@ -6,7 +6,6 @@ Simple and powerfull class/method/field/constructor manipulation!
 - No code in constructors
 - No mutable objects
 - No public static methods
-- No type casting
 - No public methods without contract (interface)
 - No implementation inheritance
 

@@ -15,19 +15,25 @@ public class ConstructorOf implements RefConstructed {
     @NotNull
     private final Constructor constructor;
 
+    private final boolean isAccessible;
+
     public ConstructorOf(@NotNull final Constructor constructor) {
         this.constructor = constructor;
+        this.isAccessible = constructor.isAccessible();
     }
 
     @Nullable
     @Override
     public Object create(@NotNull final Object... parameters) {
+        constructor.setAccessible(true);
         try {
             return constructor.newInstance(parameters);
         } catch (Exception e) {
             LOGGER.warning("create(Object[]) -> \n"
                 + e.getMessage());
             return null;
+        } finally {
+            constructor.setAccessible(isAccessible);
         }
     }
 

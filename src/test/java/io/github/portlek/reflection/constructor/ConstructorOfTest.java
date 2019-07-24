@@ -12,11 +12,11 @@ class ConstructorOfTest {
     @Test
     void create() {
         final RefClass refClass = new ClassOf(ConstructorTest.class);
-        final RefConstructed refConstructed = refClass.getPrimitiveConstructor(String.class, int.class);
+        final RefConstructed refConstructed = refClass.getPrimitiveConstructor(getClass(), String.class, int.class);
 
         new Assertion<>(
             "Cannot created object from the Constructed!",
-            refConstructed.create("Hasan", 21),
+            refConstructed.create(this, "Hasan", 21),
             new IsInstanceOf(ConstructorTest.class)
         ).affirm();
     }

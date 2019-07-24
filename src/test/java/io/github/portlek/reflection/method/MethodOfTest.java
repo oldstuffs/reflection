@@ -94,7 +94,7 @@ class MethodOfTest {
         }
 
         private void callVoidParameterMethod(String text) {
-            LOGGER.info("callVoidMethod -> Test Passed with " + text);
+            LOGGER.info("callVoidParameterMethod -> Test Passed with " + text);
         }
 
         private String callReturnParameterMethod(Integer age) {

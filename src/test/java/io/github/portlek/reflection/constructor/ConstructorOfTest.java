@@ -21,7 +21,7 @@ class ConstructorOfTest {
         ).affirm();
     }
 
-    private static class ConstructorTest {
+    private class ConstructorTest {
 
         private final String name;
         private final int age;

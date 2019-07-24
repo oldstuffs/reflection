@@ -108,20 +108,19 @@ public class ClassOf implements RefClass {
                         new ConstructorOf(clazz.getDeclaredConstructor(classes)));
                 }
             } catch (Exception ignored) {
-                return parameter.apply(classes -> {
-                    return new ConstructorOf(
-                            clazz.getDeclaredConstructor(
-                                new ListOf<>(
-                                    new Joined<>(
-                                        clazz.getDeclaredField("this$0").getType(),
-                                        new ListOf<>(
-                                            classes
-                                        )
+                return parameter.apply(classes ->
+                    new ConstructorOf(
+                        clazz.getDeclaredConstructor(
+                            new ListOf<>(
+                                new Joined<>(
+                                    clazz.getDeclaredField("this$0").getType(),
+                                    new ListOf<>(
+                                        classes
                                     )
-                                ).toArray(new Class[0])
-                            )
-                        );
-                    }
+                                )
+                            ).toArray(new Class[0])
+                        )
+                    )
                 );
             }
         } catch (Exception exception) {

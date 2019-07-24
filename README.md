@@ -3,12 +3,12 @@
 Simple and powerfull class/method/field/constructor manipulation!
 
 ### Principles
-- No code in constructors (why?)
-- No mutable objects (why?)
-- No public static methods (why?)
-- No type casting, or reflection (why?)
-- No public methods without contract (interface) (why?)
-- No implementation inheritance (why? and why?)
+- No code in constructors
+- No mutable objects
+- No public static methods
+- No type casting, or reflection
+- No public methods without contract (interface)
+- No implementation inheritance
 
 ### Using
 ```

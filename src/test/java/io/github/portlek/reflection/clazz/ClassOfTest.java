@@ -246,6 +246,13 @@ class ClassOfTest {
             CLASS.getConstructor(String.class, int.class),
             new IsInstanceOf(ConstructorOf.class)
         ).affirm();
+
+
+        new Assertion<>(
+            "Cannot find constructor!",
+            CLASS.getConstructor(),
+            new IsInstanceOf(ConstructorOf.class)
+        ).affirm();
     }
 
     @Test
@@ -277,7 +284,10 @@ class ClassOfTest {
         ).affirm();
     }
 
-    private static class TestClass {
+    private interface ITest {
+    }
+
+    private static class TestClass implements ITest {
 
         private final String text;
         private final int age;
@@ -285,6 +295,10 @@ class ClassOfTest {
         TestClass(String text, int age) {
             this.text = text;
             this.age = age;
+        }
+
+        TestClass() {
+            this("Hasan", 21);
         }
 
         private void voidMethod() {

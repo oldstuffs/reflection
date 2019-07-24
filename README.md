@@ -26,7 +26,10 @@ public void clearKnownCommands() {
     
     if (commandMap == null)
         return;
+
+    final RefClass simpleCommandClass = new ClassOf(commandMap);
+    final RefMethod clearCommandsMethod = simpleCommandClass.findMethodByName("clearCommands");
     
-    ((SimpleCommandMap)commandMap).clearCommands();
+    clearCommandsMethod.call();
 }
 ```

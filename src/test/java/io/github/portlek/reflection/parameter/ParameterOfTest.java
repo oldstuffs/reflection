@@ -1,23 +1,37 @@
 package io.github.portlek.reflection.parameter;
 
+import io.github.portlek.reflection.RefParameter;
+import org.cactoos.map.MapEntry;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.core.IsEqual;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Map;
 
 class ParameterOfTest {
 
+    private final String text = "test";
+    private final int x = 1;
+
     @Test
     void of() {
-        int x = 1;
-        int y = 2;
-        Integer xx = 1;
-        Integer yy = 2;
         MatcherAssert.assertThat(
             "Primitive method not working!",
-            ParameterOf.of(true, x, y, xx, yy),
-            CoreMatchers.equalTo(new Class[] {int.class, int.class})
+            ParameterOf.of(true, text, x),
+            new IsEqual<>(new Class[] {String.class, int.class})
         );
     }
+
+    @Test
+    void apply() throws Exception {
+        final RefParameter<Map.Entry<String, Integer>> parameter = new ParameterOf<>(text, x);
+
+        MatcherAssert.assertThat(
+            "Function doesn't give right classes and objects",
+            parameter.apply((first, second) -> new MapEntry<>((String) second[0], (Integer) second[1])),
+            new IsEqual<>(new MapEntry<>(text, x))
+        );
+    }
+
 }

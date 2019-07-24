@@ -5,6 +5,7 @@ import org.cactoos.list.Mapped;
 import org.cactoos.text.TextOf;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
@@ -15,6 +16,8 @@ public class LoggerOf extends Logger {
     private LoggerOf(String prefix) {
         super(prefix.replaceAll(", ", "#"), null);
         this.prefix = "[" + getName() + "] ";
+        setParent(Logger.getLogger(prefix));
+        setLevel(Level.ALL);
     }
 
     public LoggerOf(@NotNull final Class<?>... classes) {

@@ -2,8 +2,8 @@ package io.github.portlek.reflection.clazz;
 
 import io.github.portlek.reflection.RefClass;
 import io.github.portlek.reflection.constructor.ConstructorOf;
-import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.jupiter.api.Test;
 
 class ClassOfTest {
@@ -14,8 +14,8 @@ class ClassOfTest {
     void findConstructor() {
         MatcherAssert.assertThat(
             "Cannot find constructor!",
-            CLASS.findConstructor(1),
-            CoreMatchers.instanceOf(ConstructorOf.class)
+            CLASS.findConstructor(2),
+            new IsInstanceOf(ConstructorOf.class)
         );
     }
 
@@ -23,19 +23,29 @@ class ClassOfTest {
     void getConstructor() {
         MatcherAssert.assertThat(
             "Cannot find constructor!",
-            CLASS.getPrimitiveConstructor(1),
-            CoreMatchers.instanceOf(ConstructorOf.class)
+            CLASS.getConstructor(String.class, int.class),
+            new IsInstanceOf(ConstructorOf.class)
+        );
+    }
+
+    @Test
+    void getPrimitiveConstructor() {
+        MatcherAssert.assertThat(
+            "Cannot find constructor!",
+            CLASS.getPrimitiveConstructor(String.class, Integer.class),
+            new IsInstanceOf(ConstructorOf.class)
         );
     }
 
     private static final class TestClass {
 
-        private final int integer;
+        private final String text;
+        private final int age;
 
-        public TestClass(int integer) {
-            this.integer = integer;
+        public TestClass(String text, int age) {
+            this.text = text;
+            this.age = age;
         }
-
     }
 
 }

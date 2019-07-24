@@ -12,7 +12,12 @@ class LoggerOfTest {
     private static final Logger LOGGER = new LoggerOf(LoggerOfTest.class);
 
     @Test
-    void log() {
+    void logging() {
+        LOGGER.info("logging() -> Test succeed!");
+    }
+
+    @Test
+    void prefix() {
         MatcherAssert.assertThat(
             "Logger name isn't equal to simple name of the class!",
             LOGGER.getName(),

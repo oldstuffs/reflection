@@ -1,6 +1,6 @@
 # Reflection
 
-Simple reflection library to manage minecraft plugins.
+Simple and powerfull class/method/field/constructor manipulation!
 
 ### Using
 

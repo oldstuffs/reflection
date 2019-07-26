@@ -7,6 +7,16 @@ import org.jetbrains.annotations.Nullable;
 
 public class MckField implements RefField {
 
+    @Override
+    public void set(@NotNull Object value) {
+    }
+
+    @Nullable
+    @Override
+    public Object get() {
+        return null;
+    }
+
     @NotNull
     @Override
     public RefFieldExecuted of(@NotNull Object object) {

@@ -1,6 +1,7 @@
 package io.github.portlek.reflection;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface RefField {
 
@@ -12,5 +13,10 @@ public interface RefField {
      */
     @NotNull
     RefFieldExecuted of(@NotNull Object object);
+
+    void set(@NotNull Object value);
+
+    @Nullable
+    Object get();
 
 }

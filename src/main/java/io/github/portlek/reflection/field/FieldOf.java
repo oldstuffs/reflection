@@ -11,6 +11,9 @@ import java.util.logging.Logger;
 
 public class FieldOf implements RefField {
 
+    private static final Logger LOGGER_FIELD_OF = new LoggerOf(
+        FieldOf.class
+    );
     private static final Logger LOGGER = new LoggerOf(
         FieldOf.class,
         FieldExecuted.class
@@ -24,6 +27,34 @@ public class FieldOf implements RefField {
     public FieldOf(@NotNull final Field field) {
         this.field = field;
         this.isAccessible = field.isAccessible();
+    }
+
+    @Override
+    public void set(@NotNull Object value) {
+        field.setAccessible(true);
+        try {
+            field.set(null, value);
+        } catch (Exception exception) {
+            LOGGER_FIELD_OF.warning("set(Object) -> \n"
+                + exception.getMessage());
+        } finally {
+            field.setAccessible(isAccessible);
+        }
+    }
+
+    @Nullable
+    @Override
+    public Object get() {
+        field.setAccessible(true);
+        try {
+            return field.get(null);
+        } catch (Exception exception) {
+            LOGGER_FIELD_OF.warning("get() -> \n"
+                + exception.getMessage());
+            return null;
+        } finally {
+            field.setAccessible(isAccessible);
+        }
     }
 
     @NotNull

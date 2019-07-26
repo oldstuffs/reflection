@@ -2,7 +2,10 @@ package io.github.portlek.reflection.parameter;
 
 import io.github.portlek.reflection.RefClass;
 import org.cactoos.Scalar;
+import org.cactoos.scalar.And;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Converted implements Scalar<Class[]> {
 
@@ -18,24 +21,30 @@ public class Converted implements Scalar<Class[]> {
     @Override
     public Class[] value() {
         Class[] classes = new Class[objects.length];
-        int i = 0;
+        final AtomicInteger i = new AtomicInteger();
 
-        for (Object arg : objects) {
-            final Class clazz;
+        try {
+            new And(
+                object -> {
+                    final Class clazz;
 
-            if (arg instanceof RefClass)
-                clazz = ((RefClass)arg).getRealClass();
-            else if (arg instanceof Class)
-                clazz = (Class) arg;
-            else
-                clazz = arg.getClass();
+                    if (object instanceof RefClass)
+                        clazz = ((RefClass)object).getRealClass();
+                    else if (object instanceof Class)
+                        clazz = (Class) object;
+                    else
+                        clazz = object.getClass();
 
-            if (!isPrimitive) {
-                classes[i++] = clazz;
-                continue;
-            }
+                    if (!isPrimitive) {
+                        classes[i.getAndIncrement()] = clazz;
+                        return;
+                    }
 
-            classes[i++] = new Primitive(clazz).value();
+                    classes[i.getAndIncrement()] = new Primitive(clazz).value();
+                },
+                objects
+            ).value();
+        } catch (Exception ignore) {
         }
 
         return classes;

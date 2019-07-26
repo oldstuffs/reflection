@@ -1,4 +1,4 @@
-package io.github.portlek.reflection.parameter;
+package io.github.portlek.reflection.parameterized;
 
 import io.github.portlek.reflection.RefParameterized;
 import org.cactoos.map.MapEntry;

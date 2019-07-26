@@ -7,7 +7,7 @@ import io.github.portlek.reflection.mck.MckConstructed;
 import io.github.portlek.reflection.mck.MckField;
 import io.github.portlek.reflection.mck.MckMethod;
 import io.github.portlek.reflection.method.MethodOf;
-import io.github.portlek.reflection.parameter.ParameterizedOf;
+import io.github.portlek.reflection.parameterized.ParameterizedOf;
 import org.cactoos.iterable.Filtered;
 import org.cactoos.list.Joined;
 import org.cactoos.list.ListOf;

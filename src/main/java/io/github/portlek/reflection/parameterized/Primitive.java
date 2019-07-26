@@ -1,4 +1,4 @@
-package io.github.portlek.reflection.parameter;
+package io.github.portlek.reflection.parameterized;
 
 import org.cactoos.Scalar;
 import org.jetbrains.annotations.NotNull;

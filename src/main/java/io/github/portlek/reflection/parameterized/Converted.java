@@ -1,4 +1,4 @@
-package io.github.portlek.reflection.parameter;
+package io.github.portlek.reflection.parameterized;
 
 import io.github.portlek.reflection.RefClass;
 import org.cactoos.Scalar;

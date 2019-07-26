@@ -7,7 +7,7 @@ import io.github.portlek.reflection.mck.MckConstructed;
 import io.github.portlek.reflection.mck.MckField;
 import io.github.portlek.reflection.mck.MckMethod;
 import io.github.portlek.reflection.method.MethodOf;
-import io.github.portlek.reflection.parameter.ParameterOf;
+import io.github.portlek.reflection.parameter.ParameterizedOf;
 import org.cactoos.iterable.Filtered;
 import org.cactoos.list.Joined;
 import org.cactoos.list.ListOf;
@@ -65,7 +65,7 @@ public class ClassOf implements RefClass {
 
     @NotNull
     private RefMethod getMethod0(@NotNull final String name, final boolean primitive, @NotNull final Object... types) {
-        final RefParameter<RefMethod> parameter = new ParameterOf<>(primitive, types);
+        final RefParameterized<RefMethod> parameter = new ParameterizedOf<>(primitive, types);
 
         try {
             try {
@@ -96,7 +96,7 @@ public class ClassOf implements RefClass {
 
     @NotNull
     private RefConstructed getConstructor0(final boolean primitive, @NotNull Object... types) {
-        final RefParameter<RefConstructed> parameter = new ParameterOf<>(primitive, types);
+        final RefParameterized<RefConstructed> parameter = new ParameterizedOf<>(primitive, types);
 
         try {
             try {
@@ -142,7 +142,7 @@ public class ClassOf implements RefClass {
 
     @NotNull
     private RefMethod findMethod0(final boolean primitive, @NotNull final Object... types) {
-        final RefParameter<RefMethod> parameter = new ParameterOf<>(primitive, types);
+        final RefParameterized<RefMethod> parameter = new ParameterizedOf<>(primitive, types);
 
         final List<Method> methods = new ListOf<>(
             new Joined<>(

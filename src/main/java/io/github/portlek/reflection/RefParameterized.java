@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @param <T> result type
  */
-public interface RefParameter<T> {
+public interface RefParameterized<T> {
 
     /**
      * Executes your command

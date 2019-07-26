@@ -225,7 +225,7 @@ class ClassOfTest {
     void getPrimitiveConstructor() {
         new Assertion<>(
             "Cannot find constructor!",
-            CLASS.getPrimitiveConstructor(String.class, Integer.class),
+            CLASS.getPrimitiveConstructor(this, String.class, Integer.class),
             new IsInstanceOf(ConstructorOf.class)
         ).affirm();
     }
@@ -243,13 +243,13 @@ class ClassOfTest {
     void getConstructor() {
         new Assertion<>(
             "Cannot find constructor!",
-            CLASS.getConstructor(),
+            CLASS.getConstructor(this),
             new IsInstanceOf(ConstructorOf.class)
         ).affirm();
 
         new Assertion<>(
             "Cannot find constructor!",
-            CLASS.getConstructor(String.class, int.class),
+            CLASS.getConstructor(this, String.class, int.class),
             new IsInstanceOf(ConstructorOf.class)
         ).affirm();
     }

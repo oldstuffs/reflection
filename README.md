@@ -29,14 +29,14 @@ public void clearKnownCommands() {
     final RefClass refClass = new ClassOf(Bukkit.getServer());
     final RefMethod refMethod = refClass.findMethodByName("getCommandMap");
 
-    final Object commandMap = refMethod.of(Bukkit.getServer()).call();
+    final Object commandMap = refMethod.of(Bukkit.getServer()).call(/*Fallback Object**/new MckObject());
 
-    if (commandMap == null)
+    if (commandMap instanceof MckObject)
         return;
 
     final RefClass simpleCommandClass = new ClassOf(commandMap);
     final RefMethod clearCommandsMethod = simpleCommandClass.findMethodByName("clearCommands");
     
-    clearCommandsMethod.of(commandMap).call();
+    clearCommandsMethod.of(commandMap).call(/*Fallback Object**/new MckObject());
 }
 ```

@@ -16,13 +16,13 @@ class FieldOfTest {
     void get() {
         new Assertion<>(
             "Couldn't get the field",
-            refClass.getField("text").of(FIELD_TEST).get(),
+            refClass.getField("text").of(FIELD_TEST).get("null"),
             new IsEqual<>("Test Text")
         ).affirm();
 
         new Assertion<>(
             "Couldn't get the field",
-            refClass.getField("TEXT").of(FIELD_TEST).get(),
+            refClass.getField("TEXT").of(FIELD_TEST).get("null"),
             new IsEqual<>("Static Test Text")
         ).affirm();
     }
@@ -34,7 +34,7 @@ class FieldOfTest {
         new Assertion<>(
 
             "Couldn't set the field!",
-            refClass.getField("text").of(FIELD_TEST).get(),
+            refClass.getField("text").of(FIELD_TEST).get("null"),
             new IsEqual<>("Edited Test Text")
         ).affirm();
     }

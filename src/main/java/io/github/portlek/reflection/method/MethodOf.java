@@ -4,7 +4,6 @@ import io.github.portlek.reflection.LoggerOf;
 import io.github.portlek.reflection.RefMethod;
 import io.github.portlek.reflection.RefMethodExecuted;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 import java.util.logging.Logger;
@@ -33,16 +32,16 @@ public class MethodOf implements RefMethod {
         return new MethodExecuted(object);
     }
 
-    @Nullable
+    @NotNull
     @Override
-    public Object call(@NotNull final Object... parameters) {
+    public Object call(@NotNull final Object fallback, @NotNull final Object... parameters) {
         method.setAccessible(true);
         try {
             return method.invoke(null, parameters);
         } catch (Exception e) {
             LOGGER_METHOD_OF.warning("call(Object[]) -> \n"
                 + e.toString());
-            return null;
+            return fallback;
         } finally {
             method.setAccessible(isAccessible);
         }
@@ -57,16 +56,18 @@ public class MethodOf implements RefMethod {
             this.object = object;
         }
 
-        @Nullable
+        @NotNull
         @Override
-        public Object call(@NotNull final Object... parameters) {
+        public Object call(@NotNull final Object fallback, @NotNull final Object... parameters) {
             method.setAccessible(true);
             try {
-                return method.invoke(object, parameters);
+                return method.invoke(object, parameters) == null
+                    ? fallback
+                    : method.invoke(object, parameters);
             } catch (Exception e) {
                 LOGGER.warning("call(Object[]) -> \n"
                     + e.toString());
-                return null;
+                return fallback;
             } finally {
                 method.setAccessible(isAccessible);
             }

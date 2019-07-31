@@ -11,9 +11,10 @@ import java.util.logging.Logger;
 
 public class LoggerOf extends Logger {
 
+    @NotNull
     private final String prefix;
 
-    private LoggerOf(String prefix) {
+    private LoggerOf(@NotNull final String prefix) {
         super(prefix.replaceAll(", ", "#"), null);
         this.prefix = "[" + getName() + "] ";
         setParent(Logger.getLogger(prefix));
@@ -32,7 +33,7 @@ public class LoggerOf extends Logger {
     }
 
     @Override
-    public void log(LogRecord logRecord) {
+    public void log(@NotNull final LogRecord logRecord) {
         logRecord.setMessage(prefix + logRecord.getMessage());
         super.log(logRecord);
     }

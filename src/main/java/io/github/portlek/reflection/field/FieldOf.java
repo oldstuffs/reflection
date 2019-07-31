@@ -1,10 +1,9 @@
 package io.github.portlek.reflection.field;
 
+import io.github.portlek.reflection.LoggerOf;
 import io.github.portlek.reflection.RefField;
 import io.github.portlek.reflection.RefFieldExecuted;
-import io.github.portlek.reflection.LoggerOf;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.logging.Logger;
@@ -42,16 +41,16 @@ public class FieldOf implements RefField {
         }
     }
 
-    @Nullable
+    @NotNull
     @Override
-    public Object get() {
+    public Object get(@NotNull final Object fallback) {
         field.setAccessible(true);
         try {
             return field.get(null);
         } catch (Exception exception) {
             LOGGER_FIELD_OF.warning("get() -> \n"
                 + exception.getMessage());
-            return null;
+            return fallback;
         } finally {
             field.setAccessible(isAccessible);
         }
@@ -85,16 +84,16 @@ public class FieldOf implements RefField {
             }
         }
 
-        @Nullable
+        @NotNull
         @Override
-        public Object get() {
+        public Object get(@NotNull final Object fallback) {
             field.setAccessible(true);
             try {
                 return field.get(object);
             } catch (Exception exception) {
                 LOGGER.warning("get() -> \n"
                     + exception.getMessage());
-                return null;
+                return fallback;
             } finally {
                 field.setAccessible(isAccessible);
             }

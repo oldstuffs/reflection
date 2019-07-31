@@ -7,7 +7,6 @@ import io.github.portlek.reflection.mck.MckMethod;
 import org.hamcrest.core.IsEqual;
 import org.hamcrest.core.IsInstanceOf;
 import org.hamcrest.core.IsNot;
-import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.Test;
 import org.llorllale.cactoos.matchers.Assertion;
 
@@ -52,33 +51,34 @@ class MethodOfTest {
 
     @Test
     void call() {
+        final String fallback = "null";
         new Assertion<>(
             "Couldn't call method",
-            CLASS.getMethod("callVoidMethod").of(METHOD_TEST).call(),
-            new IsNull<>()
+            CLASS.getMethod("callVoidMethod").of(METHOD_TEST).call(fallback),
+            new IsEqual<>(fallback)
         ).affirm();
 
         new Assertion<>(
             "Couldn't call method",
-            CLASS.getMethod("callReturnMethod").of(METHOD_TEST).call(),
+            CLASS.getMethod("callReturnMethod").of(METHOD_TEST).call(fallback),
             new IsEqual<>("Called Return Method!")
         ).affirm();
 
         new Assertion<>(
             "Couldn't call method",
-            CLASS.getMethod("callVoidParameterMethod", String.class).of(METHOD_TEST).call("Hasan"),
-            new IsNull<>()
+            CLASS.getMethod("callVoidParameterMethod", String.class).of(METHOD_TEST).call(fallback,"Hasan"),
+            new IsEqual<>(fallback)
         ).affirm();
 
         new Assertion<>(
             "Couldn't call method",
-            CLASS.getMethod("callReturnParameterMethod", 21).of(METHOD_TEST).call(21),
+            CLASS.getMethod("callReturnParameterMethod", 21).of(METHOD_TEST).call(fallback, 21),
             new IsEqual<>("Called Return Method with 21")
         ).affirm();
 
         new Assertion<>(
             "Couldn't call method",
-            CLASS.getPrimitiveMethod("callPrimitiveReturnParameterMethod", 21).of(METHOD_TEST).call(21),
+            CLASS.getPrimitiveMethod("callPrimitiveReturnParameterMethod", 21).of(METHOD_TEST).call(fallback, 21),
             new IsEqual<>("Called Return Method with 21")
         ).affirm();
     }

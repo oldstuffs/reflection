@@ -3,7 +3,6 @@ package io.github.portlek.reflection.mck;
 import io.github.portlek.reflection.RefMethod;
 import io.github.portlek.reflection.RefMethodExecuted;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class MckMethod implements RefMethod {
     @NotNull
@@ -11,19 +10,16 @@ public class MckMethod implements RefMethod {
     public RefMethodExecuted of(@NotNull Object object) {
         return new MckMethodExecuted();
     }
-
-    @Nullable
+    @NotNull
     @Override
-    public Object call(@NotNull Object... parameters) {
-        return null;
+    public Object call(@NotNull Object fallback, @NotNull Object... parameters) {
+        return fallback;
     }
-
     public static class MckMethodExecuted implements RefMethodExecuted {
-        @Nullable
+        @NotNull
         @Override
-        public Object call(@NotNull Object... parameters) {
-            return null;
+        public Object call(@NotNull Object fallback, @NotNull Object... parameters) {
+            return fallback;
         }
     }
-
 }

@@ -1,7 +1,6 @@
 package io.github.portlek.reflection;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public interface RefMethod {
 
@@ -15,12 +14,13 @@ public interface RefMethod {
     RefMethodExecuted of(@NotNull final Object object);
 
     /**
-     * call static method
+     * Calls static method
      *
+     * @param fallback for null-safety
      * @param parameters sent parameters
-     * @return return value
+     * @return return value with fallback
      */
-    @Nullable
-    Object call(@NotNull final Object... parameters);
+    @NotNull
+    Object call(@NotNull final Object fallback, @NotNull final Object... parameters);
 
 }

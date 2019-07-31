@@ -6,6 +6,7 @@ import io.github.portlek.reflection.field.FieldOf;
 import io.github.portlek.reflection.method.MethodOf;
 import org.hamcrest.core.IsEqual;
 import org.hamcrest.core.IsInstanceOf;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.llorllale.cactoos.matchers.Assertion;
 import org.llorllale.cactoos.matchers.IsTrue;
@@ -32,7 +33,7 @@ class ClassOfTest {
         ).affirm();
     }
 
-    private class TestTestClass extends TestClass {
+    private static class TestTestClass extends TestClass {
 
         TestTestClass(String text, int age) {
             super(text, age);
@@ -225,7 +226,7 @@ class ClassOfTest {
     void getPrimitiveConstructor() {
         new Assertion<>(
             "Cannot find constructor!",
-            CLASS.getPrimitiveConstructor(this, String.class, Integer.class),
+            CLASS.getPrimitiveConstructor(String.class, Integer.class),
             new IsInstanceOf(ConstructorOf.class)
         ).affirm();
     }
@@ -234,7 +235,7 @@ class ClassOfTest {
     void findConstructor() {
         new Assertion<>(
             "Cannot find constructor!",
-            CLASS.findConstructor(3),
+            CLASS.findConstructor(2),
             new IsInstanceOf(ConstructorOf.class)
         ).affirm();
     }
@@ -243,13 +244,13 @@ class ClassOfTest {
     void getConstructor() {
         new Assertion<>(
             "Cannot find constructor!",
-            CLASS.getConstructor(this),
+            CLASS.getConstructor(),
             new IsInstanceOf(ConstructorOf.class)
         ).affirm();
 
         new Assertion<>(
             "Cannot find constructor!",
-            CLASS.getConstructor(this, String.class, int.class),
+            CLASS.getConstructor(String.class, int.class),
             new IsInstanceOf(ConstructorOf.class)
         ).affirm();
     }
@@ -283,12 +284,14 @@ class ClassOfTest {
         ).affirm();
     }
 
-    private class TestClass {
+    private static class TestClass {
 
+        @NotNull
         private final String text;
+
         private final int age;
 
-        TestClass(String text, int age) {
+        TestClass(@NotNull final String text, final int age) {
             this.text = text;
             this.age = age;
         }

@@ -3,7 +3,6 @@ package io.github.portlek.reflection.constructor;
 import io.github.portlek.reflection.LoggerOf;
 import io.github.portlek.reflection.RefConstructed;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
 import java.util.logging.Logger;
@@ -22,16 +21,16 @@ public class ConstructorOf implements RefConstructed {
         this.isAccessible = constructor.isAccessible();
     }
 
-    @Nullable
+    @NotNull
     @Override
-    public Object create(@NotNull final Object... parameters) {
+    public Object create(@NotNull final Object fallback, @NotNull final Object... parameters) {
         constructor.setAccessible(true);
         try {
             return constructor.newInstance(parameters);
         } catch (Exception e) {
             LOGGER.warning("create(Object[]) -> \n"
                 + e.getMessage());
-            return null;
+            return fallback;
         } finally {
             constructor.setAccessible(isAccessible);
         }

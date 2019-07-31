@@ -20,7 +20,7 @@ Simple and powerfull class/method/field/constructor manipulation!
 <dependency>
     <groupId>io.github.portlek</groupId>
     <artifactId>reflection</artifactId>
-    <version>2.8</version>
+    <version>2.9</version>
 </dependency>
 ```
 

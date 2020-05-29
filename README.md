@@ -1,6 +1,11 @@
 # Reflection
 
 Simple and powerfull class/method/field/constructor manipulation!
+[![idea](https://www.elegantobjects.org/intellij-idea.svg)](https://www.jetbrains.com/idea/)
+[![rultor](https://www.rultor.com/b/yegor256/rultor)](https://www.rultor.com/p/portlek/reflection)
+
+[![Build Status](https://travis-ci.com/portlek/reflection.svg?branch=master)](https://travis-ci.com/portlek/reflection)
+![Maven Central](https://img.shields.io/maven-central/v/io.github.portlek/master?label=version)
 
 ### Principles
 - No code in constructors
@@ -12,15 +17,10 @@ Simple and powerfull class/method/field/constructor manipulation!
 
 ### Using
 ```
-<repository>
-    <id>jcenter</id>
-    <url>https://jcenter.bintray.com/</url>
-</repository>
-
 <dependency>
     <groupId>io.github.portlek</groupId>
     <artifactId>reflection</artifactId>
-    <version>2.9</version>
+    <version>${version}</version>
 </dependency>
 ```
 

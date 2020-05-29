@@ -3,312 +3,218 @@ package io.github.portlek.reflection.clazz;
 import io.github.portlek.reflection.*;
 import io.github.portlek.reflection.constructor.ConstructorOf;
 import io.github.portlek.reflection.field.FieldOf;
-import io.github.portlek.reflection.mck.MckConstructed;
-import io.github.portlek.reflection.mck.MckField;
-import io.github.portlek.reflection.mck.MckMethod;
 import io.github.portlek.reflection.method.MethodOf;
 import io.github.portlek.reflection.parameterized.ParameterizedOf;
-import org.cactoos.iterable.Filtered;
-import org.cactoos.list.Joined;
-import org.cactoos.list.ListOf;
-import org.cactoos.scalar.FirstOf;
-import org.jetbrains.annotations.NotNull;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Logger;
+import java.util.*;
+import org.jetbrains.annotations.NotNull;
 
-public class ClassOf implements RefClass {
-
-    private static final Logger LOGGER = new LoggerOf(ClassOf.class);
+public final class ClassOf<T> implements RefClass<T> {
 
     @NotNull
-    private final Class<?> clazz;
+    private final Class<T> clazz;
 
-    public ClassOf(@NotNull final Class<?> clazz) {
+    public ClassOf(@NotNull final Class<T> clazz) {
         this.clazz = clazz;
     }
 
     public ClassOf(@NotNull final Object object) {
-        this(object.getClass());
+        this((Class<T>) object.getClass());
     }
 
-    public ClassOf(@NotNull final String className) throws ClassNotFoundException {
-        this(Class.forName(className));
+    public ClassOf(@NotNull final String classname) throws ClassNotFoundException {
+        this(Class.forName(classname));
     }
 
-    @NotNull
-    public Class<?> getRealClass() {
-        return clazz;
+    @Override
+    public @NotNull Class<T> getRealClass() {
+        return this.clazz;
     }
 
     @Override
     public boolean isInstance(@NotNull final Object object) {
-        return clazz.isInstance(object);
+        return this.clazz.isInstance(object);
     }
 
     @NotNull
     @Override
-    public RefMethod getPrimitiveMethod(@NotNull final String name, @NotNull final Object... types) {
-        return getMethod0( name, true, types);
+    public Optional<RefMethod> getPrimitiveMethod(@NotNull final String name, @NotNull final Object... types) {
+        return this.getMethod0(name, true, types);
     }
 
     @NotNull
     @Override
-    public RefMethod getMethod(@NotNull final String name, @NotNull final Object... types) {
-        return getMethod0( name, false, types);
+    public Optional<RefMethod> getMethod(@NotNull final String name, @NotNull final Object... types) {
+        return this.getMethod0(name, false, types);
+    }
+
+    @Override
+    @NotNull
+    public Optional<RefMethod> findPrimitiveMethodByParameter(@NotNull final Object... types) {
+        return this.findMethod0(true, types);
+    }
+
+    @Override
+    @NotNull
+    public Optional<RefMethod> findMethodByParameter(@NotNull final Object... types) {
+        return this.findMethod0(false, types);
     }
 
     @NotNull
-    private RefMethod getMethod0(@NotNull final String name, final boolean primitive, @NotNull final Object... types) {
-        final RefParameterized<RefMethod> parameter = new ParameterizedOf<>(primitive, types);
+    @Override
+    public Optional<RefMethod> findMethodByName(@NotNull final String... names) {
+        final Collection<Method> methods = new ArrayList<>(Arrays.asList(this.clazz.getMethods()));
+        methods.addAll(Arrays.asList(this.clazz.getDeclaredMethods()));
+        return methods.stream()
+            .filter(Objects::nonNull)
+            .filter(method ->
+                Arrays.stream(names)
+                    .findFirst()
+                    .map(name -> method.getName().equals(name))
+                    .orElse(false))
+            .findFirst()
+            .map(MethodOf::new);
+    }
 
+    @NotNull
+    @Override
+    public <X> Optional<RefMethod> findMethodByReturnType(@NotNull final RefClass<X> type) {
+        return this.findMethodByReturnType(type.getRealClass());
+    }
+
+    @NotNull
+    @Override
+    public Optional<RefMethod> findMethodByReturnType(@NotNull final Class<?> type) {
+        final Collection<Method> methods = new ArrayList<>(Arrays.asList(this.clazz.getMethods()));
+        methods.addAll(Arrays.asList(this.clazz.getDeclaredMethods()));
+        return methods.stream()
+            .filter(Objects::nonNull)
+            .filter(method -> type.equals(method.getReturnType()))
+            .findFirst()
+            .map(MethodOf::new);
+    }
+
+    @NotNull
+    @Override
+    public Optional<RefConstructed<T>> getPrimitiveConstructor(@NotNull final Object... types) {
+        return this.getConstructor0(true, types);
+    }
+
+    @NotNull
+    @Override
+    public Optional<RefConstructed<T>> getConstructor(@NotNull final Object... types) {
+        return this.getConstructor0(false, types);
+    }
+
+    @NotNull
+    @Override
+    public Optional<RefConstructed<T>> findConstructor(final int number) {
+        final Collection<Constructor<?>> constructors = new ArrayList<>(Arrays.asList(this.clazz.getConstructors()));
+        constructors.addAll(Arrays.asList(this.clazz.getDeclaredConstructors()));
+        return constructors.stream()
+            .filter(Objects::nonNull)
+            .filter(constructor -> constructor.getParameterTypes().length == number)
+            .findFirst()
+            .map(constructor -> new ConstructorOf<>((Constructor<T>) constructor));
+    }
+
+    @NotNull
+    @Override
+    public Optional<RefField> getField(@NotNull final String name) {
         try {
+            return Optional.of(new FieldOf(this.clazz.getField(name)));
+        } catch (final NoSuchFieldException ignored) {
             try {
-                return parameter.apply(classes ->
-                    new MethodOf(clazz.getMethod(name, classes)));
-            } catch (NoSuchMethodException ignored) {
-                return parameter.apply(classes ->
-                    new MethodOf(clazz.getDeclaredMethod(name, classes)));
+                return Optional.of(new FieldOf(this.clazz.getDeclaredField(name)));
+            } catch (final NoSuchFieldException e) {
+                return Optional.empty();
             }
-        } catch (Exception exception) {
-            LOGGER.warning("getMethod0(String, boolean, Object[]) -> \n"
-                + exception.toString());
-            return new MckMethod();
         }
     }
 
     @NotNull
     @Override
-    public RefConstructed getPrimitiveConstructor(@NotNull Object... types) {
-        return getConstructor0(true, types);
+    public <X> Optional<RefField> findField(@NotNull final RefClass<X> type) {
+        return this.findField(type.getRealClass());
     }
 
     @NotNull
     @Override
-    public RefConstructed getConstructor(@NotNull final Object... types) {
-        return getConstructor0(false, types);
+    public Optional<RefField> findField(final @NotNull Class<?> type) {
+        final Collection<Field> fields = new ArrayList<>(Arrays.asList(this.clazz.getFields()));
+        fields.addAll(Arrays.asList(this.clazz.getDeclaredFields()));
+        return fields.stream()
+            .filter(Objects::nonNull)
+            .filter(field -> type.equals(field.getType()))
+            .findFirst()
+            .map(FieldOf::new);
     }
 
     @NotNull
-    private RefConstructed getConstructor0(final boolean primitive, @NotNull Object... types) {
-        final RefParameterized<RefConstructed> parameter = new ParameterizedOf<>(primitive, types);
-
-        try {
+    private Optional<RefMethod> getMethod0(@NotNull final String name, final boolean primitive,
+                                           @NotNull final Object... types) {
+        final RefParameterized<RefMethod> parameter = new ParameterizedOf<>(NoSuchMethodException::new, primitive,
+            types);
+        return parameter.apply(classes -> {
             try {
-                return parameter.apply(classes ->
-                    new ConstructorOf(clazz.getConstructor(classes)));
-            } catch (Exception ignored) {
-                return parameter.apply(classes ->
-                    new ConstructorOf(clazz.getDeclaredConstructor(classes)));
-            }
-        } catch (Exception exception) {
-            LOGGER.warning("getConstructor0(boolean, Object[]) -> \n"
-                + exception.toString());
-            return new MckConstructed();
-        }
-    }
-
-    @NotNull
-    public RefMethod findPrimitiveMethodByParameter(@NotNull final Object... types) {
-        return findMethod0(true, types);
-    }
-
-    @NotNull
-    public RefMethod findMethodByParameter(@NotNull final Object... types) {
-        return findMethod0(false, types);
-    }
-
-    @NotNull
-    private RefMethod findMethod0(final boolean primitive, @NotNull final Object... types) {
-        final RefParameterized<RefMethod> parameter = new ParameterizedOf<>(primitive, types);
-
-        final List<Method> methods = new ListOf<>(
-            new Joined<>(
-                new ListOf<>(
-                    clazz.getMethods()
-                ),
-                new ListOf<Method>(
-                    clazz.getDeclaredMethods()
-                )
-            )
-        );
-
-        final List<Class> classList = new ArrayList<>();
-
-        try {
-            parameter.apply(classes -> {
-                classList.addAll(new ListOf<>(classes));
-                return new MckMethod();
-            });
-        } catch (Exception ignore) {
-        }
-
-        findMethod:
-        for (Method method : methods) {
-            final Class[] methodTypes = method.getParameterTypes();
-
-            if (methodTypes.length != classList.size())
-                continue;
-
-            for (int i = 0; i < classList.size(); i++)
-                if (!Arrays.equals(classList.toArray(new Class[0]), methodTypes))
-                    continue findMethod;
-                return new MethodOf(method);
-        }
-
-        LOGGER.warning("findMethod0(boolean, Object[]) -> \n"
-            + new NoSuchMethodException().toString());
-        return new MckMethod();
-    }
-
-    @NotNull
-    @Override
-    public RefMethod findMethodByName(@NotNull final String... names) {
-        try {
-            return new MethodOf(
-                new FirstOf<>(
-                    input -> true,
-                    new Filtered<>(
-                        method -> {
-                            if (method == null)
-                                return false;
-
-                            for (String name : names)
-                                return method.getName().equals(name);
-
-                            return false;
-                        },
-                        new Joined<>(
-                            new ListOf<>(
-                                clazz.getMethods()
-                            ),
-                            new ListOf<Method>(
-                                clazz.getDeclaredMethods()
-                            )
-                        )
-                    ),
-                    () -> {
-                        LOGGER.warning("findMethodByName(String[]) -> \n"
-                            + new NoSuchMethodException().toString());
-                        return null;
+                return Optional.of(new MethodOf(this.clazz.getMethod(name, classes)));
+            } catch (final NoSuchMethodException e) {
+                return parameter.apply(declaredclasses -> {
+                    try {
+                        return Optional.of(new MethodOf(this.clazz.getDeclaredMethod(name, declaredclasses)));
+                    } catch (final NoSuchMethodException noSuchMethodException) {
+                        return Optional.empty();
                     }
-                ).value()
-            );
-        } catch (Exception exception) {
-            LOGGER.warning("findMethodByName(String[]) -> \n"
-                + exception.toString());
-            return new MckMethod();
-        }
-    }
-
-    @NotNull
-    @Override
-    public RefMethod findMethodByReturnType(@NotNull final RefClass type) {
-        return findMethodByReturnType(type.getRealClass());
-    }
-
-    @NotNull
-    @Override
-    public RefMethod findMethodByReturnType(@NotNull final Class type) {
-        try {
-            return new MethodOf(
-                new FirstOf<>(
-                    method -> method != null && type.equals(method.getReturnType()),
-                    new Joined<>(
-                        new ListOf<>(
-                            clazz.getMethods()
-                        ),
-                        new ListOf<Method>(
-                            clazz.getDeclaredMethods()
-                        )
-                    ),
-                    null
-                ).value()
-            );
-        } catch (Exception exception) {
-            LOGGER.warning("findMethodByReturnType(Class) -> \n"
-                + exception.toString());
-            return new MckMethod();
-        }
-    }
-
-    @NotNull
-    @Override
-    public RefConstructed findConstructor(final int number) {
-        try {
-            return new ConstructorOf(
-                new FirstOf<>(
-                    constructor ->
-                        constructor != null && constructor.getParameterTypes().length == number,
-                    new Joined<>(
-                        new ListOf<>(
-                            clazz.getConstructors()
-                        ),
-                        new ListOf<Constructor>(
-                            clazz.getDeclaredConstructors()
-                        )
-                    ),
-                    null
-                ).value()
-            );
-        } catch (Exception exception) {
-            LOGGER.warning("findConstructor(int) -> \n"
-                + exception.toString());
-            return new MckConstructed();
-        }
-    }
-
-    @NotNull
-    @Override
-    public RefField getField(@NotNull final String name) {
-        try {
-            try {
-                return new FieldOf(clazz.getField(name));
-            } catch (NoSuchFieldException ignored) {
-                return new FieldOf(clazz.getDeclaredField(name));
+                });
             }
-        } catch (Exception exception) {
-            LOGGER.warning("getField(String) -> \n"
-                + exception.toString());
-            return new MckField();
-        }
+        });
     }
 
     @NotNull
-    @Override
-    public RefField findField(@NotNull final RefClass type) {
-        return findField(type.getRealClass());
+    private Optional<RefConstructed<T>> getConstructor0(final boolean primitive, @NotNull final Object... types) {
+        final RefParameterized<RefConstructed<T>> parameter = new ParameterizedOf<>(NoSuchMethodException::new,
+            primitive, types);
+        return parameter.apply(classes -> {
+            try {
+                return Optional.of(new ConstructorOf<>(this.clazz.getConstructor(classes)));
+            } catch (final NoSuchMethodException e) {
+                return parameter.apply(declaredclasses -> {
+                    try {
+                        return Optional.of(new ConstructorOf<>(this.clazz.getDeclaredConstructor(declaredclasses)));
+                    } catch (final NoSuchMethodException noSuchMethodException) {
+                        return Optional.empty();
+                    }
+                });
+            }
+        });
     }
 
     @NotNull
-    @Override
-    public RefField findField(@NotNull final Class type) {
-        try {
-            return new FieldOf(
-                new FirstOf<>(
-                    field ->
-                        field != null && type.equals(field.getType()),
-                    new Joined<>(
-                        new ListOf<>(
-                            clazz.getFields()
-                        ),
-                        new ListOf<Field>(
-                            clazz.getDeclaredFields()
-                        )
-                    ),
-                    null
-                ).value()
-            );
-        } catch (Exception exception) {
-            LOGGER.warning("findField(Class) -> \n"
-                + exception.toString());
-            return new MckField();
+    private Optional<RefMethod> findMethod0(final boolean primitive, @NotNull final Object... types) {
+        final RefParameterized<RefMethod> parameter = new ParameterizedOf<>(Throwable::new, primitive, types);
+        final Collection<Method> methods = new ArrayList<>(Arrays.asList(this.clazz.getMethods()));
+        methods.addAll(Arrays.asList(this.clazz.getDeclaredMethods()));
+        final Collection<Class<?>> classlist = new ArrayList<>();
+        parameter.apply(classes -> {
+            classlist.addAll(Arrays.asList(classes));
+            return Optional.empty();
+        });
+        findMethod:
+        for (final Method method : methods) {
+            final Class<?>[] methodtypes = method.getParameterTypes();
+            if (methodtypes.length != classlist.size()) {
+                continue;
+            }
+            for (int index = 0; index < classlist.size(); index++) {
+                if (!Arrays.equals(classlist.toArray(new Class<?>[0]), methodtypes)) {
+                    continue findMethod;
+                }
+            }
+            return Optional.of(new MethodOf(method));
         }
+        return Optional.empty();
     }
 
 }

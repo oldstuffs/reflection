@@ -1,41 +1,41 @@
 package io.github.portlek.reflection.parameterized;
 
-import org.cactoos.Scalar;
+import java.util.function.Supplier;
 import org.jetbrains.annotations.NotNull;
 
-public class Primitive implements Scalar<Class> {
+public final class Primitive<T> implements Supplier<Class<T>> {
 
     @NotNull
-    private final Class clazz;
+    private final Class<T> clazz;
 
-    public Primitive(@NotNull final Class clazz) {
+    public Primitive(@NotNull final Class<T> clazz) {
         this.clazz = clazz;
     }
 
     @NotNull
     @Override
-    public Class value() {
-        switch (clazz.getName()) {
+    public Class<T> get() {
+        switch (this.clazz.getName()) {
             case "java.lang.Integer":
-                return Integer.TYPE;
+                return (Class<T>) Integer.TYPE;
             case "java.lang.Float":
-                return Float.TYPE;
+                return (Class<T>) Float.TYPE;
             case "java.lang.Short":
-                return Short.TYPE;
+                return (Class<T>) Short.TYPE;
             case "java.lang.Character":
-                return Character.TYPE;
+                return (Class<T>) Character.TYPE;
             case "java.lang.Boolean":
-                return Boolean.TYPE;
+                return (Class<T>) Boolean.TYPE;
             case "java.lang.Byte":
-                return Byte.TYPE;
+                return (Class<T>) Byte.TYPE;
             case "java.lang.Long":
-                return Long.TYPE;
+                return (Class<T>) Long.TYPE;
             case "java.lang.Void":
-                return Void.TYPE;
+                return (Class<T>) Void.TYPE;
             case "java.lang.Double":
-                return Double.TYPE;
+                return (Class<T>) Double.TYPE;
             default:
-                return clazz;
+                return this.clazz;
         }
     }
 

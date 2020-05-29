@@ -1,84 +1,111 @@
 package io.github.portlek.reflection.method;
 
-import io.github.portlek.reflection.LoggerOf;
 import io.github.portlek.reflection.RefClass;
+import io.github.portlek.reflection.RefMethodExecuted;
 import io.github.portlek.reflection.clazz.ClassOf;
-import io.github.portlek.reflection.mck.MckMethod;
 import org.hamcrest.core.IsEqual;
 import org.hamcrest.core.IsInstanceOf;
 import org.hamcrest.core.IsNot;
 import org.junit.jupiter.api.Test;
 import org.llorllale.cactoos.matchers.Assertion;
+import org.llorllale.cactoos.matchers.Throws;
 
-import java.util.logging.Logger;
+final class MethodOfTest {
 
-class MethodOfTest {
+    private final MethodOfTest.MethodTest METHOD_TEST = new MethodOfTest.MethodTest();
 
-    private static final Logger LOGGER = new LoggerOf(
-        MethodOfTest.class,
-        MethodTest.class
-    );
-
-    private final MethodTest METHOD_TEST = new MethodTest();
-    private final RefClass CLASS = new ClassOf(METHOD_TEST);
+    private final RefClass<MethodOfTest.MethodTest> CLASS = new ClassOf<>(this.METHOD_TEST);
 
     @Test
-    void of() {
+    void of() throws Throwable {
         new Assertion<>(
             "Couldn't applied method!",
-            CLASS.getMethod("callVoidMethod").of(METHOD_TEST),
-            new IsNot<>(
-                new IsInstanceOf(MckMethod.MckMethodExecuted.class)
-            )
+            this.CLASS.getMethod("callVoidMethod")
+                .orElseThrow(() ->
+                    new NoSuchFieldException("Cannot find method!"))
+                .of(this.METHOD_TEST),
+            new IsInstanceOf(RefMethodExecuted.class)
         ).affirm();
 
         new Assertion<>(
             "Couldn't applied method!",
-            CLASS.getMethod("callReturnParameterMethod", 21).of(METHOD_TEST),
-            new IsNot<>(
-                new IsInstanceOf(MckMethod.MckMethodExecuted.class)
-            )
+            this.CLASS.getMethod("callReturnParameterMethod", 21)
+                .orElseThrow(() ->
+                    new NoSuchFieldException("Cannot find method!"))
+                .of(this.METHOD_TEST),
+            new IsInstanceOf(RefMethodExecuted.class)
         ).affirm();
 
         new Assertion<>(
             "Couldn't applied method!",
-            CLASS.getPrimitiveMethod("callPrimitiveReturnParameterMethod", 21).of(METHOD_TEST),
-            new IsNot<>(
-                new IsInstanceOf(MckMethod.MckMethodExecuted.class)
-            )
+            this.CLASS.getPrimitiveMethod("callPrimitiveReturnParameterMethod", 21)
+                .orElseThrow(() ->
+                    new NoSuchFieldException("Cannot find method!"))
+                .of(this.METHOD_TEST),
+            new IsInstanceOf(RefMethodExecuted.class)
         ).affirm();
     }
 
     @Test
-    void call() {
-        final String fallback = "null";
+    void call() throws NoSuchFieldException {
+
         new Assertion<>(
             "Couldn't call method",
-            CLASS.getMethod("callVoidMethod").of(METHOD_TEST).call(fallback),
-            new IsEqual<>(fallback)
+            () -> this.CLASS.getMethod("callVoidMethod")
+                .orElseThrow(() ->
+                    new NoSuchMethodException("Cannot find method!"))
+                .of(this.METHOD_TEST)
+                .call()
+                .orElseThrow(() ->
+                    new NoSuchMethodException("Couldn't call method!")),
+            new IsNot<>(new Throws<>(RuntimeException.class))
         ).affirm();
 
         new Assertion<>(
             "Couldn't call method",
-            CLASS.getMethod("callReturnMethod").of(METHOD_TEST).call(fallback),
+            this.CLASS.getMethod("callReturnMethod")
+                .orElseThrow(() ->
+                    new NoSuchFieldException("Cannot find method!"))
+                .of(this.METHOD_TEST)
+                .call()
+                .orElseThrow(() ->
+                    new NoSuchFieldException("Cannot find method!")),
             new IsEqual<>("Called Return Method!")
         ).affirm();
 
         new Assertion<>(
             "Couldn't call method",
-            CLASS.getMethod("callVoidParameterMethod", String.class).of(METHOD_TEST).call(fallback,"Hasan"),
-            new IsEqual<>(fallback)
+            () -> this.CLASS.getMethod("callVoidParameterMethod", String.class)
+                .orElseThrow(() ->
+                    new NoSuchFieldException("Cannot find method!"))
+                .of(this.METHOD_TEST)
+                .call("Hasan")
+                .orElseThrow(() ->
+                    new NoSuchFieldException("Cannot find method!")),
+            new IsNot<>(new Throws<>(RuntimeException.class))
         ).affirm();
 
         new Assertion<>(
             "Couldn't call method",
-            CLASS.getMethod("callReturnParameterMethod", 21).of(METHOD_TEST).call(fallback, 21),
+            this.CLASS.getMethod("callReturnParameterMethod", 21)
+                .orElseThrow(() ->
+                    new NoSuchFieldException("Cannot find method!"))
+                .of(this.METHOD_TEST)
+                .call(21)
+                .orElseThrow(() ->
+                    new NoSuchFieldException("Cannot find method!")),
             new IsEqual<>("Called Return Method with 21")
         ).affirm();
 
         new Assertion<>(
             "Couldn't call method",
-            CLASS.getPrimitiveMethod("callPrimitiveReturnParameterMethod", 21).of(METHOD_TEST).call(fallback, 21),
+            this.CLASS.getPrimitiveMethod("callPrimitiveReturnParameterMethod", 21)
+                .orElseThrow(() ->
+                    new NoSuchFieldException("Cannot find method!"))
+                .of(this.METHOD_TEST)
+                .call(21)
+                .orElseThrow(() ->
+                    new NoSuchFieldException("Cannot find method!")),
             new IsEqual<>("Called Return Method with 21")
         ).affirm();
     }
@@ -86,22 +113,22 @@ class MethodOfTest {
     private static final class MethodTest {
 
         private void callVoidMethod() {
-            LOGGER.info("callVoidMethod -> Test Passed!");
+
         }
 
         private String callReturnMethod() {
             return "Called Return Method!";
         }
 
-        private void callVoidParameterMethod(String text) {
-            LOGGER.info("callVoidParameterMethod -> Test Passed with " + text);
+        private void callVoidParameterMethod(final String text) {
+
         }
 
-        private String callReturnParameterMethod(Integer age) {
+        private String callReturnParameterMethod(final Integer age) {
             return "Called Return Method with " + age;
         }
 
-        private String callPrimitiveReturnParameterMethod(int age) {
+        private String callPrimitiveReturnParameterMethod(final int age) {
             return "Called Return Method with " + age;
         }
 

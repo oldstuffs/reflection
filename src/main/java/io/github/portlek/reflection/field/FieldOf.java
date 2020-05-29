@@ -1,22 +1,12 @@
 package io.github.portlek.reflection.field;
 
-import io.github.portlek.reflection.LoggerOf;
 import io.github.portlek.reflection.RefField;
 import io.github.portlek.reflection.RefFieldExecuted;
+import java.lang.reflect.Field;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Field;
-import java.util.logging.Logger;
-
-public class FieldOf implements RefField {
-
-    private static final Logger LOGGER_FIELD_OF = new LoggerOf(
-        FieldOf.class
-    );
-    private static final Logger LOGGER = new LoggerOf(
-        FieldOf.class,
-        FieldExecuted.class
-    );
+public final class FieldOf implements RefField {
 
     @NotNull
     private final Field field;
@@ -28,41 +18,38 @@ public class FieldOf implements RefField {
         this.isAccessible = field.isAccessible();
     }
 
-    @Override
-    public void set(@NotNull Object value) {
-        field.setAccessible(true);
-        try {
-            field.set(null, value);
-        } catch (Exception exception) {
-            LOGGER_FIELD_OF.warning("set(Object) -> \n"
-                + exception.getMessage());
-        } finally {
-            field.setAccessible(isAccessible);
-        }
-    }
-
-    @NotNull
-    @Override
-    public Object get(@NotNull final Object fallback) {
-        field.setAccessible(true);
-        try {
-            return field.get(null);
-        } catch (Exception exception) {
-            LOGGER_FIELD_OF.warning("get() -> \n"
-                + exception.getMessage());
-            return fallback;
-        } finally {
-            field.setAccessible(isAccessible);
-        }
-    }
-
     @NotNull
     @Override
     public RefFieldExecuted of(@NotNull final Object object) {
-        return new FieldExecuted(object);
+        return new FieldOf.FieldExecuted(object);
     }
 
-    private class FieldExecuted implements RefFieldExecuted {
+    @Override
+    public void set(@NotNull final Object value) {
+        this.field.setAccessible(true);
+        try {
+            this.field.set(null, value);
+        } catch (final IllegalAccessException e) {
+            e.printStackTrace();
+        } finally {
+            this.field.setAccessible(this.isAccessible);
+        }
+    }
+
+    @NotNull
+    @Override
+    public Optional<Object> get() {
+        this.field.setAccessible(true);
+        try {
+            return Optional.ofNullable(this.field.get(null));
+        } catch (final IllegalAccessException e) {
+            return Optional.empty();
+        } finally {
+            this.field.setAccessible(this.isAccessible);
+        }
+    }
+
+    private final class FieldExecuted implements RefFieldExecuted {
 
         @NotNull
         private final Object object;
@@ -72,30 +59,27 @@ public class FieldOf implements RefField {
         }
 
         @Override
-        public void set(@NotNull Object value) {
-            field.setAccessible(true);
+        public void set(@NotNull final Object value) {
+            FieldOf.this.field.setAccessible(true);
             try {
-                field.set(object, value);
-            } catch (Exception exception) {
-                LOGGER.warning("set(Object) -> \n"
-                    + exception.getMessage());
+                FieldOf.this.field.set(this.object, value);
+            } catch (final IllegalAccessException e) {
+                e.printStackTrace();
             } finally {
-                field.setAccessible(isAccessible);
+                FieldOf.this.field.setAccessible(FieldOf.this.isAccessible);
             }
         }
 
         @NotNull
         @Override
-        public Object get(@NotNull final Object fallback) {
-            field.setAccessible(true);
+        public Optional<Object> get() {
+            FieldOf.this.field.setAccessible(true);
             try {
-                return field.get(object);
-            } catch (Exception exception) {
-                LOGGER.warning("get() -> \n"
-                    + exception.getMessage());
-                return fallback;
+                return Optional.ofNullable(FieldOf.this.field.get(this.object));
+            } catch (final IllegalAccessException e) {
+                return Optional.empty();
             } finally {
-                field.setAccessible(isAccessible);
+                FieldOf.this.field.setAccessible(FieldOf.this.isAccessible);
             }
         }
 

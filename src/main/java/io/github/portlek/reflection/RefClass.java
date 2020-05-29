@@ -1,8 +1,9 @@
 package io.github.portlek.reflection;
 
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
-public interface RefClass {
+public interface RefClass<T> {
 
     /**
      * get passed class
@@ -10,7 +11,7 @@ public interface RefClass {
      * @return class
      */
     @NotNull
-    Class<?> getRealClass();
+    Class<T> getRealClass();
 
     /**
      * see {@link Class#isInstance(Object)}
@@ -18,27 +19,27 @@ public interface RefClass {
      * @param object the object to check
      * @return true if object is an instance of this class
      */
-    boolean isInstance(@NotNull final Object object);
+    boolean isInstance(@NotNull Object object);
 
     /**
      * get existing method by name and types
      *
-     * @param name  name
+     * @param name name
      * @param types method parameters. can be Class or RefClass
      * @return RefMethod object
      */
     @NotNull
-    RefMethod getPrimitiveMethod(@NotNull final String name, @NotNull final Object... types);
+    Optional<RefMethod> getPrimitiveMethod(@NotNull String name, @NotNull Object... types);
 
     /**
      * get existing method by name and types
      *
-     * @param name  name
+     * @param name name
      * @param types method parameters. can be Class or RefClass
      * @return RefMethod object
      */
     @NotNull
-    RefMethod getMethod(@NotNull final String name, @NotNull final Object... types);
+    Optional<RefMethod> getMethod(@NotNull String name, @NotNull Object... types);
 
     /**
      * find method by type parameters
@@ -47,7 +48,7 @@ public interface RefClass {
      * @return RefMethod object
      */
     @NotNull
-    RefMethod findPrimitiveMethodByParameter(@NotNull final Object... types);
+    Optional<RefMethod> findPrimitiveMethodByParameter(@NotNull Object... types);
 
     /**
      * find method by type parameters
@@ -56,7 +57,7 @@ public interface RefClass {
      * @return RefMethod object
      */
     @NotNull
-    RefMethod findMethodByParameter(@NotNull final Object... types);
+    Optional<RefMethod> findMethodByParameter(@NotNull Object... types);
 
     /**
      * find method by name
@@ -65,7 +66,7 @@ public interface RefClass {
      * @return RefMethod object
      */
     @NotNull
-    RefMethod findMethodByName(@NotNull final String... names);
+    Optional<RefMethod> findMethodByName(@NotNull String... names);
 
     /**
      * find method by return value
@@ -74,7 +75,7 @@ public interface RefClass {
      * @return RefMethod
      */
     @NotNull
-    RefMethod findMethodByReturnType(@NotNull final RefClass type);
+    <X> Optional<RefMethod> findMethodByReturnType(@NotNull RefClass<X> type);
 
     /**
      * find method by return value
@@ -83,7 +84,7 @@ public interface RefClass {
      * @return RefMethod
      */
     @NotNull
-    RefMethod findMethodByReturnType(@NotNull final Class type);
+    Optional<RefMethod> findMethodByReturnType(@NotNull Class<?> type);
 
     /**
      * get existing constructor by types
@@ -92,7 +93,7 @@ public interface RefClass {
      * @return RefMethod object
      */
     @NotNull
-    RefConstructed getPrimitiveConstructor(@NotNull final Object... types);
+    Optional<RefConstructed<T>> getPrimitiveConstructor(@NotNull Object... types);
 
     /**
      * get existing constructor by types
@@ -101,7 +102,7 @@ public interface RefClass {
      * @return RefMethod object
      */
     @NotNull
-    RefConstructed getConstructor(@NotNull final Object... types);
+    Optional<RefConstructed<T>> getConstructor(@NotNull Object... types);
 
     /**
      * find constructor by number of arguments
@@ -110,7 +111,7 @@ public interface RefClass {
      * @return RefConstructor
      */
     @NotNull
-    RefConstructed findConstructor(final int number);
+    Optional<RefConstructed<T>> findConstructor(int number);
 
     /**
      * get field by name
@@ -119,7 +120,7 @@ public interface RefClass {
      * @return RefField
      */
     @NotNull
-    RefField getField(@NotNull final String name);
+    Optional<RefField> getField(@NotNull String name);
 
     /**
      * find field by type
@@ -128,7 +129,7 @@ public interface RefClass {
      * @return RefField
      */
     @NotNull
-    RefField findField(@NotNull final RefClass type);
+    <X> Optional<RefField> findField(@NotNull RefClass<X> type);
 
     /**
      * find field by type
@@ -137,6 +138,6 @@ public interface RefClass {
      * @return RefField
      */
     @NotNull
-    RefField findField(@NotNull final Class type);
+    Optional<RefField> findField(@NotNull Class<?> type);
 
 }

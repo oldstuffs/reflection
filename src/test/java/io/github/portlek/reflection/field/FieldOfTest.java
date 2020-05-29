@@ -6,35 +6,57 @@ import org.hamcrest.core.IsEqual;
 import org.junit.jupiter.api.Test;
 import org.llorllale.cactoos.matchers.Assertion;
 
-class FieldOfTest {
+final class FieldOfTest {
 
-    private final static Object FIELD_TEST = new FieldTest();
+    private static final Object FIELD_TEST = new FieldOfTest.FieldTest();
 
-    private final RefClass refClass = new ClassOf(FieldTest.class);
+    private final RefClass<FieldOfTest.FieldTest> refClass = new ClassOf<>(FieldOfTest.FieldTest.class);
 
     @Test
-    void get() {
+    void get() throws Throwable {
         new Assertion<>(
             "Couldn't get the field",
-            refClass.getField("text").of(FIELD_TEST).get("null"),
+            this.refClass.getField("text")
+                .orElseThrow(() ->
+                    new NoSuchFieldException("Cannot find field!"))
+                .of(FieldOfTest.FIELD_TEST)
+                .get()
+                .orElseThrow(() ->
+                    new NoSuchFieldException("Cannot find field!")),
             new IsEqual<>("Test Text")
         ).affirm();
 
         new Assertion<>(
             "Couldn't get the field",
-            refClass.getField("TEXT").of(FIELD_TEST).get("null"),
+            this.refClass.getField("TEXT")
+                .orElseThrow(() ->
+                    new NoSuchFieldException("Cannot find field!"))
+                .of(FieldOfTest.FIELD_TEST)
+                .get()
+                .orElseThrow(() ->
+                    new NoSuchFieldException("Cannot find field!")),
             new IsEqual<>("Static Test Text")
         ).affirm();
     }
 
     @Test
-    void set() {
-        refClass.getField("text").of(FIELD_TEST).set("Edited Test Text");
+    void set() throws NoSuchFieldException {
+        this.refClass.getField("text")
+            .orElseThrow(() ->
+                new NoSuchFieldException("Cannot find field!"))
+            .of(FieldOfTest.FIELD_TEST)
+            .set("Edited Test Text");
 
         new Assertion<>(
 
             "Couldn't set the field!",
-            refClass.getField("text").of(FIELD_TEST).get("null"),
+            this.refClass.getField("text")
+                .orElseThrow(() ->
+                    new NoSuchFieldException("Cannot find field!"))
+                .of(FieldOfTest.FIELD_TEST)
+                .get()
+                .orElseThrow(() ->
+                    new NoSuchFieldException("Cannot find field!")),
             new IsEqual<>("Edited Test Text")
         ).affirm();
     }
@@ -42,6 +64,7 @@ class FieldOfTest {
     private static final class FieldTest {
 
         private static final String TEXT = "Static Test Text";
+
         private final String text = "Test Text";
 
     }

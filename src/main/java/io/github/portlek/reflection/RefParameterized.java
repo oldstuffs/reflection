@@ -1,18 +1,8 @@
 package io.github.portlek.reflection;
 
-import org.cactoos.Func;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
+import java.util.function.Function;
 
-/**
- * @param <T> result type
- */
-public interface RefParameterized<T> {
-
-    /**
-     * Executes your command
-     *
-     * @param func a function of Class[]
-     */
-    T apply(@NotNull final Func<Class[], T> func) throws Exception;
+public interface RefParameterized<T> extends Function<Function<Class<?>[], Optional<T>>, Optional<T>> {
 
 }

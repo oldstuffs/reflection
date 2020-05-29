@@ -1,5 +1,6 @@
 package io.github.portlek.reflection;
 
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 public interface RefFieldExecuted {
@@ -14,10 +15,9 @@ public interface RefFieldExecuted {
     /**
      * Gets field
      *
-     * @param fallback for null-safety
      * @return field value with fallback
      */
     @NotNull
-    Object get(@NotNull final Object fallback);
+    Optional<Object> get();
 
 }

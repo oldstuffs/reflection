@@ -11,10 +11,10 @@ Simple and powerfull class/method/field/constructor manipulation!
 ### Principles
 - No code in constructors
 - No mutable objects
-- No public static methods
+- No static
 - No public methods without contract (interface)
 - No implementation inheritance
-- No nulls (mock object)
+- No nulls (Optional)
 
 ### Using
 ```gradle
@@ -30,17 +30,12 @@ implementation("io.github.portlek:reflection:${version}")
 
 ```java
 public void clearKnownCommands() {
-    final RefClass refClass = new ClassOf(Bukkit.getServer());
-    final RefMethod refMethod = refClass.findMethodByName("getCommandMap");
-
-    final Object commandMap = refMethod.of(Bukkit.getServer()).call(/*Fallback Object**/new MckObject());
-
-    if (commandMap instanceof MckObject)
-        return;
-
-    final RefClass simpleCommandClass = new ClassOf(commandMap);
-    final RefMethod clearCommandsMethod = simpleCommandClass.findMethodByName("clearCommands");
-    
-    clearCommandsMethod.of(commandMap).call(/*Fallback Object**/new MckObject());
+  new ClassOf<>(Bukkit.getServer())
+    .findMethodByName("getCommandMap")
+    .flatMap(refMethod -> refMethod.of(Bukkit.getServer()).call().map(o -> o instanceof CommandMap))
+    .ifPresent(commandMap -> new ClassOf<>(commandMap)
+      .findMethodByName("clearCommands")
+      .ifPresent(clearCommandsMethod ->
+          clearCommandsMethod.of(commandMap).call()));
 }
 ```

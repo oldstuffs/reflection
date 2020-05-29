@@ -16,7 +16,10 @@ Simple and powerfull class/method/field/constructor manipulation!
 - No nulls (mock object)
 
 ### Using
+```gradle
+implementation("io.github.portlek:reflection:${version}")
 ```
+```xml
 <dependency>
     <groupId>io.github.portlek</groupId>
     <artifactId>reflection</artifactId>

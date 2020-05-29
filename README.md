@@ -6,7 +6,7 @@ Simple and powerfull class/method/field/constructor manipulation!
 [![rultor](https://www.rultor.com/b/yegor256/rultor)](https://www.rultor.com/p/portlek/reflection)
 
 [![Build Status](https://travis-ci.com/portlek/reflection.svg?branch=master)](https://travis-ci.com/portlek/reflection)
-![Maven Central](https://img.shields.io/maven-central/v/io.github.portlek/master?label=version)
+![Maven Central](https://img.shields.io/maven-central/v/io.github.portlek/reflection?label=version)
 
 ### Principles
 - No code in constructors

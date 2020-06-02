@@ -17,16 +17,33 @@ Simple and powerfull class/method/field/constructor manipulation!
 - No nulls (Optional)
 
 ## Setup
+<details>
+<summary>Gradle</summary>
+
 ```gradle
-implementation("io.github.portlek:reflection:${version}")
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("io.github.portlek:reflection:${version}")
+}
 ```
+</details>
+
+<details>
+<summary>Maven</summary>
+
 ```xml
-<dependency>
-    <groupId>io.github.portlek</groupId>
-    <artifactId>reflection</artifactId>
-    <version>${version}</version>
-</dependency>
+<dependencies>
+    <dependency>
+        <groupId>io.github.portlek</groupId>
+        <artifactId>reflection</artifactId>
+        <version>${version}</version>
+    </dependency>
+</dependencies>
 ```
+</details>
 
 ## Usage
 ```java

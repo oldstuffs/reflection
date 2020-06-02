@@ -8,7 +8,7 @@ Simple and powerfull class/method/field/constructor manipulation!
 [![Build Status](https://travis-ci.com/portlek/reflection.svg?branch=master)](https://travis-ci.com/portlek/reflection)
 ![Maven Central](https://img.shields.io/maven-central/v/io.github.portlek/reflection?label=version)
 
-### Principles
+## Principles
 - No code in constructors
 - No mutable objects
 - No static
@@ -16,7 +16,7 @@ Simple and powerfull class/method/field/constructor manipulation!
 - No implementation inheritance
 - No nulls (Optional)
 
-### Using
+## Usage
 ```gradle
 implementation("io.github.portlek:reflection:${version}")
 ```
@@ -28,6 +28,7 @@ implementation("io.github.portlek:reflection:${version}")
 </dependency>
 ```
 
+## Using
 ```java
 public void clearKnownCommands() {
   new ClassOf<>(Bukkit.getServer())

@@ -16,7 +16,7 @@ Simple and powerfull class/method/field/constructor manipulation!
 - No implementation inheritance
 - No nulls (Optional)
 
-## Usage
+## Setup
 ```gradle
 implementation("io.github.portlek:reflection:${version}")
 ```
@@ -28,7 +28,7 @@ implementation("io.github.portlek:reflection:${version}")
 </dependency>
 ```
 
-## Using
+## Usage
 ```java
 public void clearKnownCommands() {
   new ClassOf<>(Bukkit.getServer())

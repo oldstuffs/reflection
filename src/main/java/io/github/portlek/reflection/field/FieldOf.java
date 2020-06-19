@@ -24,6 +24,12 @@ public final class FieldOf implements RefField {
 
     @NotNull
     @Override
+    public String name() {
+        return this.field.getName();
+    }
+
+    @NotNull
+    @Override
     public RefFieldExecuted of(@Nullable final Object object) {
         return new FieldOf.FieldExecuted(this.field, object);
     }

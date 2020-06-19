@@ -16,7 +16,7 @@ final class FieldOfTest {
     void get() throws Throwable {
         new Assertion<>(
             "Couldn't get the field",
-            this.refClass.getField("text")
+            this.refClass.field("text")
                 .orElseThrow(() ->
                     new NoSuchFieldException("Cannot find field!"))
                 .of(FieldOfTest.FIELD_TEST)
@@ -28,7 +28,7 @@ final class FieldOfTest {
 
         new Assertion<>(
             "Couldn't get the field",
-            this.refClass.getField("TEXT")
+            this.refClass.field("TEXT")
                 .orElseThrow(() ->
                     new NoSuchFieldException("Cannot find field!"))
                 .of(FieldOfTest.FIELD_TEST)
@@ -41,7 +41,7 @@ final class FieldOfTest {
 
     @Test
     void set() throws NoSuchFieldException {
-        this.refClass.getField("text")
+        this.refClass.field("text")
             .orElseThrow(() ->
                 new NoSuchFieldException("Cannot find field!"))
             .of(FieldOfTest.FIELD_TEST)
@@ -50,7 +50,7 @@ final class FieldOfTest {
         new Assertion<>(
 
             "Couldn't set the field!",
-            this.refClass.getField("text")
+            this.refClass.field("text")
                 .orElseThrow(() ->
                     new NoSuchFieldException("Cannot find field!"))
                 .of(FieldOfTest.FIELD_TEST)

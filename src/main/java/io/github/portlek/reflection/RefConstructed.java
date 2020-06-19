@@ -3,7 +3,7 @@ package io.github.portlek.reflection;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
-public interface RefConstructed<T> {
+public interface RefConstructed<T> extends RefAnnotated {
 
     /**
      * create new instance with constructor

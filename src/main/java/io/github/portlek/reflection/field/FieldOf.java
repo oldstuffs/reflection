@@ -2,84 +2,65 @@ package io.github.portlek.reflection.field;
 
 import io.github.portlek.reflection.RefField;
 import io.github.portlek.reflection.RefFieldExecuted;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+@RequiredArgsConstructor
 public final class FieldOf implements RefField {
 
     @NotNull
     private final Field field;
 
-    private final boolean isAccessible;
-
-    public FieldOf(@NotNull final Field field) {
-        this.field = field;
-        this.isAccessible = field.isAccessible();
+    @NotNull
+    @Override
+    public Class<?> type() {
+        return this.field.getType();
     }
 
     @NotNull
     @Override
-    public RefFieldExecuted of(@NotNull final Object object) {
-        return new FieldOf.FieldExecuted(object);
+    public RefFieldExecuted of(@Nullable final Object object) {
+        return new FieldOf.FieldExecuted(this.field, object);
     }
 
     @Override
-    public void set(@NotNull final Object value) {
-        this.field.setAccessible(true);
-        try {
-            this.field.set(null, value);
-        } catch (final IllegalAccessException e) {
-            e.printStackTrace();
-        } finally {
-            this.field.setAccessible(this.isAccessible);
-        }
+    public <A extends Annotation> Optional<A> annotation(@NotNull final Class<A> annotationClass) {
+        return Optional.ofNullable(this.field.getDeclaredAnnotation(annotationClass));
     }
 
-    @NotNull
-    @Override
-    public Optional<Object> get() {
-        this.field.setAccessible(true);
-        try {
-            return Optional.ofNullable(this.field.get(null));
-        } catch (final IllegalAccessException e) {
-            return Optional.empty();
-        } finally {
-            this.field.setAccessible(this.isAccessible);
-        }
-    }
-
-    private final class FieldExecuted implements RefFieldExecuted {
+    @RequiredArgsConstructor
+    private static final class FieldExecuted implements RefFieldExecuted {
 
         @NotNull
+        private final Field field;
+
+        @Nullable
         private final Object object;
 
-        FieldExecuted(@NotNull final Object object) {
-            this.object = object;
-        }
-
+        @SneakyThrows
         @Override
         public void set(@NotNull final Object value) {
-            FieldOf.this.field.setAccessible(true);
-            try {
-                FieldOf.this.field.set(this.object, value);
-            } catch (final IllegalAccessException e) {
-                e.printStackTrace();
-            } finally {
-                FieldOf.this.field.setAccessible(FieldOf.this.isAccessible);
-            }
+            final boolean accessible = this.field.isAccessible();
+            this.field.setAccessible(true);
+            this.field.set(this.object, value);
+            this.field.setAccessible(accessible);
         }
 
+        @SneakyThrows
         @NotNull
         @Override
         public Optional<Object> get() {
-            FieldOf.this.field.setAccessible(true);
+            final boolean accessible = this.field.isAccessible();
+            this.field.setAccessible(true);
             try {
-                return Optional.ofNullable(FieldOf.this.field.get(this.object));
-            } catch (final IllegalAccessException e) {
-                return Optional.empty();
+                return Optional.ofNullable(this.field.get(this.object));
             } finally {
-                FieldOf.this.field.setAccessible(FieldOf.this.isAccessible);
+                this.field.setAccessible(accessible);
             }
         }
 

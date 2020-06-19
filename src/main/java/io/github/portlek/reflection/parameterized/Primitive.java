@@ -1,16 +1,14 @@
 package io.github.portlek.reflection.parameterized;
 
 import java.util.function.Supplier;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
+@RequiredArgsConstructor
 public final class Primitive<T> implements Supplier<Class<T>> {
 
     @NotNull
     private final Class<T> clazz;
-
-    public Primitive(@NotNull final Class<T> clazz) {
-        this.clazz = clazz;
-    }
 
     @NotNull
     @Override

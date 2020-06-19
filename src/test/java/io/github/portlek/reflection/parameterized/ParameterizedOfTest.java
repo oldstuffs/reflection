@@ -14,8 +14,8 @@ final class ParameterizedOfTest {
     void apply() {
         final String text = "test";
         final int testnumber = 1;
-        final RefParameterized<Map.Entry<Class<String>, Class<Integer>>> parameter = new ParameterizedOf<>(
-            RuntimeException::new, text, testnumber);
+        final RefParameterized<Map.Entry<Class<String>, Class<Integer>>> parameter =
+            new ParameterizedOf<>(text, testnumber);
 
         new Assertion<>(
             "Function doesn't give right classes and objects",

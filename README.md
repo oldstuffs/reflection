@@ -1,6 +1,6 @@
 # Reflection
 
-Simple and powerfull class/method/field/constructor manipulation!
+Simple and powerful class/method/field/constructor manipulation.
 
 [![idea](https://www.elegantobjects.org/intellij-idea.svg)](https://www.jetbrains.com/idea/)
 [![rultor](https://www.rultor.com/b/yegor256/rultor)](https://www.rultor.com/p/portlek/reflection)
@@ -14,7 +14,7 @@ Simple and powerfull class/method/field/constructor manipulation!
 - No static
 - No public methods without contract (interface)
 - No implementation inheritance
-- No nulls (Optional)
+- No returns null (Optional)
 
 ## Setup
 <details>
@@ -49,10 +49,10 @@ dependencies {
 ```java
 public void clearKnownCommands() {
   new ClassOf<>(Bukkit.getServer())
-    .findMethodByName("getCommandMap")
+    .methodByName("getCommandMap")
     .flatMap(refMethod -> refMethod.of(Bukkit.getServer()).call().map(o -> o instanceof CommandMap))
     .ifPresent(commandMap -> new ClassOf<>(commandMap)
-      .findMethodByName("clearCommands")
+      .methodByName("clearCommands")
       .ifPresent(clearCommandsMethod ->
           clearCommandsMethod.of(commandMap).call()));
 }

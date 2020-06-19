@@ -15,7 +15,7 @@ final class ConstructorOfTest {
     void create() throws NoSuchMethodException {
         final RefClass<ConstructorOfTest.ConstructorTest> refClass = new ClassOf<>(ConstructorOfTest.ConstructorTest.class);
         final Optional<RefConstructed<ConstructorOfTest.ConstructorTest>> optional =
-            refClass.getPrimitiveConstructor(String.class, int.class);
+            refClass.primitiveConstructor(String.class, int.class);
         new Assertion<>(
             "Cannot created object of the Constructed!",
             optional

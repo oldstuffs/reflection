@@ -2,8 +2,9 @@ package io.github.portlek.reflection;
 
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public interface RefMethod {
+public interface RefMethod extends RefMethodExecuted, RefAnnotated {
 
     /**
      * apply method to object
@@ -12,7 +13,7 @@ public interface RefMethod {
      * @return RefMethodExecuted with method call(...)
      */
     @NotNull
-    RefMethodExecuted of(@NotNull Object object);
+    RefMethodExecuted of(@Nullable Object object);
 
     /**
      * Calls static method
@@ -20,7 +21,10 @@ public interface RefMethod {
      * @param parameters sent parameters
      * @return return value with fallback
      */
+    @Override
     @NotNull
-    Optional<Object> call(@NotNull Object... parameters);
+    default Optional<Object> call(@NotNull final Object... parameters) {
+        return this.of(null).call(parameters);
+    }
 
 }

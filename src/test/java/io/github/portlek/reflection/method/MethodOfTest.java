@@ -20,7 +20,7 @@ final class MethodOfTest {
     void of() throws Throwable {
         new Assertion<>(
             "Couldn't applied method!",
-            this.CLASS.getMethod("callVoidMethod")
+            this.CLASS.method("callVoidMethod")
                 .orElseThrow(() ->
                     new NoSuchFieldException("Cannot find method!"))
                 .of(this.METHOD_TEST),
@@ -29,7 +29,7 @@ final class MethodOfTest {
 
         new Assertion<>(
             "Couldn't applied method!",
-            this.CLASS.getMethod("callReturnParameterMethod", 21)
+            this.CLASS.method("callReturnParameterMethod", 21)
                 .orElseThrow(() ->
                     new NoSuchFieldException("Cannot find method!"))
                 .of(this.METHOD_TEST),
@@ -38,7 +38,7 @@ final class MethodOfTest {
 
         new Assertion<>(
             "Couldn't applied method!",
-            this.CLASS.getPrimitiveMethod("callPrimitiveReturnParameterMethod", 21)
+            this.CLASS.primitiveMethod("callPrimitiveReturnParameterMethod", 21)
                 .orElseThrow(() ->
                     new NoSuchFieldException("Cannot find method!"))
                 .of(this.METHOD_TEST),
@@ -51,7 +51,7 @@ final class MethodOfTest {
 
         new Assertion<>(
             "Couldn't call method",
-            () -> this.CLASS.getMethod("callVoidMethod")
+            () -> this.CLASS.method("callVoidMethod")
                 .orElseThrow(() ->
                     new NoSuchMethodException("Cannot find method!"))
                 .of(this.METHOD_TEST)
@@ -63,7 +63,7 @@ final class MethodOfTest {
 
         new Assertion<>(
             "Couldn't call method",
-            this.CLASS.getMethod("callReturnMethod")
+            this.CLASS.method("callReturnMethod")
                 .orElseThrow(() ->
                     new NoSuchFieldException("Cannot find method!"))
                 .of(this.METHOD_TEST)
@@ -75,7 +75,7 @@ final class MethodOfTest {
 
         new Assertion<>(
             "Couldn't call method",
-            () -> this.CLASS.getMethod("callVoidParameterMethod", String.class)
+            () -> this.CLASS.method("callVoidParameterMethod", String.class)
                 .orElseThrow(() ->
                     new NoSuchFieldException("Cannot find method!"))
                 .of(this.METHOD_TEST)
@@ -87,7 +87,7 @@ final class MethodOfTest {
 
         new Assertion<>(
             "Couldn't call method",
-            this.CLASS.getMethod("callReturnParameterMethod", 21)
+            this.CLASS.method("callReturnParameterMethod", 21)
                 .orElseThrow(() ->
                     new NoSuchFieldException("Cannot find method!"))
                 .of(this.METHOD_TEST)
@@ -99,7 +99,7 @@ final class MethodOfTest {
 
         new Assertion<>(
             "Couldn't call method",
-            this.CLASS.getPrimitiveMethod("callPrimitiveReturnParameterMethod", 21)
+            this.CLASS.primitiveMethod("callPrimitiveReturnParameterMethod", 21)
                 .orElseThrow(() ->
                     new NoSuchFieldException("Cannot find method!"))
                 .of(this.METHOD_TEST)

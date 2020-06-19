@@ -15,7 +15,7 @@ final class ClassOfTest {
     void getRealClass() {
         new Assertion<>(
             "Class is not equal to real class!",
-            ClassOfTest.CLASS.getRealClass(),
+            ClassOfTest.CLASS.realClass(),
             new IsEqual<>(ClassOfTest.TestClass.class)
         ).affirm();
     }
@@ -33,38 +33,38 @@ final class ClassOfTest {
     void getMethod() {
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.getMethod("voidMethod").isPresent(),
+            ClassOfTest.CLASS.method("voidMethod").isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.getMethod("returnStringMethod").isPresent(),
+            ClassOfTest.CLASS.method("returnStringMethod").isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.getMethod("voidParameterMethod", String.class, Integer.class).isPresent(),
+            ClassOfTest.CLASS.method("voidParameterMethod", String.class, Integer.class).isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.getMethod("returnIntegerParameterMethod", String.class, Integer.class).isPresent(),
+            ClassOfTest.CLASS.method("returnIntegerParameterMethod", String.class, Integer.class).isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.getPrimitiveMethod("voidPrimitiveParameterMethod", String.class, Integer.class)
+            ClassOfTest.CLASS.primitiveMethod("voidPrimitiveParameterMethod", String.class, Integer.class)
                 .isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.getPrimitiveMethod("returnIntPrimitiveParameterMethod", String.class,
+            ClassOfTest.CLASS.primitiveMethod("returnIntPrimitiveParameterMethod", String.class,
                 Integer.class).isPresent(),
             new IsTrue()
         ).affirm();
@@ -74,19 +74,19 @@ final class ClassOfTest {
     void findMethodByParameter() {
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findMethodByParameter().isPresent(),
+            ClassOfTest.CLASS.methodByParameter().isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findMethodByParameter(String.class, Integer.class).isPresent(),
+            ClassOfTest.CLASS.methodByParameter(String.class, Integer.class).isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findMethodByParameter(String.class, int.class).isPresent(),
+            ClassOfTest.CLASS.methodByParameter(String.class, int.class).isPresent(),
             new IsTrue()
         ).affirm();
     }
@@ -95,19 +95,19 @@ final class ClassOfTest {
     void findPrimitiveMethodByParameter() {
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findPrimitiveMethodByParameter().isPresent(),
+            ClassOfTest.CLASS.primitiveMethodByParameter().isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findPrimitiveMethodByParameter(String.class, Integer.class).isPresent(),
+            ClassOfTest.CLASS.primitiveMethodByParameter(String.class, Integer.class).isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findPrimitiveMethodByParameter(String.class, int.class).isPresent(),
+            ClassOfTest.CLASS.primitiveMethodByParameter(String.class, int.class).isPresent(),
             new IsTrue()
         ).affirm();
     }
@@ -116,37 +116,37 @@ final class ClassOfTest {
     void findMethodByName() {
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findMethodByName("voidMethod").isPresent(),
+            ClassOfTest.CLASS.methodByName("voidMethod").isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findMethodByName("returnStringMethod").isPresent(),
+            ClassOfTest.CLASS.methodByName("returnStringMethod").isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findMethodByName("voidParameterMethod").isPresent(),
+            ClassOfTest.CLASS.methodByName("voidParameterMethod").isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findMethodByName("returnIntegerParameterMethod").isPresent(),
+            ClassOfTest.CLASS.methodByName("returnIntegerParameterMethod").isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findMethodByName("voidPrimitiveParameterMethod").isPresent(),
+            ClassOfTest.CLASS.methodByName("voidPrimitiveParameterMethod").isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findMethodByName("returnIntPrimitiveParameterMethod").isPresent(),
+            ClassOfTest.CLASS.methodByName("returnIntPrimitiveParameterMethod").isPresent(),
             new IsTrue()
         ).affirm();
     }
@@ -155,25 +155,25 @@ final class ClassOfTest {
     void findMethodByReturnType() {
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findMethodByReturnType(void.class).isPresent(),
+            ClassOfTest.CLASS.methodByReturnType(void.class).isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findMethodByReturnType(String.class).isPresent(),
+            ClassOfTest.CLASS.methodByReturnType(String.class).isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findMethodByReturnType(Integer.class).isPresent(),
+            ClassOfTest.CLASS.methodByReturnType(Integer.class).isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findMethodByReturnType(int.class).isPresent(),
+            ClassOfTest.CLASS.methodByReturnType(int.class).isPresent(),
             new IsTrue()
         ).affirm();
     }
@@ -182,25 +182,25 @@ final class ClassOfTest {
     void findMethodByReturnTypeAsRefClass() {
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findMethodByReturnType(new ClassOf<>(void.class)).isPresent(),
+            ClassOfTest.CLASS.methodByReturnType(new ClassOf<>(void.class)).isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findMethodByReturnType(new ClassOf<>(String.class)).isPresent(),
+            ClassOfTest.CLASS.methodByReturnType(new ClassOf<>(String.class)).isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findMethodByReturnType(new ClassOf<>(Integer.class)).isPresent(),
+            ClassOfTest.CLASS.methodByReturnType(new ClassOf<>(Integer.class)).isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find method",
-            ClassOfTest.CLASS.findMethodByReturnType(new ClassOf<>(int.class)).isPresent(),
+            ClassOfTest.CLASS.methodByReturnType(new ClassOf<>(int.class)).isPresent(),
             new IsTrue()
         ).affirm();
     }
@@ -209,7 +209,7 @@ final class ClassOfTest {
     void getPrimitiveConstructor() {
         new Assertion<>(
             "Cannot find constructor!",
-            ClassOfTest.CLASS.getPrimitiveConstructor(String.class, Integer.class).isPresent(),
+            ClassOfTest.CLASS.primitiveConstructor(String.class, Integer.class).isPresent(),
             new IsTrue()
         ).affirm();
     }
@@ -218,7 +218,7 @@ final class ClassOfTest {
     void findConstructor() {
         new Assertion<>(
             "Cannot find constructor!",
-            ClassOfTest.CLASS.findConstructor(2).isPresent(),
+            ClassOfTest.CLASS.constructor(2).isPresent(),
             new IsTrue()
         ).affirm();
     }
@@ -227,13 +227,13 @@ final class ClassOfTest {
     void getConstructor() {
         new Assertion<>(
             "Cannot find constructor!",
-            ClassOfTest.CLASS.getConstructor().isPresent(),
+            ClassOfTest.CLASS.constructor().isPresent(),
             new IsTrue()
         ).affirm();
 
         new Assertion<>(
             "Cannot find constructor!",
-            ClassOfTest.CLASS.getConstructor(String.class, int.class).isPresent(),
+            ClassOfTest.CLASS.constructor(String.class, int.class).isPresent(),
             new IsTrue()
         ).affirm();
     }
@@ -242,7 +242,7 @@ final class ClassOfTest {
     void getField() {
         new Assertion<>(
             "Cannot find field!",
-            ClassOfTest.CLASS.getField("text").isPresent(),
+            ClassOfTest.CLASS.field("text").isPresent(),
             new IsTrue()
         ).affirm();
     }
@@ -251,7 +251,7 @@ final class ClassOfTest {
     void findFieldFromClass() {
         new Assertion<>(
             "Cannot find field!",
-            ClassOfTest.CLASS.findField(String.class).isPresent(),
+            ClassOfTest.CLASS.field(String.class).isPresent(),
             new IsTrue()
         ).affirm();
     }
@@ -260,7 +260,7 @@ final class ClassOfTest {
     void findFieldFromRefClass() {
         new Assertion<>(
             "Cannot find field!",
-            ClassOfTest.CLASS.findField(new ClassOf<>(String.class)).isPresent(),
+            ClassOfTest.CLASS.field(new ClassOf<>(String.class)).isPresent(),
             new IsTrue()
         ).affirm();
     }

@@ -6,7 +6,7 @@
 
     <groupId>io.github.portlek</groupId>
     <artifactId>reflection</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>3.1.1</version>
     <name>reflection</name>
     <description>An API for reflection.</description>
     <url>https://github.com/portlek/reflection</url>

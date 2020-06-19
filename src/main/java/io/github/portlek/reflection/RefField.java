@@ -15,6 +15,13 @@ public interface RefField extends RefFieldExecuted, RefAnnotated {
     Class<?> type();
 
     /**
+     * name of the field
+     * @return a {@link String} that's name of the field
+     */
+    @NotNull
+    String name();
+
+    /**
      * apply find for object
      *
      * @param object applied object

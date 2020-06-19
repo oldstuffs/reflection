@@ -32,7 +32,7 @@ public interface RefClass<T> extends RefAnnotated {
      */
     @NotNull
     default <A extends Annotation> void fieldsWithAnnotation(@NotNull final Class<A> annotationClass,
-                                                             @NotNull final BiConsumer<RefField, Annotation> consumer) {
+                                                             @NotNull final BiConsumer<RefField, A> consumer) {
         this.fields().forEach(refField ->
             refField.annotation(annotationClass, a -> consumer.accept(refField, a)));
     }
@@ -61,7 +61,7 @@ public interface RefClass<T> extends RefAnnotated {
      */
     @NotNull
     default <A extends Annotation> void declaredFieldsWithAnnotation(@NotNull final Class<A> annotationClass,
-                                                                     @NotNull final BiConsumer<RefField, Annotation> consumer) {
+                                                                     @NotNull final BiConsumer<RefField, A> consumer) {
         this.declaredFields().forEach(refField ->
             refField.annotation(annotationClass, a -> consumer.accept(refField, a)));
     }
@@ -89,7 +89,7 @@ public interface RefClass<T> extends RefAnnotated {
      */
     @NotNull
     default <A extends Annotation> void methodsWithAnnotation(@NotNull final Class<A> annotationClass,
-                                                              @NotNull final BiConsumer<RefMethod, Annotation> consumer) {
+                                                              @NotNull final BiConsumer<RefMethod, A> consumer) {
         this.methods().forEach(refField ->
             refField.annotation(annotationClass, a -> consumer.accept(refField, a)));
     }
@@ -118,7 +118,7 @@ public interface RefClass<T> extends RefAnnotated {
      */
     @NotNull
     default <A extends Annotation> void declaredMethodsWithAnnotation(@NotNull final Class<A> annotationClass,
-                                                                      @NotNull final BiConsumer<RefMethod, Annotation> consumer) {
+                                                                      @NotNull final BiConsumer<RefMethod, A> consumer) {
         this.declaredMethods().forEach(refField ->
             refField.annotation(annotationClass, a -> consumer.accept(refField, a)));
     }

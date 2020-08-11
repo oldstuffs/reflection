@@ -1,7 +1,3 @@
-# Reflection
-
-Simple and powerful Object oriented Java reflection library.
-
 [![idea](https://www.elegantobjects.org/intellij-idea.svg)](https://www.jetbrains.com/idea/)
 [![rultor](https://www.rultor.com/b/yegor256/rultor)](https://www.rultor.com/p/portlek/reflection)
 
@@ -16,36 +12,19 @@ Simple and powerful Object oriented Java reflection library.
 - No implementation inheritance
 - No returns null (Optional)
 
-## Setup
-<details>
-<summary>Gradle</summary>
-
-```gradle
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation("io.github.portlek:reflection:${version}")
-}
-```
-</details>
-
-<details>
-<summary>Maven</summary>
-
+## How to Use
 ```xml
-<dependencies>
-    <dependency>
-        <groupId>io.github.portlek</groupId>
-        <artifactId>reflection</artifactId>
-        <version>${version}</version>
-    </dependency>
-</dependencies>
+<dependency>
+  <groupId>io.github.portlek</groupId>
+  <artifactId>reflection</artifactId>
+  <version>${version}</version>
+</dependency>
 ```
-</details>
+```gradle
+implementation("io.github.portlek:reflection:${version}")
+```
 
-## Usage
+## Example usage
 ```java
 public void clearKnownCommands() {
   new ClassOf<>(Bukkit.getServer())

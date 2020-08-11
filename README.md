@@ -23,16 +23,19 @@
 ```gradle
 implementation("io.github.portlek:reflection:${version}")
 ```
-
 ## Example usage
 ```java
-public void clearKnownCommands() {
-  new ClassOf<>(Bukkit.getServer())
-    .methodByName("getCommandMap")
-    .flatMap(refMethod -> refMethod.of(Bukkit.getServer()).call().map(o -> o instanceof CommandMap))
-    .ifPresent(commandMap -> new ClassOf<>(commandMap)
-      .methodByName("clearCommands")
-      .ifPresent(clearCommandsMethod ->
+final class Example {
+
+  void clearKnownCommands() {
+    new ClassOf<>(Bukkit.getServer())
+      .methodByName("getCommandMap")
+      .flatMap(refMethod -> refMethod.of(Bukkit.getServer()).call().map(o -> o instanceof CommandMap))
+      .ifPresent(commandMap -> new ClassOf<>(commandMap)
+        .methodByName("clearCommands")
+        .ifPresent(clearCommandsMethod ->
           clearCommandsMethod.of(commandMap).call()));
+  }
+ 
 }
 ```

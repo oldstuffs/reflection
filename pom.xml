@@ -9,7 +9,7 @@
         <version>1.7</version>
     </parent>
     <artifactId>reflection</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>3.3</version>
     <name>reflection</name>
     <description>An API for reflection.</description>
     <url>https://github.com/portlek/reflection</url>

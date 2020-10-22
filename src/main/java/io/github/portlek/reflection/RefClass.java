@@ -228,6 +228,7 @@ public interface RefClass<T> extends RefAnnotated {
    * gets method by return value.
    *
    * @param type the type to get.
+   * @param <X> the class type of the return type.
    *
    * @return a {@link RefMethod} object.
    */
@@ -287,6 +288,7 @@ public interface RefClass<T> extends RefAnnotated {
    * gets field by type.
    *
    * @param type the type to get
+   * @param <X> the class type of the field.
    *
    * @return a {@link RefField} object.
    */

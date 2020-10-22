@@ -23,7 +23,6 @@ implementation("io.github.portlek:reflection:${version}")
 ## Example usage
 ```java
 final class Example {
-
   void clearKnownCommands() {
     new ClassOf<>(Bukkit.getServer())
       .methodByName("getCommandMap")
@@ -33,6 +32,5 @@ final class Example {
         .ifPresent(clearCommandsMethod ->
           clearCommandsMethod.of(commandMap).call()));
   }
- 
 }
 ```

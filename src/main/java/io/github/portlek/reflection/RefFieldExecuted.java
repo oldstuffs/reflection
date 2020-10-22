@@ -28,21 +28,23 @@ package io.github.portlek.reflection;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * an interface to determine applied {@link java.lang.reflect.Field}.
+ */
 public interface RefFieldExecuted {
 
-    /**
-     * Sets field
-     *
-     * @param value object to set
-     */
-    void set(@NotNull Object value);
+  /**
+   * gets the field's value.
+   *
+   * @return the field value.
+   */
+  @NotNull
+  Optional<Object> getValue();
 
-    /**
-     * Gets field
-     *
-     * @return field value with fallback
-     */
-    @NotNull
-    Optional<Object> get();
-
+  /**
+   * sets the field to the given value.
+   *
+   * @param value the value to set.
+   */
+  void setValue(@NotNull Object value);
 }

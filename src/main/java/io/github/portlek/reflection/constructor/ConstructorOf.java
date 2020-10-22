@@ -28,33 +28,48 @@ package io.github.portlek.reflection.constructor;
 import io.github.portlek.reflection.RefConstructed;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
-@RequiredArgsConstructor
+/**
+ * an implementation for {@link RefConstructed}.
+ *
+ * @param <T> the result instance's type.
+ */
 public final class ConstructorOf<T> implements RefConstructed<T> {
 
-    @NotNull
-    private final Constructor<T> constructor;
+  /**
+   * the constructor.
+   */
+  @NotNull
+  private final Constructor<T> constructor;
 
-    @Override
-    public <A extends Annotation> Optional<A> annotation(@NotNull final Class<A> annotationClass) {
-        return Optional.ofNullable(this.constructor.getDeclaredAnnotation(annotationClass));
+  /**
+   * ctor.
+   *
+   * @param constructor the constructor.
+   */
+  public ConstructorOf(@NotNull final Constructor<T> constructor) {
+    this.constructor = constructor;
+  }
+
+  @Override
+  public <A extends Annotation> Optional<A> getAnnotation(@NotNull final Class<A> annotationClass) {
+    return Optional.ofNullable(this.constructor.getDeclaredAnnotation(annotationClass));
+  }
+
+  @NotNull
+  @Override
+  public Optional<T> create(@NotNull final Object... parameters) {
+    final boolean accessible = this.constructor.isAccessible();
+    try {
+      this.constructor.setAccessible(true);
+      return Optional.of(this.constructor.newInstance(parameters));
+    } catch (final IllegalAccessException | InstantiationException | InvocationTargetException exception) {
+      throw new IllegalStateException(exception);
+    } finally {
+      this.constructor.setAccessible(accessible);
     }
-
-    @SneakyThrows
-    @NotNull
-    @Override
-    public Optional<T> create(@NotNull final Object... parameters) {
-        final boolean accessible = this.constructor.isAccessible();
-        this.constructor.setAccessible(true);
-        try {
-            return Optional.of(this.constructor.newInstance(parameters));
-        } finally {
-            this.constructor.setAccessible(accessible);
-        }
-    }
-
+  }
 }

@@ -29,52 +29,55 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * an interface to determine {@link java.lang.reflect.Field}.
+ */
 public interface RefField extends RefFieldExecuted, RefAnnotated {
 
-    /**
-     * class type of the field
-     *
-     * @return a {@link Class} that's type of the field
-     */
-    @NotNull
-    Class<?> type();
+  /**
+   * gets the type of the field.
+   *
+   * @return a {@link Class} that's type of the field
+   */
+  @NotNull
+  Class<?> getType();
 
-    /**
-     * name of the field
-     *
-     * @return a {@link String} that's name of the field
-     */
-    @NotNull
-    String name();
+  /**
+   * gets name of the field.
+   *
+   * @return name of the field.
+   */
+  @NotNull
+  String getName();
 
-    /**
-     * apply find for object
-     *
-     * @param object applied object
-     * @return RefFieldExecuted with getter and setter
-     */
-    @NotNull
-    RefFieldExecuted of(@Nullable Object object);
+  /**
+   * applies the given object to create a {@link RefFieldExecuted} object.
+   *
+   * @param object the object to apply.
+   *
+   * @return a {@link RefFieldExecuted} object.
+   */
+  @NotNull
+  RefFieldExecuted of(@Nullable Object object);
 
-    /**
-     * Sets static fields
-     *
-     * @param value object to set
-     */
-    @Override
-    default void set(@NotNull final Object value) {
-        this.of(null).set(value);
-    }
+  /**
+   * sets the given object to the static field.
+   *
+   * @param value object to set.
+   */
+  @Override
+  default void setValue(@NotNull final Object value) {
+    this.of(null).setValue(value);
+  }
 
-    /**
-     * Gets static fields
-     *
-     * @return static field value with fallback
-     */
-    @Override
-    @NotNull
-    default Optional<Object> get() {
-        return this.of(null).get();
-    }
-
+  /**
+   * gets the field's object as a static.
+   *
+   * @return static field value.
+   */
+  @Override
+  @NotNull
+  default Optional<Object> getValue() {
+    return this.of(null).getValue();
+  }
 }

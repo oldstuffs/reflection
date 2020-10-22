@@ -30,71 +30,97 @@ import io.github.portlek.reflection.RefFieldExecuted;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@RequiredArgsConstructor
+/**
+ * an implementation for {@link RefField}.
+ */
 public final class FieldOf implements RefField {
 
-    @NotNull
-    private final Field field;
+  /**
+   * the field.
+   */
+  @NotNull
+  private final Field field;
 
-    @NotNull
-    @Override
-    public Class<?> type() {
-        return this.field.getType();
+  /**
+   * ctor.
+   *
+   * @param field the field.
+   */
+  public FieldOf(@NotNull final Field field) {
+    this.field = field;
+  }
+
+  @NotNull
+  @Override
+  public Class<?> getType() {
+    return this.field.getType();
+  }
+
+  @NotNull
+  @Override
+  public String getName() {
+    return this.field.getName();
+  }
+
+  @NotNull
+  @Override
+  public RefFieldExecuted of(@Nullable final Object object) {
+    return new FieldOf.FieldExecuted(object);
+  }
+
+  @Override
+  public <A extends Annotation> Optional<A> getAnnotation(@NotNull final Class<A> annotationClass) {
+    return Optional.ofNullable(this.field.getDeclaredAnnotation(annotationClass));
+  }
+
+  /**
+   * an implementation for {@link RefFieldExecuted}.
+   */
+  private final class FieldExecuted implements RefFieldExecuted {
+
+    /**
+     * the object.
+     */
+    @Nullable
+    private final Object object;
+
+    /**
+     * ctor.
+     *
+     * @param object the object.
+     */
+    FieldExecuted(@Nullable final Object object) {
+      this.object = object;
     }
 
     @NotNull
     @Override
-    public String name() {
-        return this.field.getName();
+    public Optional<Object> getValue() {
+      final boolean accessible = FieldOf.this.field.isAccessible();
+      try {
+        FieldOf.this.field.setAccessible(true);
+        return Optional.ofNullable(FieldOf.this.field.get(this.object));
+      } catch (final IllegalAccessException exception) {
+        throw new IllegalStateException(exception);
+      } finally {
+        FieldOf.this.field.setAccessible(accessible);
+      }
     }
 
-    @NotNull
     @Override
-    public RefFieldExecuted of(@Nullable final Object object) {
-        return new FieldOf.FieldExecuted(this.field, object);
+    public void setValue(@NotNull final Object value) {
+      final boolean accessible = FieldOf.this.field.isAccessible();
+      try {
+        FieldOf.this.field.setAccessible(true);
+        FieldOf.this.field.set(this.object, value);
+      } catch (final IllegalAccessException exception) {
+        throw new IllegalStateException(exception);
+      } finally {
+        FieldOf.this.field.setAccessible(accessible);
+      }
     }
-
-    @Override
-    public <A extends Annotation> Optional<A> annotation(@NotNull final Class<A> annotationClass) {
-        return Optional.ofNullable(this.field.getDeclaredAnnotation(annotationClass));
-    }
-
-    @RequiredArgsConstructor
-    private static final class FieldExecuted implements RefFieldExecuted {
-
-        @NotNull
-        private final Field field;
-
-        @Nullable
-        private final Object object;
-
-        @SneakyThrows
-        @Override
-        public void set(@NotNull final Object value) {
-            final boolean accessible = this.field.isAccessible();
-            this.field.setAccessible(true);
-            this.field.set(this.object, value);
-            this.field.setAccessible(accessible);
-        }
-
-        @SneakyThrows
-        @NotNull
-        @Override
-        public Optional<Object> get() {
-            final boolean accessible = this.field.isAccessible();
-            this.field.setAccessible(true);
-            try {
-                return Optional.ofNullable(this.field.get(this.object));
-            } finally {
-                this.field.setAccessible(accessible);
-            }
-        }
-
-    }
-
+  }
 }

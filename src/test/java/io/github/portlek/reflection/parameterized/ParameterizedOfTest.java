@@ -35,21 +35,19 @@ import org.llorllale.cactoos.matchers.Assertion;
 
 final class ParameterizedOfTest {
 
-    @Test
-    void apply() {
-        final String text = "test";
-        final int testnumber = 1;
-        final RefParameterized<Map.Entry<Class<String>, Class<Integer>>> parameter =
-            new ParameterizedOf<>(text, testnumber);
-
-        new Assertion<>(
-            "Function doesn't give right classes and objects",
-            parameter.apply(classes ->
-                Optional.of(new MapEntry<>((Class<String>) classes[0], (Class<Integer>) classes[1])))
-                .orElseThrow(() ->
-                    new RuntimeException("Something's wrong!")),
-            new IsEqual<>(new MapEntry<>(String.class, Integer.class))
-        ).affirm();
-    }
-
+  @Test
+  void apply() {
+    final String text = "test";
+    final int testnumber = 1;
+    final RefParameterized<Map.Entry<Class<String>, Class<Integer>>> parameter =
+      new ParameterizedOf<>(text, testnumber);
+    new Assertion<>(
+      "Function doesn't give right classes and objects",
+      parameter.apply(classes ->
+        Optional.of(new MapEntry<>((Class<String>) classes[0], (Class<Integer>) classes[1])))
+        .orElseThrow(() ->
+          new RuntimeException("Something's wrong!")),
+      new IsEqual<>(new MapEntry<>(String.class, Integer.class))
+    ).affirm();
+  }
 }

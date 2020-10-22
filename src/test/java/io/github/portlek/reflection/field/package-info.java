@@ -22,24 +22,7 @@
  * SOFTWARE.
  *
  */
-
-package io.github.portlek.reflection;
-
-import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
-
 /**
- * an interface to determine applied {@link java.lang.reflect.Method}.
+ * the package that contains {@link io.github.portlek.reflection.RefField}'s tests.
  */
-public interface RefMethodExecuted {
-
-  /**
-   * calls the method with the given parameters.
-   *
-   * @param parameters the parameters to call.
-   *
-   * @return the value of the mehtod.
-   */
-  @NotNull
-  Optional<Object> call(@NotNull Object... parameters);
-}
+package io.github.portlek.reflection.field;

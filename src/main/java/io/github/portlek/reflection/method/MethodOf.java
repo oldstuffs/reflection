@@ -28,52 +28,75 @@ package io.github.portlek.reflection.method;
 import io.github.portlek.reflection.RefMethod;
 import io.github.portlek.reflection.RefMethodExecuted;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@RequiredArgsConstructor
+/**
+ * an implementation for {@link RefMethod}.
+ */
 public final class MethodOf implements RefMethod {
 
-    @NotNull
-    private final Method method;
+  /**
+   * the method.
+   */
+  @NotNull
+  private final Method method;
+
+  /**
+   * ctor.
+   *
+   * @param method the method.
+   */
+  public MethodOf(@NotNull final Method method) {
+    this.method = method;
+  }
+
+  @NotNull
+  @Override
+  public RefMethodExecuted of(@Nullable final Object object) {
+    return new MethodOf.MethodExecuted(object);
+  }
+
+  @Override
+  public <A extends Annotation> Optional<A> getAnnotation(@NotNull final Class<A> annotationClass) {
+    return Optional.ofNullable(this.method.getDeclaredAnnotation(annotationClass));
+  }
+
+  /**
+   * an implementation for {@link RefMethodExecuted}.
+   */
+  private final class MethodExecuted implements RefMethodExecuted {
+
+    /**
+     * the object.
+     */
+    @Nullable
+    private final Object object;
+
+    /**
+     * ctor.
+     *
+     * @param object the object.
+     */
+    MethodExecuted(@Nullable final Object object) {
+      this.object = object;
+    }
 
     @NotNull
     @Override
-    public RefMethodExecuted of(@Nullable final Object object) {
-        return new MethodOf.MethodExecuted(this.method, object);
+    public Optional<Object> call(@NotNull final Object... parameters) {
+      final boolean accessible = MethodOf.this.method.isAccessible();
+      try {
+        MethodOf.this.method.setAccessible(true);
+        return Optional.ofNullable(MethodOf.this.method.invoke(this.object, parameters));
+      } catch (final IllegalAccessException | InvocationTargetException exception) {
+        throw new IllegalStateException(exception);
+      } finally {
+        MethodOf.this.method.setAccessible(accessible);
+      }
     }
-
-    @Override
-    public <A extends Annotation> Optional<A> annotation(@NotNull final Class<A> annotationClass) {
-        return Optional.ofNullable(this.method.getDeclaredAnnotation(annotationClass));
-    }
-
-    @RequiredArgsConstructor
-    private static final class MethodExecuted implements RefMethodExecuted {
-
-        @NotNull
-        private final Method method;
-
-        @Nullable
-        private final Object object;
-
-        @SneakyThrows
-        @NotNull
-        @Override
-        public Optional<Object> call(@NotNull final Object... parameters) {
-            final boolean accessible = this.method.isAccessible();
-            this.method.setAccessible(true);
-            try {
-                return Optional.ofNullable(this.method.invoke(this.object, parameters));
-            } finally {
-                this.method.setAccessible(accessible);
-            }
-        }
-
-    }
-
+  }
 }

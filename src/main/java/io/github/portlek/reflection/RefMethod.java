@@ -29,27 +29,31 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * an interface to determine {@link java.lang.reflect.Method}.
+ */
 public interface RefMethod extends RefMethodExecuted, RefAnnotated {
 
-    /**
-     * apply method to object
-     *
-     * @param object object to which the method is applied
-     * @return RefMethodExecuted with method call(...)
-     */
-    @NotNull
-    RefMethodExecuted of(@Nullable Object object);
+  /**
+   * applies the given object to create a {@link RefMethodExecuted} object.
+   *
+   * @param object the object to apply.
+   *
+   * @return a {@link RefMethodExecuted} object.
+   */
+  @NotNull
+  RefMethodExecuted of(@Nullable Object object);
 
-    /**
-     * Calls static method
-     *
-     * @param parameters sent parameters
-     * @return return value with fallback
-     */
-    @Override
-    @NotNull
-    default Optional<Object> call(@NotNull final Object... parameters) {
-        return this.of(null).call(parameters);
-    }
-
+  /**
+   * calls the method with the given parameters as a static.
+   *
+   * @param parameters the parameters to call.
+   *
+   * @return value of the method.
+   */
+  @Override
+  @NotNull
+  default Optional<Object> call(@NotNull final Object... parameters) {
+    return this.of(null).call(parameters);
+  }
 }

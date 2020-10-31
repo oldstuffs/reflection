@@ -1,6 +1,6 @@
 [![idea](https://www.elegantobjects.org/intellij-idea.svg)](https://www.jetbrains.com/idea/)
 
-[![Build Status](https://travis-ci.com/portlek/reflection.svg?branch=master)](https://travis-ci.com/portlek/reflection)
+![master](https://github.com/portlek/reflection/workflows/build/badge.svg)
 ![Maven Central](https://img.shields.io/maven-central/v/io.github.portlek/reflection?label=version)
 ## Principles
 - No code in constructors

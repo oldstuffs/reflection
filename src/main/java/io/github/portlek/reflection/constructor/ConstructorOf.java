@@ -30,6 +30,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
+import java.util.logging.Level;
+import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -37,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> the result instance's type.
  */
+@Log
 public final class ConstructorOf<T> implements RefConstructed<T> {
 
   /**
@@ -62,7 +65,8 @@ public final class ConstructorOf<T> implements RefConstructed<T> {
       this.constructor.setAccessible(true);
       return Optional.of(this.constructor.newInstance(parameters));
     } catch (final IllegalAccessException | InstantiationException | InvocationTargetException exception) {
-      throw new IllegalStateException(exception);
+      ConstructorOf.log.log(Level.SEVERE, "ConstructorOf#create(Object[])", exception);
+      return Optional.empty();
     } finally {
       this.constructor.setAccessible(accessible);
     }

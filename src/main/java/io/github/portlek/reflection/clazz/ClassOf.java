@@ -138,8 +138,8 @@ public final class ClassOf<T> implements RefClass<T> {
     } catch (final NoSuchFieldException ignored) {
       try {
         return Optional.of(new FieldOf(this.clazz.getDeclaredField(name)));
-      } catch (final NoSuchFieldException e) {
-        ClassOf.log.log(Level.SEVERE, "ClassOf#getField(String)", e);
+      } catch (final NoSuchFieldException exception) {
+        ClassOf.log.log(Level.SEVERE, "ClassOf#getField(String)", exception);
         return Optional.empty();
       }
     }
@@ -283,12 +283,12 @@ public final class ClassOf<T> implements RefClass<T> {
     return parameter.apply(classes -> {
       try {
         return Optional.of(new ConstructorOf<>(this.clazz.getConstructor(classes)));
-      } catch (final NoSuchMethodException e) {
+      } catch (final NoSuchMethodException exception) {
         return parameter.apply(declaredClasses -> {
           try {
             return Optional.of(new ConstructorOf<>(this.clazz.getDeclaredConstructor(declaredClasses)));
           } catch (final NoSuchMethodException noSuchMethodException) {
-            ClassOf.log.log(Level.SEVERE, "ClassOf#getConstructor0(boolean, Object[])", e);
+            ClassOf.log.log(Level.SEVERE, "ClassOf#getConstructor0(boolean, Object[])", exception);
             return Optional.empty();
           }
         });
@@ -303,12 +303,12 @@ public final class ClassOf<T> implements RefClass<T> {
     return parameter.apply(classes -> {
       try {
         return Optional.of(new MethodOf(this.clazz.getMethod(name, classes)));
-      } catch (final NoSuchMethodException e) {
+      } catch (final NoSuchMethodException exception) {
         return parameter.apply(declaredClasses -> {
           try {
             return Optional.of(new MethodOf(this.clazz.getDeclaredMethod(name, declaredClasses)));
           } catch (final NoSuchMethodException noSuchMethodException) {
-            ClassOf.log.log(Level.SEVERE, "ClassOf#getMethod0(String, boolean, Object[])", e);
+            ClassOf.log.log(Level.SEVERE, "ClassOf#getMethod0(String, boolean, Object[])", exception);
             return Optional.empty();
           }
         });

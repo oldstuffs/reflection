@@ -31,6 +31,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Optional;
+import java.util.logging.Level;
+import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -77,6 +79,12 @@ public final class FieldOf implements RefField {
     return this.field.getType();
   }
 
+  @NotNull
+  @Override
+  public RefFieldExecuted of(@Nullable final Object object) {
+    return new FieldOf.FieldExecuted(object);
+  }
+
   @Override
   public boolean hasFinal() {
     return Modifier.isFinal(this.field.getModifiers());
@@ -97,15 +105,10 @@ public final class FieldOf implements RefField {
     return Modifier.isStatic(this.field.getModifiers());
   }
 
-  @NotNull
-  @Override
-  public RefFieldExecuted of(@Nullable final Object object) {
-    return new FieldOf.FieldExecuted(object);
-  }
-
   /**
    * an implementation for {@link RefFieldExecuted}.
    */
+  @Log
   private final class FieldExecuted implements RefFieldExecuted {
 
     /**
@@ -131,7 +134,8 @@ public final class FieldOf implements RefField {
         FieldOf.this.field.setAccessible(true);
         return Optional.ofNullable(FieldOf.this.field.get(this.object));
       } catch (final IllegalAccessException exception) {
-        throw new IllegalStateException(exception);
+        FieldExecuted.log.log(Level.SEVERE, "FieldExecuted#getValue()", exception);
+        return Optional.empty();
       } finally {
         FieldOf.this.field.setAccessible(accessible);
       }
@@ -144,7 +148,7 @@ public final class FieldOf implements RefField {
         FieldOf.this.field.setAccessible(true);
         FieldOf.this.field.set(this.object, value);
       } catch (final IllegalAccessException exception) {
-        throw new IllegalStateException(exception);
+        FieldExecuted.log.log(Level.SEVERE, "FieldExecuted#setValue(Object)", exception);
       } finally {
         FieldOf.this.field.setAccessible(accessible);
       }

@@ -25,22 +25,20 @@
 
 package io.github.portlek.reflection.parameterized;
 
-import io.github.portlek.reflection.RefParameterized;
-import java.util.Map;
 import java.util.Optional;
 import org.cactoos.map.MapEntry;
 import org.hamcrest.core.IsEqual;
 import org.junit.jupiter.api.Test;
 import org.llorllale.cactoos.matchers.Assertion;
 
+@SuppressWarnings("unchecked")
 final class ParameterizedOfTest {
 
   @Test
   void apply() {
-    final String text = "test";
-    final int testnumber = 1;
-    final RefParameterized<Map.Entry<Class<String>, Class<Integer>>> parameter =
-      new ParameterizedOf<>(text, testnumber);
+    final var text = "test";
+    final var testNumber = 1;
+    final var parameter = new ParameterizedOf<>(text, testNumber);
     new Assertion<>(
       "Function doesn't give right classes and objects",
       parameter.apply(classes ->

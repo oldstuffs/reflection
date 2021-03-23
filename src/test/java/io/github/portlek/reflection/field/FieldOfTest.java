@@ -25,11 +25,14 @@
 
 package io.github.portlek.reflection.field;
 
+import io.github.portlek.reflection.Anno;
 import io.github.portlek.reflection.RefClass;
 import io.github.portlek.reflection.clazz.ClassOf;
 import org.hamcrest.core.IsEqual;
+import org.hamcrest.core.IsNot;
 import org.junit.jupiter.api.Test;
 import org.llorllale.cactoos.matchers.Assertion;
+import org.llorllale.cactoos.matchers.IsTrue;
 
 final class FieldOfTest {
 
@@ -38,7 +41,7 @@ final class FieldOfTest {
   private final RefClass<FieldOfTest.FieldTest> refClass = new ClassOf<>(FieldOfTest.FieldTest.class);
 
   @Test
-  void get() throws Throwable {
+  void get() throws NoSuchFieldException {
     new Assertion<>(
       "Couldn't get the field",
       this.refClass.getField("text")
@@ -64,6 +67,103 @@ final class FieldOfTest {
   }
 
   @Test
+  void getAnnotation() throws NoSuchFieldException {
+    new Assertion<>(
+      "Cannot find annotation on the field",
+      this.refClass.getField("TEXT")
+        .orElseThrow(() ->
+          new NoSuchFieldException("Cannot find field!"))
+        .getAnnotation(Anno.class)
+        .isPresent(),
+      new IsTrue()
+    ).affirm();
+  }
+
+  @Test
+  void getName() throws NoSuchFieldException {
+    new Assertion<>(
+      "Cannot find the name of the field",
+      this.refClass.getField("TEXT")
+        .orElseThrow(() ->
+          new NoSuchFieldException("Cannot find field!"))
+        .getName(),
+      new IsEqual<>("TEXT")
+    ).affirm();
+  }
+
+  @Test
+  void getRealField() throws NoSuchFieldException {
+    new Assertion<>(
+      "Cannot find the real field instance of the field",
+      this.refClass.getField("TEXT")
+        .orElseThrow(() ->
+          new NoSuchFieldException("Cannot find field!"))
+        .getRealField(),
+      new IsEqual<>(FieldTest.class.getDeclaredField("TEXT"))
+    ).affirm();
+  }
+
+  @Test
+  void getType() throws NoSuchFieldException {
+    new Assertion<>(
+      "Cannot find type of the field",
+      this.refClass.getField("TEXT")
+        .orElseThrow(() ->
+          new NoSuchFieldException("Cannot find field!"))
+        .getType(),
+      new IsEqual<>(String.class)
+    ).affirm();
+  }
+
+  @Test
+  void hasFinal() throws NoSuchFieldException {
+    new Assertion<>(
+      "Cannot find final modifier of the field",
+      this.refClass.getField("TEXT")
+        .orElseThrow(() ->
+          new NoSuchFieldException("Cannot find field!"))
+        .hasFinal(),
+      new IsTrue()
+    ).affirm();
+  }
+
+  @Test
+  void hasPrivate() throws NoSuchFieldException {
+    new Assertion<>(
+      "Cannot find private modifier of the field",
+      this.refClass.getField("TEXT")
+        .orElseThrow(() ->
+          new NoSuchFieldException("Cannot find field!"))
+        .hasPrivate(),
+      new IsTrue()
+    ).affirm();
+  }
+
+  @Test
+  void hasPublic() throws NoSuchFieldException {
+    new Assertion<>(
+      "Found public modifier of the field",
+      this.refClass.getField("TEXT")
+        .orElseThrow(() ->
+          new NoSuchFieldException("Cannot find field!"))
+        .hasPublic(),
+      new IsNot<>(new IsTrue())
+    ).affirm();
+  }
+
+  @Test
+  void hasStatic() throws NoSuchFieldException {
+    new Assertion<>(
+      "Cannot find static modifier of the field",
+      this.refClass.getField("TEXT")
+        .orElseThrow(() ->
+          new NoSuchFieldException("Cannot find field!"))
+        .hasStatic(),
+      new IsTrue()
+    ).affirm();
+  }
+
+  @Test
   void set() throws NoSuchFieldException {
     this.refClass.getField("text")
       .orElseThrow(() ->
@@ -85,8 +185,10 @@ final class FieldOfTest {
 
   private static final class FieldTest {
 
+    @Anno("TEXT")
     private static final String TEXT = "Static Test Text";
 
+    @Anno("text")
     private final String text = "Test Text";
   }
 }

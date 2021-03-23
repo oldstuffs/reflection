@@ -25,6 +25,7 @@
 
 package io.github.portlek.reflection.method;
 
+import io.github.portlek.reflection.Anno;
 import io.github.portlek.reflection.RefClass;
 import io.github.portlek.reflection.RefMethodExecuted;
 import io.github.portlek.reflection.clazz.ClassOf;
@@ -33,6 +34,7 @@ import org.hamcrest.core.IsInstanceOf;
 import org.hamcrest.core.IsNot;
 import org.junit.jupiter.api.Test;
 import org.llorllale.cactoos.matchers.Assertion;
+import org.llorllale.cactoos.matchers.IsTrue;
 import org.llorllale.cactoos.matchers.Throws;
 
 final class MethodOfTest {
@@ -40,34 +42,6 @@ final class MethodOfTest {
   private final MethodOfTest.MethodTest METHOD_TEST = new MethodOfTest.MethodTest();
 
   private final RefClass<MethodOfTest.MethodTest> CLASS = new ClassOf<>(this.METHOD_TEST);
-
-  @Test
-  void of() throws Throwable {
-    new Assertion<>(
-      "Couldn't applied method!",
-      this.CLASS.getMethod("callVoidMethod")
-        .orElseThrow(() ->
-          new NoSuchFieldException("Cannot find method!"))
-        .of(this.METHOD_TEST),
-      new IsInstanceOf(RefMethodExecuted.class)
-    ).affirm();
-    new Assertion<>(
-      "Couldn't applied method!",
-      this.CLASS.getMethod("callReturnParameterMethod", 21)
-        .orElseThrow(() ->
-          new NoSuchFieldException("Cannot find method!"))
-        .of(this.METHOD_TEST),
-      new IsInstanceOf(RefMethodExecuted.class)
-    ).affirm();
-    new Assertion<>(
-      "Couldn't applied method!",
-      this.CLASS.getPrimitiveMethod("callPrimitiveReturnParameterMethod", 21)
-        .orElseThrow(() ->
-          new NoSuchFieldException("Cannot find method!"))
-        .of(this.METHOD_TEST),
-      new IsInstanceOf(RefMethodExecuted.class)
-    ).affirm();
-  }
 
   @Test
   void call() throws NoSuchFieldException {
@@ -128,24 +102,151 @@ final class MethodOfTest {
     ).affirm();
   }
 
+  @Test
+  void getAnnotation() throws NoSuchMethodException {
+    new Assertion<>(
+      "Cannot find the annotation",
+      this.CLASS.getMethod("callVoidMethod")
+        .orElseThrow(() ->
+          new NoSuchMethodException("Cannot find method!"))
+        .getAnnotation(Anno.class)
+        .isPresent(),
+      new IsTrue()
+    ).affirm();
+  }
+
+  @Test
+  void getName() throws NoSuchMethodException {
+    new Assertion<>(
+      "Cannot find the name of the method",
+      this.CLASS.getMethod("callVoidMethod")
+        .orElseThrow(() ->
+          new NoSuchMethodException("Cannot find method!"))
+        .getName(),
+      new IsEqual<>("callVoidMethod")
+    ).affirm();
+  }
+
+  @Test
+  void getParameterTypes() throws NoSuchMethodException {
+    new Assertion<>(
+      "Cannot find parameter types of the method",
+      this.CLASS.getMethod("callVoidMethod")
+        .orElseThrow(() ->
+          new NoSuchMethodException("Cannot find method!"))
+        .getParameterTypes()
+        .length,
+      new IsEqual<>(0)
+    ).affirm();
+  }
+
+  @Test
+  void getReturnType() throws NoSuchMethodException {
+    new Assertion<>(
+      "Cannot find return type of the method",
+      this.CLASS.getMethod("callVoidMethod")
+        .orElseThrow(() ->
+          new NoSuchMethodException("Cannot find method!"))
+        .getReturnType(),
+      new IsEqual<>(void.class)
+    ).affirm();
+  }
+
+  @Test
+  void hasFinal() throws NoSuchMethodException {
+    new Assertion<>(
+      "Found final modifier of the method",
+      this.CLASS.getMethod("callVoidMethod")
+        .orElseThrow(() ->
+          new NoSuchMethodException("Cannot find method!"))
+        .hasStatic(),
+      new IsNot<>(new IsTrue())
+    ).affirm();
+  }
+
+  @Test
+  void hasPrivate() throws NoSuchMethodException {
+    new Assertion<>(
+      "Cannot find private modifier of the method",
+      this.CLASS.getMethod("callVoidMethod")
+        .orElseThrow(() ->
+          new NoSuchMethodException("Cannot find method!"))
+        .hasStatic(),
+      new IsTrue()
+    ).affirm();
+  }
+
+  @Test
+  void hasPublic() throws NoSuchMethodException {
+    new Assertion<>(
+      "Found public modifier of the method",
+      this.CLASS.getMethod("callVoidMethod")
+        .orElseThrow(() ->
+          new NoSuchMethodException("Cannot find method!"))
+        .hasPublic(),
+      new IsNot<>(new IsTrue())
+    ).affirm();
+  }
+
+  @Test
+  void hasStatic() throws NoSuchMethodException {
+    new Assertion<>(
+      "Found static modifier of the method",
+      this.CLASS.getMethod("callVoidMethod")
+        .orElseThrow(() ->
+          new NoSuchMethodException("Cannot find method!"))
+        .hasStatic(),
+      new IsNot<>(new IsTrue())
+    ).affirm();
+  }
+
+  @Test
+  void of() throws NoSuchFieldException {
+    new Assertion<>(
+      "Couldn't applied method!",
+      this.CLASS.getMethod("callVoidMethod")
+        .orElseThrow(() ->
+          new NoSuchFieldException("Cannot find method!"))
+        .of(this.METHOD_TEST),
+      new IsInstanceOf(RefMethodExecuted.class)
+    ).affirm();
+    new Assertion<>(
+      "Couldn't applied method!",
+      this.CLASS.getMethod("callReturnParameterMethod", 21)
+        .orElseThrow(() ->
+          new NoSuchFieldException("Cannot find method!"))
+        .of(this.METHOD_TEST),
+      new IsInstanceOf(RefMethodExecuted.class)
+    ).affirm();
+    new Assertion<>(
+      "Couldn't applied method!",
+      this.CLASS.getPrimitiveMethod("callPrimitiveReturnParameterMethod", 21)
+        .orElseThrow(() ->
+          new NoSuchFieldException("Cannot find method!"))
+        .of(this.METHOD_TEST),
+      new IsInstanceOf(RefMethodExecuted.class)
+    ).affirm();
+  }
+
   private static final class MethodTest {
 
-    private void callVoidMethod() {
+    private String callPrimitiveReturnParameterMethod(final int age) {
+      return "Called Return Method with " + age;
     }
 
     private String callReturnMethod() {
       return "Called Return Method!";
     }
 
-    private void callVoidParameterMethod(final String text) {
-    }
-
     private String callReturnParameterMethod(final Integer age) {
       return "Called Return Method with " + age;
     }
 
-    private String callPrimitiveReturnParameterMethod(final int age) {
-      return "Called Return Method with " + age;
+    @Anno("callVoidMethod")
+    private void callVoidMethod() {
+    }
+
+    private void callVoidParameterMethod(final String text) {
     }
   }
 }

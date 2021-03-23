@@ -29,21 +29,20 @@ import io.github.portlek.reflection.RefClass;
 import io.github.portlek.reflection.RefConstructed;
 import io.github.portlek.reflection.RefField;
 import io.github.portlek.reflection.RefMethod;
-import io.github.portlek.reflection.RefParameterized;
 import io.github.portlek.reflection.constructor.ConstructorOf;
 import io.github.portlek.reflection.field.FieldOf;
 import io.github.portlek.reflection.method.MethodOf;
 import io.github.portlek.reflection.parameterized.ParameterizedOf;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
+import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -51,6 +50,8 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> the class's type.
  */
+@Log
+@SuppressWarnings("unchecked")
 public final class ClassOf<T> implements RefClass<T> {
 
   /**
@@ -68,14 +69,26 @@ public final class ClassOf<T> implements RefClass<T> {
     this.clazz = clazz;
   }
 
-  @SuppressWarnings("unchecked")
+  /**
+   * ctor.
+   *
+   * @param object the object to get its class.
+   *
+   * @see Object#getClass()
+   */
   public ClassOf(@NotNull final T object) {
     this((Class<T>) object.getClass());
   }
 
-  @SuppressWarnings("unchecked")
-  public ClassOf(@NotNull final String classname) throws ClassNotFoundException {
-    this((Class<T>) Class.forName(classname));
+  /**
+   * ctor.
+   *
+   * @param className the class name to get its class.
+   *
+   * @see Class#forName(String)
+   */
+  public ClassOf(@NotNull final String className) throws ClassNotFoundException {
+    this((Class<T>) Class.forName(className));
   }
 
   @Override
@@ -89,11 +102,10 @@ public final class ClassOf<T> implements RefClass<T> {
     return this.getConstructor0(false, types);
   }
 
-  @SuppressWarnings("unchecked")
   @NotNull
   @Override
   public Optional<RefConstructed<T>> getConstructor(final int number) {
-    final Collection<Constructor<?>> constructors = new ArrayList<>(Arrays.asList(this.clazz.getConstructors()));
+    final var constructors = new ArrayList<>(Arrays.asList(this.clazz.getConstructors()));
     constructors.addAll(Arrays.asList(this.clazz.getDeclaredConstructors()));
     return constructors.stream()
       .filter(Objects::nonNull)
@@ -127,6 +139,7 @@ public final class ClassOf<T> implements RefClass<T> {
       try {
         return Optional.of(new FieldOf(this.clazz.getDeclaredField(name)));
       } catch (final NoSuchFieldException e) {
+        ClassOf.log.log(Level.SEVERE, "ClassOf#getField(String)", e);
         return Optional.empty();
       }
     }
@@ -140,8 +153,8 @@ public final class ClassOf<T> implements RefClass<T> {
 
   @NotNull
   @Override
-  public Optional<RefField> getField(final @NotNull Class<?> type) {
-    final List<RefField> fields = this.getFields();
+  public Optional<RefField> getField(@NotNull final Class<?> type) {
+    final var fields = this.getFields();
     fields.addAll(this.getDeclaredFields());
     return fields.stream()
       .filter(Objects::nonNull)
@@ -166,8 +179,8 @@ public final class ClassOf<T> implements RefClass<T> {
   @NotNull
   @Override
   public Optional<RefMethod> getMethodByName(@NotNull final String... names) {
-    final Collection<Method> methods = new ArrayList<>(Arrays.asList(this.clazz.getMethods()));
-    methods.addAll(Arrays.asList(this.clazz.getDeclaredMethods()));
+    final var methods = this.getMethods();
+    methods.addAll(this.getDeclaredMethods());
     return methods.stream()
       .filter(Objects::nonNull)
       .filter(method ->
@@ -175,8 +188,7 @@ public final class ClassOf<T> implements RefClass<T> {
           .findFirst()
           .map(name -> method.getName().equals(name))
           .orElse(false))
-      .findFirst()
-      .map(MethodOf::new);
+      .findFirst();
   }
 
   @Override
@@ -194,13 +206,12 @@ public final class ClassOf<T> implements RefClass<T> {
   @NotNull
   @Override
   public Optional<RefMethod> getMethodByReturnType(@NotNull final Class<?> type) {
-    final Collection<Method> methods = new ArrayList<>(Arrays.asList(this.clazz.getMethods()));
-    methods.addAll(Arrays.asList(this.clazz.getDeclaredMethods()));
+    final var methods = this.getMethods();
+    methods.addAll(this.getDeclaredMethods());
     return methods.stream()
       .filter(Objects::nonNull)
       .filter(method -> type.equals(method.getReturnType()))
-      .findFirst()
-      .map(MethodOf::new);
+      .findFirst();
   }
 
   @NotNull
@@ -242,33 +253,33 @@ public final class ClassOf<T> implements RefClass<T> {
 
   @NotNull
   private Optional<RefMethod> findMethod0(final boolean primitive, @NotNull final Object... types) {
-    final RefParameterized<RefMethod> parameter = new ParameterizedOf<>(primitive, types);
-    final Collection<Method> methods = new ArrayList<>(Arrays.asList(this.clazz.getMethods()));
-    methods.addAll(Arrays.asList(this.clazz.getDeclaredMethods()));
-    final Collection<Class<?>> classList = new ArrayList<>();
+    final var parameter = new ParameterizedOf<>(primitive, types);
+    final var methods = this.getMethods();
+    methods.addAll(this.getDeclaredMethods());
+    final var classList = new ArrayList<Class<?>>();
     parameter.apply(classes -> {
       classList.addAll(Arrays.asList(classes));
       return Optional.empty();
     });
     findMethod:
-    for (final Method method : methods) {
-      final Class<?>[] methodtypes = method.getParameterTypes();
-      if (methodtypes.length != classList.size()) {
+    for (final var method : methods) {
+      final var methodTypes = method.getParameterTypes();
+      if (methodTypes.length != classList.size()) {
         continue;
       }
       for (int index = 0; index < classList.size(); index++) {
-        if (!Arrays.equals(classList.toArray(new Class<?>[0]), methodtypes)) {
+        if (!Arrays.equals(classList.toArray(new Class<?>[0]), methodTypes)) {
           continue findMethod;
         }
       }
-      return Optional.of(new MethodOf(method));
+      return Optional.of(method);
     }
     return Optional.empty();
   }
 
   @NotNull
   private Optional<RefConstructed<T>> getConstructor0(final boolean primitive, @NotNull final Object... types) {
-    final RefParameterized<RefConstructed<T>> parameter = new ParameterizedOf<>(primitive, types);
+    final var parameter = new ParameterizedOf<RefConstructed<T>>(primitive, types);
     return parameter.apply(classes -> {
       try {
         return Optional.of(new ConstructorOf<>(this.clazz.getConstructor(classes)));
@@ -277,6 +288,7 @@ public final class ClassOf<T> implements RefClass<T> {
           try {
             return Optional.of(new ConstructorOf<>(this.clazz.getDeclaredConstructor(declaredClasses)));
           } catch (final NoSuchMethodException noSuchMethodException) {
+            ClassOf.log.log(Level.SEVERE, "ClassOf#getConstructor0(boolean, Object[])", e);
             return Optional.empty();
           }
         });
@@ -287,15 +299,16 @@ public final class ClassOf<T> implements RefClass<T> {
   @NotNull
   private Optional<RefMethod> getMethod0(@NotNull final String name, final boolean primitive,
                                          @NotNull final Object... types) {
-    final RefParameterized<RefMethod> parameter = new ParameterizedOf<>(primitive, types);
+    final var parameter = new ParameterizedOf<RefMethod>(primitive, types);
     return parameter.apply(classes -> {
       try {
         return Optional.of(new MethodOf(this.clazz.getMethod(name, classes)));
       } catch (final NoSuchMethodException e) {
-        return parameter.apply(declaredclasses -> {
+        return parameter.apply(declaredClasses -> {
           try {
-            return Optional.of(new MethodOf(this.clazz.getDeclaredMethod(name, declaredclasses)));
+            return Optional.of(new MethodOf(this.clazz.getDeclaredMethod(name, declaredClasses)));
           } catch (final NoSuchMethodException noSuchMethodException) {
+            ClassOf.log.log(Level.SEVERE, "ClassOf#getMethod0(String, boolean, Object[])", e);
             return Optional.empty();
           }
         });

@@ -32,6 +32,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * a class that allows you to use the given objects as parameter types.
+ *
+ * @param <T> type of the parameter.
  */
 public final class ParameterizedOf<T> implements RefParameterized<T> {
 

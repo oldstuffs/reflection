@@ -30,6 +30,7 @@ import io.github.portlek.reflection.RefMethodExecuted;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,8 +62,46 @@ public final class MethodOf implements RefMethod {
 
   @NotNull
   @Override
+  public String getName() {
+    return this.method.getName();
+  }
+
+  @NotNull
+  @Override
+  public Class<?>[] getParameterTypes() {
+    return this.method.getParameterTypes();
+  }
+
+  @NotNull
+  @Override
+  public Class<?> getReturnType() {
+    return this.method.getReturnType();
+  }
+
+  @NotNull
+  @Override
   public RefMethodExecuted of(@Nullable final Object object) {
     return new MethodOf.MethodExecuted(object);
+  }
+
+  @Override
+  public boolean hasFinal() {
+    return Modifier.isFinal(this.method.getModifiers());
+  }
+
+  @Override
+  public boolean hasPrivate() {
+    return Modifier.isPrivate(this.method.getModifiers());
+  }
+
+  @Override
+  public boolean hasPublic() {
+    return Modifier.isPublic(this.method.getModifiers());
+  }
+
+  @Override
+  public boolean hasStatic() {
+    return Modifier.isStatic(this.method.getModifiers());
   }
 
   /**

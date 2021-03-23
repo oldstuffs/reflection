@@ -25,68 +25,36 @@
 
 package io.github.portlek.reflection;
 
-import java.lang.reflect.Field;
-import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 /**
- * an interface to determine {@link Field}.
+ * an interface to determine modifiable objects.
  */
-public interface RefField extends RefFieldExecuted, RefAnnotated, RefModifiable {
+public interface RefModifiable {
 
   /**
-   * gets name of the field.
+   * checks if the field has {@code final} modifier.
    *
-   * @return name of the field.
+   * @return {@code true} if the field has {@code final} modifier.
    */
-  @NotNull
-  String getName();
+  boolean hasFinal();
 
   /**
-   * obtains the real field.
+   * checks if the field has {@code private} modifier.
    *
-   * @return the real field.
+   * @return {@code true} if the field has {@code private} modifier.
    */
-  @NotNull
-  Field getRealField();
+  boolean hasPrivate();
 
   /**
-   * gets the type of the field.
+   * checks if the field has {@code public} modifier.
    *
-   * @return a {@link Class} that's type of the field
+   * @return {@code true} if the field has {@code public} modifier.
    */
-  @NotNull
-  Class<?> getType();
+  boolean hasPublic();
 
   /**
-   * gets the field's object as a static.
+   * checks if the field has {@code static} modifier.
    *
-   * @return static field value.
+   * @return {@code true} if the field has {@code static} modifier.
    */
-  @Override
-  @NotNull
-  default Optional<Object> getValue() {
-    return this.of(null).getValue();
-  }
-
-  /**
-   * sets the given object to the static field.
-   *
-   * @param value object to set.
-   */
-  @Override
-  default void setValue(@NotNull final Object value) {
-    this.of(null).setValue(value);
-  }
-
-  /**
-   * applies the given object to create a {@link RefFieldExecuted} object.
-   *
-   * @param object the object to apply.
-   *
-   * @return a {@link RefFieldExecuted} object.
-   */
-  @NotNull
-  RefFieldExecuted of(@Nullable Object object);
+  boolean hasStatic();
 }

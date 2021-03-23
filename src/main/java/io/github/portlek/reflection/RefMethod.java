@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * an interface to determine {@link java.lang.reflect.Method}.
  */
-public interface RefMethod extends RefMethodExecuted, RefAnnotated {
+public interface RefMethod extends RefMethodExecuted, RefAnnotated, RefModifiable {
 
   /**
    * calls the method with the given parameters as a static.
@@ -46,6 +46,30 @@ public interface RefMethod extends RefMethodExecuted, RefAnnotated {
   default Optional<Object> call(@NotNull final Object... parameters) {
     return this.of(null).call(parameters);
   }
+
+  /**
+   * obtains the method's name.
+   *
+   * @return method's name.
+   */
+  @NotNull
+  String getName();
+
+  /**
+   * obtains the parameter types of the method.
+   *
+   * @return parameter types.
+   */
+  @NotNull
+  Class<?>[] getParameterTypes();
+
+  /**
+   * obtains the return type of the method.
+   *
+   * @return return type.
+   */
+  @NotNull
+  Class<?> getReturnType();
 
   /**
    * applies the given object to create a {@link RefMethodExecuted} object.

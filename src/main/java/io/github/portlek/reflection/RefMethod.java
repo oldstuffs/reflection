@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Hasan Demirtaş
+ * Copyright (c) 2021 Hasan Demirtaş
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,16 +35,6 @@ import org.jetbrains.annotations.Nullable;
 public interface RefMethod extends RefMethodExecuted, RefAnnotated {
 
   /**
-   * applies the given object to create a {@link RefMethodExecuted} object.
-   *
-   * @param object the object to apply.
-   *
-   * @return a {@link RefMethodExecuted} object.
-   */
-  @NotNull
-  RefMethodExecuted of(@Nullable Object object);
-
-  /**
    * calls the method with the given parameters as a static.
    *
    * @param parameters the parameters to call.
@@ -56,4 +46,14 @@ public interface RefMethod extends RefMethodExecuted, RefAnnotated {
   default Optional<Object> call(@NotNull final Object... parameters) {
     return this.of(null).call(parameters);
   }
+
+  /**
+   * applies the given object to create a {@link RefMethodExecuted} object.
+   *
+   * @param object the object to apply.
+   *
+   * @return a {@link RefMethodExecuted} object.
+   */
+  @NotNull
+  RefMethodExecuted of(@Nullable Object object);
 }

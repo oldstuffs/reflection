@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Hasan Demirtaş
+ * Copyright (c) 2021 Hasan Demirtaş
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -54,11 +54,6 @@ public final class ConstructorOf<T> implements RefConstructed<T> {
     this.constructor = constructor;
   }
 
-  @Override
-  public <A extends Annotation> Optional<A> getAnnotation(@NotNull final Class<A> annotationClass) {
-    return Optional.ofNullable(this.constructor.getDeclaredAnnotation(annotationClass));
-  }
-
   @NotNull
   @Override
   public Optional<T> create(@NotNull final Object... parameters) {
@@ -71,5 +66,10 @@ public final class ConstructorOf<T> implements RefConstructed<T> {
     } finally {
       this.constructor.setAccessible(accessible);
     }
+  }
+
+  @Override
+  public <A extends Annotation> Optional<A> getAnnotation(@NotNull final Class<A> annotationClass) {
+    return Optional.ofNullable(this.constructor.getDeclaredAnnotation(annotationClass));
   }
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Hasan Demirtaş
+ * Copyright (c) 2021 Hasan Demirtaş
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -54,15 +54,15 @@ public final class MethodOf implements RefMethod {
     this.method = method;
   }
 
+  @Override
+  public <A extends Annotation> Optional<A> getAnnotation(@NotNull final Class<A> annotationClass) {
+    return Optional.ofNullable(this.method.getDeclaredAnnotation(annotationClass));
+  }
+
   @NotNull
   @Override
   public RefMethodExecuted of(@Nullable final Object object) {
     return new MethodOf.MethodExecuted(object);
-  }
-
-  @Override
-  public <A extends Annotation> Optional<A> getAnnotation(@NotNull final Class<A> annotationClass) {
-    return Optional.ofNullable(this.method.getDeclaredAnnotation(annotationClass));
   }
 
   /**

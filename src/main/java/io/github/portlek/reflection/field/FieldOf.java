@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Hasan Demirtaş
+ * Copyright (c) 2021 Hasan Demirtaş
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,7 @@ import io.github.portlek.reflection.RefField;
 import io.github.portlek.reflection.RefFieldExecuted;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,10 +54,9 @@ public final class FieldOf implements RefField {
     this.field = field;
   }
 
-  @NotNull
   @Override
-  public Class<?> getType() {
-    return this.field.getType();
+  public <A extends Annotation> Optional<A> getAnnotation(@NotNull final Class<A> annotationClass) {
+    return Optional.ofNullable(this.field.getDeclaredAnnotation(annotationClass));
   }
 
   @NotNull
@@ -67,13 +67,40 @@ public final class FieldOf implements RefField {
 
   @NotNull
   @Override
-  public RefFieldExecuted of(@Nullable final Object object) {
-    return new FieldOf.FieldExecuted(object);
+  public Field getRealField() {
+    return this.field;
+  }
+
+  @NotNull
+  @Override
+  public Class<?> getType() {
+    return this.field.getType();
   }
 
   @Override
-  public <A extends Annotation> Optional<A> getAnnotation(@NotNull final Class<A> annotationClass) {
-    return Optional.ofNullable(this.field.getDeclaredAnnotation(annotationClass));
+  public boolean hasFinal() {
+    return Modifier.isFinal(this.field.getModifiers());
+  }
+
+  @Override
+  public boolean hasPrivate() {
+    return Modifier.isPrivate(this.field.getModifiers());
+  }
+
+  @Override
+  public boolean hasPublic() {
+    return Modifier.isPublic(this.field.getModifiers());
+  }
+
+  @Override
+  public boolean hasStatic() {
+    return Modifier.isStatic(this.field.getModifiers());
+  }
+
+  @NotNull
+  @Override
+  public RefFieldExecuted of(@Nullable final Object object) {
+    return new FieldOf.FieldExecuted(object);
   }
 
   /**

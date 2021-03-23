@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Hasan Demirtaş
+ * Copyright (c) 2021 Hasan Demirtaş
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,22 +25,15 @@
 
 package io.github.portlek.reflection;
 
+import java.lang.reflect.Field;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * an interface to determine {@link java.lang.reflect.Field}.
+ * an interface to determine {@link Field}.
  */
 public interface RefField extends RefFieldExecuted, RefAnnotated {
-
-  /**
-   * gets the type of the field.
-   *
-   * @return a {@link Class} that's type of the field
-   */
-  @NotNull
-  Class<?> getType();
 
   /**
    * gets name of the field.
@@ -51,14 +44,31 @@ public interface RefField extends RefFieldExecuted, RefAnnotated {
   String getName();
 
   /**
-   * applies the given object to create a {@link RefFieldExecuted} object.
+   * obtains the real field.
    *
-   * @param object the object to apply.
-   *
-   * @return a {@link RefFieldExecuted} object.
+   * @return the real field.
    */
   @NotNull
-  RefFieldExecuted of(@Nullable Object object);
+  Field getRealField();
+
+  /**
+   * gets the type of the field.
+   *
+   * @return a {@link Class} that's type of the field
+   */
+  @NotNull
+  Class<?> getType();
+
+  /**
+   * gets the field's object as a static.
+   *
+   * @return static field value.
+   */
+  @Override
+  @NotNull
+  default Optional<Object> getValue() {
+    return this.of(null).getValue();
+  }
 
   /**
    * sets the given object to the static field.
@@ -71,13 +81,40 @@ public interface RefField extends RefFieldExecuted, RefAnnotated {
   }
 
   /**
-   * gets the field's object as a static.
+   * checks if the field has {@code final} modifier.
    *
-   * @return static field value.
+   * @return {@code true} if the field has {@code final} modifier.
    */
-  @Override
+  boolean hasFinal();
+
+  /**
+   * checks if the field has {@code private} modifier.
+   *
+   * @return {@code true} if the field has {@code private} modifier.
+   */
+  boolean hasPrivate();
+
+  /**
+   * checks if the field has {@code public} modifier.
+   *
+   * @return {@code true} if the field has {@code public} modifier.
+   */
+  boolean hasPublic();
+
+  /**
+   * checks if the field has {@code static} modifier.
+   *
+   * @return {@code true} if the field has {@code static} modifier.
+   */
+  boolean hasStatic();
+
+  /**
+   * applies the given object to create a {@link RefFieldExecuted} object.
+   *
+   * @param object the object to apply.
+   *
+   * @return a {@link RefFieldExecuted} object.
+   */
   @NotNull
-  default Optional<Object> getValue() {
-    return this.of(null).getValue();
-  }
+  RefFieldExecuted of(@Nullable Object object);
 }

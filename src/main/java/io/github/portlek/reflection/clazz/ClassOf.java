@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Hasan Demirtaş
+ * Copyright (c) 2021 Hasan Demirtaş
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,11 @@
 
 package io.github.portlek.reflection.clazz;
 
-import io.github.portlek.reflection.*;
+import io.github.portlek.reflection.RefClass;
+import io.github.portlek.reflection.RefConstructed;
+import io.github.portlek.reflection.RefField;
+import io.github.portlek.reflection.RefMethod;
+import io.github.portlek.reflection.RefParameterized;
 import io.github.portlek.reflection.constructor.ConstructorOf;
 import io.github.portlek.reflection.field.FieldOf;
 import io.github.portlek.reflection.method.MethodOf;
@@ -33,7 +37,12 @@ import io.github.portlek.reflection.parameterized.ParameterizedOf;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 
@@ -69,79 +78,9 @@ public final class ClassOf<T> implements RefClass<T> {
     this((Class<T>) Class.forName(classname));
   }
 
-  @NotNull
   @Override
-  public Class<T> getRealClass() {
-    return this.clazz;
-  }
-
-  @Override
-  public boolean isInstance(@NotNull final Object object) {
-    return this.clazz.isInstance(object);
-  }
-
-  @NotNull
-  @Override
-  public Optional<RefMethod> getPrimitiveMethod(@NotNull final String name, @NotNull final Object... types) {
-    return this.getMethod0(name, true, types);
-  }
-
-  @NotNull
-  @Override
-  public Optional<RefMethod> getMethod(@NotNull final String name, @NotNull final Object... types) {
-    return this.getMethod0(name, false, types);
-  }
-
-  @Override
-  @NotNull
-  public Optional<RefMethod> getPrimitiveMethodByParameter(@NotNull final Object... types) {
-    return this.findMethod0(true, types);
-  }
-
-  @Override
-  @NotNull
-  public Optional<RefMethod> getMethodByParameter(@NotNull final Object... types) {
-    return this.findMethod0(false, types);
-  }
-
-  @NotNull
-  @Override
-  public Optional<RefMethod> getMethodByName(@NotNull final String... names) {
-    final Collection<Method> methods = new ArrayList<>(Arrays.asList(this.clazz.getMethods()));
-    methods.addAll(Arrays.asList(this.clazz.getDeclaredMethods()));
-    return methods.stream()
-      .filter(Objects::nonNull)
-      .filter(method ->
-        Arrays.stream(names)
-          .findFirst()
-          .map(name -> method.getName().equals(name))
-          .orElse(false))
-      .findFirst()
-      .map(MethodOf::new);
-  }
-
-  @NotNull
-  @Override
-  public <X> Optional<RefMethod> getMethodByReturnType(@NotNull final RefClass<X> type) {
-    return this.getMethodByReturnType(type.getRealClass());
-  }
-
-  @NotNull
-  @Override
-  public Optional<RefMethod> getMethodByReturnType(@NotNull final Class<?> type) {
-    final Collection<Method> methods = new ArrayList<>(Arrays.asList(this.clazz.getMethods()));
-    methods.addAll(Arrays.asList(this.clazz.getDeclaredMethods()));
-    return methods.stream()
-      .filter(Objects::nonNull)
-      .filter(method -> type.equals(method.getReturnType()))
-      .findFirst()
-      .map(MethodOf::new);
-  }
-
-  @NotNull
-  @Override
-  public Optional<RefConstructed<T>> getPrimitiveConstructor(@NotNull final Object... types) {
-    return this.getConstructor0(true, types);
+  public <A extends Annotation> Optional<A> getAnnotation(@NotNull final Class<A> annotationClass) {
+    return Optional.ofNullable(this.clazz.getDeclaredAnnotation(annotationClass));
   }
 
   @NotNull
@@ -161,6 +100,22 @@ public final class ClassOf<T> implements RefClass<T> {
       .filter(constructor -> constructor.getParameterTypes().length == number)
       .findFirst()
       .map(constructor -> new ConstructorOf<>((Constructor<T>) constructor));
+  }
+
+  @NotNull
+  @Override
+  public List<RefField> getDeclaredFields() {
+    return Arrays.stream(this.clazz.getDeclaredFields())
+      .map(FieldOf::new)
+      .collect(Collectors.toList());
+  }
+
+  @NotNull
+  @Override
+  public List<RefMethod> getDeclaredMethods() {
+    return Arrays.stream(this.clazz.getDeclaredMethods())
+      .map(MethodOf::new)
+      .collect(Collectors.toList());
   }
 
   @NotNull
@@ -204,10 +159,48 @@ public final class ClassOf<T> implements RefClass<T> {
 
   @NotNull
   @Override
-  public List<RefField> getDeclaredFields() {
-    return Arrays.stream(this.clazz.getDeclaredFields())
-      .map(FieldOf::new)
-      .collect(Collectors.toList());
+  public Optional<RefMethod> getMethod(@NotNull final String name, @NotNull final Object... types) {
+    return this.getMethod0(name, false, types);
+  }
+
+  @NotNull
+  @Override
+  public Optional<RefMethod> getMethodByName(@NotNull final String... names) {
+    final Collection<Method> methods = new ArrayList<>(Arrays.asList(this.clazz.getMethods()));
+    methods.addAll(Arrays.asList(this.clazz.getDeclaredMethods()));
+    return methods.stream()
+      .filter(Objects::nonNull)
+      .filter(method ->
+        Arrays.stream(names)
+          .findFirst()
+          .map(name -> method.getName().equals(name))
+          .orElse(false))
+      .findFirst()
+      .map(MethodOf::new);
+  }
+
+  @Override
+  @NotNull
+  public Optional<RefMethod> getMethodByParameter(@NotNull final Object... types) {
+    return this.findMethod0(false, types);
+  }
+
+  @NotNull
+  @Override
+  public <X> Optional<RefMethod> getMethodByReturnType(@NotNull final RefClass<X> type) {
+    return this.getMethodByReturnType(type.getRealClass());
+  }
+
+  @NotNull
+  @Override
+  public Optional<RefMethod> getMethodByReturnType(@NotNull final Class<?> type) {
+    final Collection<Method> methods = new ArrayList<>(Arrays.asList(this.clazz.getMethods()));
+    methods.addAll(Arrays.asList(this.clazz.getDeclaredMethods()));
+    return methods.stream()
+      .filter(Objects::nonNull)
+      .filter(method -> type.equals(method.getReturnType()))
+      .findFirst()
+      .map(MethodOf::new);
   }
 
   @NotNull
@@ -220,52 +213,31 @@ public final class ClassOf<T> implements RefClass<T> {
 
   @NotNull
   @Override
-  public List<RefMethod> getDeclaredMethods() {
-    return Arrays.stream(this.clazz.getDeclaredMethods())
-      .map(MethodOf::new)
-      .collect(Collectors.toList());
+  public Optional<RefConstructed<T>> getPrimitiveConstructor(@NotNull final Object... types) {
+    return this.getConstructor0(true, types);
+  }
+
+  @NotNull
+  @Override
+  public Optional<RefMethod> getPrimitiveMethod(@NotNull final String name, @NotNull final Object... types) {
+    return this.getMethod0(name, true, types);
   }
 
   @Override
-  public <A extends Annotation> Optional<A> getAnnotation(@NotNull final Class<A> annotationClass) {
-    return Optional.ofNullable(this.clazz.getDeclaredAnnotation(annotationClass));
+  @NotNull
+  public Optional<RefMethod> getPrimitiveMethodByParameter(@NotNull final Object... types) {
+    return this.findMethod0(true, types);
   }
 
   @NotNull
-  private Optional<RefMethod> getMethod0(@NotNull final String name, final boolean primitive,
-                                         @NotNull final Object... types) {
-    final RefParameterized<RefMethod> parameter = new ParameterizedOf<>(primitive, types);
-    return parameter.apply(classes -> {
-      try {
-        return Optional.of(new MethodOf(this.clazz.getMethod(name, classes)));
-      } catch (final NoSuchMethodException e) {
-        return parameter.apply(declaredclasses -> {
-          try {
-            return Optional.of(new MethodOf(this.clazz.getDeclaredMethod(name, declaredclasses)));
-          } catch (final NoSuchMethodException noSuchMethodException) {
-            return Optional.empty();
-          }
-        });
-      }
-    });
+  @Override
+  public Class<T> getRealClass() {
+    return this.clazz;
   }
 
-  @NotNull
-  private Optional<RefConstructed<T>> getConstructor0(final boolean primitive, @NotNull final Object... types) {
-    final RefParameterized<RefConstructed<T>> parameter = new ParameterizedOf<>(primitive, types);
-    return parameter.apply(classes -> {
-      try {
-        return Optional.of(new ConstructorOf<>(this.clazz.getConstructor(classes)));
-      } catch (final NoSuchMethodException e) {
-        return parameter.apply(declaredClasses -> {
-          try {
-            return Optional.of(new ConstructorOf<>(this.clazz.getDeclaredConstructor(declaredClasses)));
-          } catch (final NoSuchMethodException noSuchMethodException) {
-            return Optional.empty();
-          }
-        });
-      }
-    });
+  @Override
+  public boolean isInstance(@NotNull final Object object) {
+    return this.clazz.isInstance(object);
   }
 
   @NotNull
@@ -292,5 +264,42 @@ public final class ClassOf<T> implements RefClass<T> {
       return Optional.of(new MethodOf(method));
     }
     return Optional.empty();
+  }
+
+  @NotNull
+  private Optional<RefConstructed<T>> getConstructor0(final boolean primitive, @NotNull final Object... types) {
+    final RefParameterized<RefConstructed<T>> parameter = new ParameterizedOf<>(primitive, types);
+    return parameter.apply(classes -> {
+      try {
+        return Optional.of(new ConstructorOf<>(this.clazz.getConstructor(classes)));
+      } catch (final NoSuchMethodException e) {
+        return parameter.apply(declaredClasses -> {
+          try {
+            return Optional.of(new ConstructorOf<>(this.clazz.getDeclaredConstructor(declaredClasses)));
+          } catch (final NoSuchMethodException noSuchMethodException) {
+            return Optional.empty();
+          }
+        });
+      }
+    });
+  }
+
+  @NotNull
+  private Optional<RefMethod> getMethod0(@NotNull final String name, final boolean primitive,
+                                         @NotNull final Object... types) {
+    final RefParameterized<RefMethod> parameter = new ParameterizedOf<>(primitive, types);
+    return parameter.apply(classes -> {
+      try {
+        return Optional.of(new MethodOf(this.clazz.getMethod(name, classes)));
+      } catch (final NoSuchMethodException e) {
+        return parameter.apply(declaredclasses -> {
+          try {
+            return Optional.of(new MethodOf(this.clazz.getDeclaredMethod(name, declaredclasses)));
+          } catch (final NoSuchMethodException noSuchMethodException) {
+            return Optional.empty();
+          }
+        });
+      }
+    });
   }
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Hasan Demirtaş
+ * Copyright (c) 2021 Hasan Demirtaş
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,32 +40,32 @@ import org.jetbrains.annotations.NotNull;
 public interface RefClass<T> extends RefAnnotated {
 
   /**
-   * gets a field list that has the given annotation.
+   * gets existing constructor by types.
    *
-   * @param annotationClass the annotation class to get.
-   * @param <A> the annotation type.
+   * @param types the parameter types to get.
    *
-   * @return a field list.
+   * @return a {@link RefConstructed} object.
    */
   @NotNull
-  default <A extends Annotation> List<RefField> getFieldsWithAnnotation(@NotNull final Class<A> annotationClass) {
-    return this.getFields().stream()
-      .filter(refField -> refField.hasAnnotation(annotationClass))
-      .collect(Collectors.toList());
-  }
+  Optional<RefConstructed<T>> getConstructor(@NotNull Object... types);
 
   /**
-   * gets a field list that has the given annotation and runs the consumer for each found field.
+   * gets constructor by number of arguments.
    *
-   * @param annotationClass the annotation class to get.
-   * @param consumer the consumer to run.
-   * @param <A> the annotation type.
+   * @param number the number to get.
+   *
+   * @return a {@link RefConstructed} object.
    */
-  default <A extends Annotation> void getFieldsWithAnnotation(@NotNull final Class<A> annotationClass,
-                                                              @NotNull final BiConsumer<RefField, A> consumer) {
-    this.getFields().forEach(refField ->
-      refField.getAnnotation(annotationClass, a -> consumer.accept(refField, a)));
-  }
+  @NotNull
+  Optional<RefConstructed<T>> getConstructor(int number);
+
+  /**
+   * gets all declared fields.
+   *
+   * @return all declared fields of the class.
+   */
+  @NotNull
+  List<RefField> getDeclaredFields();
 
   /**
    * gets a declared field list that has the given annotation.
@@ -97,32 +97,12 @@ public interface RefClass<T> extends RefAnnotated {
   }
 
   /**
-   * gets a method list that has the given annotation.
+   * gets all declared methods.
    *
-   * @param annotationClass the annotation class to get.
-   * @param <A> the annotation type.
-   *
-   * @return a method list.
+   * @return all declared methods of the class.
    */
   @NotNull
-  default <A extends Annotation> List<RefMethod> getMethodsWithAnnotation(@NotNull final Class<A> annotationClass) {
-    return this.getMethods().stream()
-      .filter(refField -> refField.hasAnnotation(annotationClass))
-      .collect(Collectors.toList());
-  }
-
-  /**
-   * gets a method list that has the given annotation and runs the consumer for each found method.
-   *
-   * @param annotationClass the annotation class to get.
-   * @param consumer the consumer to run.
-   * @param <A> the annotation type.
-   */
-  default <A extends Annotation> void getMethodsWithAnnotation(@NotNull final Class<A> annotationClass,
-                                                               @NotNull final BiConsumer<RefMethod, A> consumer) {
-    this.getMethods().forEach(refField ->
-      refField.getAnnotation(annotationClass, a -> consumer.accept(refField, a)));
-  }
+  List<RefMethod> getDeclaredMethods();
 
   /**
    * gets a method field list that has the given annotation.
@@ -152,127 +132,6 @@ public interface RefClass<T> extends RefAnnotated {
     this.getDeclaredMethods().forEach(refField ->
       refField.getAnnotation(annotationClass, a -> consumer.accept(refField, a)));
   }
-
-  /**
-   * obtains the real class.
-   *
-   * @return the real class.
-   */
-  @NotNull
-  Class<T> getRealClass();
-
-  /**
-   * checks if the given object is instance of {@code this}.
-   *
-   * @param object the object to check.
-   *
-   * @return true if object is an instance of this class.
-   *
-   * @see Class#isInstance(Object)
-   */
-  boolean isInstance(@NotNull Object object);
-
-  /**
-   * gets existing method by name and types.
-   *
-   * @param name the name to get.
-   * @param types the method parameter types to get.
-   *
-   * @return a {@link RefMethod} object.
-   */
-  @NotNull
-  Optional<RefMethod> getPrimitiveMethod(@NotNull String name, @NotNull Object... types);
-
-  /**
-   * gets existing method by name and types.
-   *
-   * @param name the name to get.
-   * @param types method parameter types to get.
-   *
-   * @return a {@link RefMethod} object.
-   */
-  @NotNull
-  Optional<RefMethod> getMethod(@NotNull String name, @NotNull Object... types);
-
-  /**
-   * gets method by type parameters.
-   *
-   * @param types the parameter types to get.
-   *
-   * @return a {@link RefMethod} object.
-   */
-  @NotNull
-  Optional<RefMethod> getPrimitiveMethodByParameter(@NotNull Object... types);
-
-  /**
-   * gets method by type parameters.
-   *
-   * @param types the parameter types to get.
-   *
-   * @return a {@link RefMethod} object.
-   */
-  @NotNull
-  Optional<RefMethod> getMethodByParameter(@NotNull Object... types);
-
-  /**
-   * gets method by name.
-   *
-   * @param names the names to get.
-   *
-   * @return a {@link RefMethod} object.
-   */
-  @NotNull
-  Optional<RefMethod> getMethodByName(@NotNull String... names);
-
-  /**
-   * gets method by return value.
-   *
-   * @param type the type to get.
-   * @param <X> the class type of the return type.
-   *
-   * @return a {@link RefMethod} object.
-   */
-  @NotNull <X> Optional<RefMethod> getMethodByReturnType(@NotNull RefClass<X> type);
-
-  /**
-   * gets method by return value.
-   *
-   * @param type the type to get.
-   *
-   * @return a {@link RefMethod} object.
-   */
-  @NotNull
-  Optional<RefMethod> getMethodByReturnType(@NotNull Class<?> type);
-
-  /**
-   * gets existing constructor by types.
-   *
-   * @param types the parameter types to get.
-   *
-   * @return a {@link RefConstructed} object.
-   */
-  @NotNull
-  Optional<RefConstructed<T>> getPrimitiveConstructor(@NotNull Object... types);
-
-  /**
-   * gets existing constructor by types.
-   *
-   * @param types the parameter types to get.
-   *
-   * @return a {@link RefConstructed} object.
-   */
-  @NotNull
-  Optional<RefConstructed<T>> getConstructor(@NotNull Object... types);
-
-  /**
-   * gets constructor by number of arguments.
-   *
-   * @param number the number to get.
-   *
-   * @return a {@link RefConstructed} object.
-   */
-  @NotNull
-  Optional<RefConstructed<T>> getConstructor(int number);
 
   /**
    * gets field by name.
@@ -313,12 +172,83 @@ public interface RefClass<T> extends RefAnnotated {
   List<RefField> getFields();
 
   /**
-   * gets all declared fields.
+   * gets a field list that has the given annotation.
    *
-   * @return all declared fields of the class.
+   * @param annotationClass the annotation class to get.
+   * @param <A> the annotation type.
+   *
+   * @return a field list.
    */
   @NotNull
-  List<RefField> getDeclaredFields();
+  default <A extends Annotation> List<RefField> getFieldsWithAnnotation(@NotNull final Class<A> annotationClass) {
+    return this.getFields().stream()
+      .filter(refField -> refField.hasAnnotation(annotationClass))
+      .collect(Collectors.toList());
+  }
+
+  /**
+   * gets a field list that has the given annotation and runs the consumer for each found field.
+   *
+   * @param annotationClass the annotation class to get.
+   * @param consumer the consumer to run.
+   * @param <A> the annotation type.
+   */
+  default <A extends Annotation> void getFieldsWithAnnotation(@NotNull final Class<A> annotationClass,
+                                                              @NotNull final BiConsumer<RefField, A> consumer) {
+    this.getFields().forEach(refField ->
+      refField.getAnnotation(annotationClass, a -> consumer.accept(refField, a)));
+  }
+
+  /**
+   * gets existing method by name and types.
+   *
+   * @param name the name to get.
+   * @param types method parameter types to get.
+   *
+   * @return a {@link RefMethod} object.
+   */
+  @NotNull
+  Optional<RefMethod> getMethod(@NotNull String name, @NotNull Object... types);
+
+  /**
+   * gets method by name.
+   *
+   * @param names the names to get.
+   *
+   * @return a {@link RefMethod} object.
+   */
+  @NotNull
+  Optional<RefMethod> getMethodByName(@NotNull String... names);
+
+  /**
+   * gets method by type parameters.
+   *
+   * @param types the parameter types to get.
+   *
+   * @return a {@link RefMethod} object.
+   */
+  @NotNull
+  Optional<RefMethod> getMethodByParameter(@NotNull Object... types);
+
+  /**
+   * gets method by return value.
+   *
+   * @param type the type to get.
+   * @param <X> the class type of the return type.
+   *
+   * @return a {@link RefMethod} object.
+   */
+  @NotNull <X> Optional<RefMethod> getMethodByReturnType(@NotNull RefClass<X> type);
+
+  /**
+   * gets method by return value.
+   *
+   * @param type the type to get.
+   *
+   * @return a {@link RefMethod} object.
+   */
+  @NotNull
+  Optional<RefMethod> getMethodByReturnType(@NotNull Class<?> type);
 
   /**
    * gets all methods.
@@ -329,10 +259,80 @@ public interface RefClass<T> extends RefAnnotated {
   List<RefMethod> getMethods();
 
   /**
-   * gets all declared methods.
+   * gets a method list that has the given annotation.
    *
-   * @return all declared methods of the class.
+   * @param annotationClass the annotation class to get.
+   * @param <A> the annotation type.
+   *
+   * @return a method list.
    */
   @NotNull
-  List<RefMethod> getDeclaredMethods();
+  default <A extends Annotation> List<RefMethod> getMethodsWithAnnotation(@NotNull final Class<A> annotationClass) {
+    return this.getMethods().stream()
+      .filter(refField -> refField.hasAnnotation(annotationClass))
+      .collect(Collectors.toList());
+  }
+
+  /**
+   * gets a method list that has the given annotation and runs the consumer for each found method.
+   *
+   * @param annotationClass the annotation class to get.
+   * @param consumer the consumer to run.
+   * @param <A> the annotation type.
+   */
+  default <A extends Annotation> void getMethodsWithAnnotation(@NotNull final Class<A> annotationClass,
+                                                               @NotNull final BiConsumer<RefMethod, A> consumer) {
+    this.getMethods().forEach(refField ->
+      refField.getAnnotation(annotationClass, a -> consumer.accept(refField, a)));
+  }
+
+  /**
+   * gets existing constructor by types.
+   *
+   * @param types the parameter types to get.
+   *
+   * @return a {@link RefConstructed} object.
+   */
+  @NotNull
+  Optional<RefConstructed<T>> getPrimitiveConstructor(@NotNull Object... types);
+
+  /**
+   * gets existing method by name and types.
+   *
+   * @param name the name to get.
+   * @param types the method parameter types to get.
+   *
+   * @return a {@link RefMethod} object.
+   */
+  @NotNull
+  Optional<RefMethod> getPrimitiveMethod(@NotNull String name, @NotNull Object... types);
+
+  /**
+   * gets method by type parameters.
+   *
+   * @param types the parameter types to get.
+   *
+   * @return a {@link RefMethod} object.
+   */
+  @NotNull
+  Optional<RefMethod> getPrimitiveMethodByParameter(@NotNull Object... types);
+
+  /**
+   * obtains the real class.
+   *
+   * @return the real class.
+   */
+  @NotNull
+  Class<T> getRealClass();
+
+  /**
+   * checks if the given object is instance of {@code this}.
+   *
+   * @param object the object to check.
+   *
+   * @return true if object is an instance of this class.
+   *
+   * @see Class#isInstance(Object)
+   */
+  boolean isInstance(@NotNull Object object);
 }

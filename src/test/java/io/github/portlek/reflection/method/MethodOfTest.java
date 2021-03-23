@@ -171,7 +171,7 @@ final class MethodOfTest {
       this.CLASS.getMethod("callVoidMethod")
         .orElseThrow(() ->
           new NoSuchMethodException("Cannot find method!"))
-        .hasStatic(),
+        .hasPrivate(),
       new IsTrue()
     ).affirm();
   }

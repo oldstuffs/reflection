@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> the result instance's type.
  */
-public interface RefConstructed<T> extends RefAnnotated {
+public interface RefConstructed<T> extends RefAnnotated, RefModifiable {
 
   /**
    * creates a new instance from the given parameters.

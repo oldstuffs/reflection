@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> the class's type.
  */
-public interface RefClass<T> extends RefAnnotated {
+public interface RefClass<T> extends RefAnnotated, RefModifiable {
 
   /**
    * gets existing constructor by types.

@@ -35,6 +35,7 @@ import io.github.portlek.reflection.method.MethodOf;
 import io.github.portlek.reflection.parameterized.ParameterizedOf;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -250,6 +251,26 @@ public final class ClassOf<T> implements RefClass<T> {
   @Override
   public boolean isInstance(@NotNull final Object object) {
     return this.clazz.isInstance(object);
+  }
+
+  @Override
+  public boolean hasFinal() {
+    return Modifier.isFinal(this.clazz.getModifiers());
+  }
+
+  @Override
+  public boolean hasPrivate() {
+    return Modifier.isPrivate(this.clazz.getModifiers());
+  }
+
+  @Override
+  public boolean hasPublic() {
+    return Modifier.isPublic(this.clazz.getModifiers());
+  }
+
+  @Override
+  public boolean hasStatic() {
+    return Modifier.isStatic(this.clazz.getModifiers());
   }
 
   @NotNull

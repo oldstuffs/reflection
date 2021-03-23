@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Hasan Demirtaş
+ * Copyright (c) 2021 Hasan Demirtaş
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -59,9 +59,9 @@ public final class Converted implements Supplier<Class<?>[]> {
   @NotNull
   @Override
   public Class<?>[] get() {
-    final Class<?>[] classes = new Class[this.objects.length];
-    for (int index = 0; index < this.objects.length; index++) {
-      final Object object = this.objects[index];
+    final var classes = new Class[this.objects.length];
+    for (var index = 0; index < this.objects.length; index++) {
+      final var object = this.objects[index];
       final Class<?> clazz;
       if (object instanceof RefClass) {
         clazz = ((RefClass<?>) object).getRealClass();

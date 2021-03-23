@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Hasan Demirtaş
+ * Copyright (c) 2021 Hasan Demirtaş
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,11 @@
 
 package io.github.portlek.reflection.clazz;
 
+import io.github.portlek.reflection.Anno;
 import io.github.portlek.reflection.RefClass;
+import java.util.concurrent.atomic.AtomicReference;
 import org.hamcrest.core.IsEqual;
+import org.hamcrest.core.IsNot;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.llorllale.cactoos.matchers.Assertion;
@@ -37,93 +40,28 @@ final class ClassOfTest {
   private static final RefClass<ClassOfTest.TestClass> CLASS = new ClassOf<>(ClassOfTest.TestClass.class);
 
   @Test
-  void getRealClass() {
+  void findConstructor() {
     new Assertion<>(
-      "Class is not equal to real class!",
-      ClassOfTest.CLASS.getRealClass(),
-      new IsEqual<>(ClassOfTest.TestClass.class)
-    ).affirm();
-  }
-
-  @Test
-  void isInstance() {
-    new Assertion<>(
-      "Class is not instance of the object",
-      ClassOfTest.CLASS.isInstance(new ClassOfTest.TestTestClass("Hasan", 21)),
+      "Cannot find constructor!",
+      ClassOfTest.CLASS.getConstructor(2).isPresent(),
       new IsTrue()
     ).affirm();
   }
 
   @Test
-  void getMethod() {
+  void findFieldFromClass() {
     new Assertion<>(
-      "Cannot find method",
-      ClassOfTest.CLASS.getMethod("voidMethod").isPresent(),
-      new IsTrue()
-    ).affirm();
-    new Assertion<>(
-      "Cannot find method",
-      ClassOfTest.CLASS.getMethod("returnStringMethod").isPresent(),
-      new IsTrue()
-    ).affirm();
-    new Assertion<>(
-      "Cannot find method",
-      ClassOfTest.CLASS.getMethod("voidParameterMethod", String.class, Integer.class).isPresent(),
-      new IsTrue()
-    ).affirm();
-    new Assertion<>(
-      "Cannot find method",
-      ClassOfTest.CLASS.getMethod("returnIntegerParameterMethod", String.class, Integer.class).isPresent(),
-      new IsTrue()
-    ).affirm();
-    new Assertion<>(
-      "Cannot find method",
-      ClassOfTest.CLASS.getPrimitiveMethod("voidPrimitiveParameterMethod", String.class, Integer.class)
-        .isPresent(),
-      new IsTrue()
-    ).affirm();
-    new Assertion<>(
-      "Cannot find method",
-      ClassOfTest.CLASS.getPrimitiveMethod("returnIntPrimitiveParameterMethod", String.class,
-        Integer.class).isPresent(),
+      "Cannot find field!",
+      ClassOfTest.CLASS.getField(String.class).isPresent(),
       new IsTrue()
     ).affirm();
   }
 
   @Test
-  void findMethodByParameter() {
+  void findFieldFromRefClass() {
     new Assertion<>(
-      "Cannot find method",
-      ClassOfTest.CLASS.getMethodByParameter().isPresent(),
-      new IsTrue()
-    ).affirm();
-    new Assertion<>(
-      "Cannot find method",
-      ClassOfTest.CLASS.getMethodByParameter(String.class, Integer.class).isPresent(),
-      new IsTrue()
-    ).affirm();
-    new Assertion<>(
-      "Cannot find method",
-      ClassOfTest.CLASS.getMethodByParameter(String.class, int.class).isPresent(),
-      new IsTrue()
-    ).affirm();
-  }
-
-  @Test
-  void findPrimitiveMethodByParameter() {
-    new Assertion<>(
-      "Cannot find method",
-      ClassOfTest.CLASS.getPrimitiveMethodByParameter().isPresent(),
-      new IsTrue()
-    ).affirm();
-    new Assertion<>(
-      "Cannot find method",
-      ClassOfTest.CLASS.getPrimitiveMethodByParameter(String.class, Integer.class).isPresent(),
-      new IsTrue()
-    ).affirm();
-    new Assertion<>(
-      "Cannot find method",
-      ClassOfTest.CLASS.getPrimitiveMethodByParameter(String.class, int.class).isPresent(),
+      "Cannot find field!",
+      ClassOfTest.CLASS.getField(new ClassOf<>(String.class)).isPresent(),
       new IsTrue()
     ).affirm();
   }
@@ -158,6 +96,25 @@ final class ClassOfTest {
     new Assertion<>(
       "Cannot find method",
       ClassOfTest.CLASS.getMethodByName("returnIntPrimitiveParameterMethod").isPresent(),
+      new IsTrue()
+    ).affirm();
+  }
+
+  @Test
+  void findMethodByParameter() {
+    new Assertion<>(
+      "Cannot find method",
+      ClassOfTest.CLASS.getMethodByParameter().isPresent(),
+      new IsTrue()
+    ).affirm();
+    new Assertion<>(
+      "Cannot find method",
+      ClassOfTest.CLASS.getMethodByParameter(String.class, Integer.class).isPresent(),
+      new IsTrue()
+    ).affirm();
+    new Assertion<>(
+      "Cannot find method",
+      ClassOfTest.CLASS.getMethodByParameter(String.class, int.class).isPresent(),
       new IsTrue()
     ).affirm();
   }
@@ -211,20 +168,37 @@ final class ClassOfTest {
   }
 
   @Test
-  void getPrimitiveConstructor() {
+  void findPrimitiveMethodByParameter() {
     new Assertion<>(
-      "Cannot find constructor!",
-      ClassOfTest.CLASS.getPrimitiveConstructor(String.class, Integer.class).isPresent(),
+      "Cannot find method",
+      ClassOfTest.CLASS.getPrimitiveMethodByParameter().isPresent(),
+      new IsTrue()
+    ).affirm();
+    new Assertion<>(
+      "Cannot find method",
+      ClassOfTest.CLASS.getPrimitiveMethodByParameter(String.class, Integer.class).isPresent(),
+      new IsTrue()
+    ).affirm();
+    new Assertion<>(
+      "Cannot find method",
+      ClassOfTest.CLASS.getPrimitiveMethodByParameter(String.class, int.class).isPresent(),
       new IsTrue()
     ).affirm();
   }
 
   @Test
-  void findConstructor() {
+  void getAnnotation() {
     new Assertion<>(
-      "Cannot find constructor!",
-      ClassOfTest.CLASS.getConstructor(2).isPresent(),
+      "Cannot find the annotation!",
+      ClassOfTest.CLASS.getAnnotation(Anno.class).isPresent(),
       new IsTrue()
+    ).affirm();
+    final var count = new AtomicReference<String>();
+    ClassOfTest.CLASS.getAnnotation(Anno.class, anno -> count.set(anno.value()));
+    new Assertion<>(
+      "Cannot run the consumer!",
+      count.get(),
+      new IsEqual<>("test")
     ).affirm();
   }
 
@@ -240,6 +214,29 @@ final class ClassOfTest {
       ClassOfTest.CLASS.getConstructor(String.class, int.class).isPresent(),
       new IsTrue()
     ).affirm();
+    new Assertion<>(
+      "Cannot find constructor!",
+      ClassOfTest.CLASS.getConstructor(2).isPresent(),
+      new IsTrue()
+    ).affirm();
+  }
+
+  @Test
+  void getDeclaredFields() {
+    new Assertion<>(
+      "Cannot find declared fields",
+      ClassOfTest.CLASS.getDeclaredFields().size(),
+      new IsEqual<>(2)
+    ).affirm();
+  }
+
+  @Test
+  void getDeclaredMethods() {
+    new Assertion<>(
+      "Cannot find declared methods",
+      ClassOfTest.CLASS.getDeclaredMethods().size(),
+      new IsEqual<>(6)
+    ).affirm();
   }
 
   @Test
@@ -252,36 +249,184 @@ final class ClassOfTest {
   }
 
   @Test
-  void findFieldFromClass() {
+  void getFields() {
     new Assertion<>(
-      "Cannot find field!",
-      ClassOfTest.CLASS.getField(String.class).isPresent(),
+      "Cannot find declared fields",
+      ClassOfTest.CLASS.getFields().size(),
+      new IsEqual<>(0)
+    ).affirm();
+  }
+
+  @Test
+  void getMethod() {
+    new Assertion<>(
+      "Cannot find method",
+      ClassOfTest.CLASS.getMethod("voidMethod").isPresent(),
+      new IsTrue()
+    ).affirm();
+    new Assertion<>(
+      "Cannot find method",
+      ClassOfTest.CLASS.getMethod("returnStringMethod").isPresent(),
+      new IsTrue()
+    ).affirm();
+    new Assertion<>(
+      "Cannot find method",
+      ClassOfTest.CLASS.getMethod("voidParameterMethod", String.class, Integer.class).isPresent(),
+      new IsTrue()
+    ).affirm();
+    new Assertion<>(
+      "Cannot find method",
+      ClassOfTest.CLASS.getMethod("returnIntegerParameterMethod", String.class, Integer.class).isPresent(),
+      new IsTrue()
+    ).affirm();
+    new Assertion<>(
+      "Cannot find method",
+      ClassOfTest.CLASS.getPrimitiveMethod("voidPrimitiveParameterMethod", String.class, Integer.class)
+        .isPresent(),
+      new IsTrue()
+    ).affirm();
+    new Assertion<>(
+      "Cannot find method",
+      ClassOfTest.CLASS.getPrimitiveMethod("returnIntPrimitiveParameterMethod", String.class,
+        Integer.class).isPresent(),
       new IsTrue()
     ).affirm();
   }
 
   @Test
-  void findFieldFromRefClass() {
+  void getMethodByName() {
     new Assertion<>(
-      "Cannot find field!",
-      ClassOfTest.CLASS.getField(new ClassOf<>(String.class)).isPresent(),
+      "Cannot find the method by name",
+      ClassOfTest.CLASS.getMethodByName("voidMethod").isPresent(),
       new IsTrue()
     ).affirm();
   }
 
-  private static class TestTestClass extends ClassOfTest.TestClass {
-
-    TestTestClass(final String text, final int age) {
-      super(text, age);
-    }
+  @Test
+  void getMethodByParameter() {
+    new Assertion<>(
+      "Cannot find the method by parameter",
+      ClassOfTest.CLASS.getMethodByParameter(String.class, Integer.class).isPresent(),
+      new IsTrue()
+    ).affirm();
   }
 
+  @Test
+  void getMethodByReturnType() {
+    new Assertion<>(
+      "Cannot find the method by return type",
+      ClassOfTest.CLASS.getMethodByReturnType(String.class).isPresent(),
+      new IsTrue()
+    ).affirm();
+    new Assertion<>(
+      "Cannot find the method by return type",
+      ClassOfTest.CLASS.getMethodByReturnType(Integer.class).isPresent(),
+      new IsTrue()
+    ).affirm();
+    new Assertion<>(
+      "Cannot find the method by return type",
+      ClassOfTest.CLASS.getMethodByReturnType(void.class).isPresent(),
+      new IsTrue()
+    ).affirm();
+  }
+
+  @Test
+  void getMethods() {
+    new Assertion<>(
+      "Cannot find methods",
+      ClassOfTest.CLASS.getMethods().size(),
+      new IsEqual<>(9)
+    ).affirm();
+  }
+
+  @Test
+  void getPrimitiveConstructor() {
+    new Assertion<>(
+      "Cannot find constructor!",
+      ClassOfTest.CLASS.getPrimitiveConstructor(String.class, Integer.class).isPresent(),
+      new IsTrue()
+    ).affirm();
+  }
+
+  @Test
+  void getPrimitiveMethod() {
+    new Assertion<>(
+      "Cannot find primitive method",
+      ClassOfTest.CLASS.getPrimitiveMethod("returnIntPrimitiveParameterMethod", String.class, int.class).isPresent(),
+      new IsTrue()
+    ).affirm();
+  }
+
+  @Test
+  void getPrimitiveMethodByParameter() {
+    new Assertion<>(
+      "Cannot find primitive method",
+      ClassOfTest.CLASS.getPrimitiveMethodByParameter(String.class, int.class).isPresent(),
+      new IsTrue()
+    ).affirm();
+  }
+
+  @Test
+  void getRealClass() {
+    new Assertion<>(
+      "Class is not equal to real class!",
+      ClassOfTest.CLASS.getRealClass(),
+      new IsEqual<>(ClassOfTest.TestClass.class)
+    ).affirm();
+  }
+
+  @Test
+  void hasFinal() {
+    new Assertion<>(
+      "Cannot get the class's modifier correctly",
+      ClassOfTest.CLASS.hasFinal(),
+      new IsNot<>(new IsTrue())
+    ).affirm();
+  }
+
+  @Test
+  void hasPrivate() {
+    new Assertion<>(
+      "Cannot get the class's modifier correctly",
+      ClassOfTest.CLASS.hasPrivate(),
+      new IsTrue()
+    ).affirm();
+  }
+
+  @Test
+  void hasPublic() {
+    new Assertion<>(
+      "Cannot get the class's modifier correctly",
+      ClassOfTest.CLASS.hasPublic(),
+      new IsNot<>(new IsTrue())
+    ).affirm();
+  }
+
+  @Test
+  void hasStatic() {
+    new Assertion<>(
+      "Cannot get the class's modifier correctly",
+      ClassOfTest.CLASS.hasStatic(),
+      new IsTrue()
+    ).affirm();
+  }
+
+  @Test
+  void isInstance() {
+    new Assertion<>(
+      "Class is not instance of the object",
+      ClassOfTest.CLASS.isInstance(new ClassOfTest.TestTestClass("Hasan", 21)),
+      new IsTrue()
+    ).affirm();
+  }
+
+  @Anno("test")
   private static class TestClass {
+
+    private final int age;
 
     @NotNull
     private final String text;
-
-    private final int age;
 
     TestClass(@NotNull final String text, final int age) {
       this.text = text;
@@ -292,25 +437,32 @@ final class ClassOfTest {
       this("Hasan", 21);
     }
 
-    private void voidMethod() {
-    }
-
-    private String returnStringMethod() {
-      return "Called Return Method!";
-    }
-
-    private void voidParameterMethod(final String param1, final Integer param2) {
+    private int returnIntPrimitiveParameterMethod(final String param1, final int param2) {
+      return 1;
     }
 
     private Integer returnIntegerParameterMethod(final String param1, final Integer param2) {
       return 1;
     }
 
-    private void voidPrimitiveParameterMethod(final String param1, final int param2) {
+    private String returnStringMethod() {
+      return "Called Return Method!";
     }
 
-    private int returnIntPrimitiveParameterMethod(final String param1, final int param2) {
-      return 1;
+    private void voidMethod() {
+    }
+
+    private void voidParameterMethod(final String param1, final Integer param2) {
+    }
+
+    private void voidPrimitiveParameterMethod(final String param1, final int param2) {
+    }
+  }
+
+  private static class TestTestClass extends ClassOfTest.TestClass {
+
+    TestTestClass(final String text, final int age) {
+      super(text, age);
     }
   }
 }

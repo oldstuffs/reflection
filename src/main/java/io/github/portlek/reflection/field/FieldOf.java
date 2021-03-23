@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Hasan Demirtaş
+ * Copyright (c) 2021 Hasan Demirtaş
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,13 +29,17 @@ import io.github.portlek.reflection.RefField;
 import io.github.portlek.reflection.RefFieldExecuted;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Optional;
+import java.util.logging.Level;
+import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * an implementation for {@link RefField}.
  */
+@Log
 public final class FieldOf implements RefField {
 
   /**
@@ -53,10 +57,9 @@ public final class FieldOf implements RefField {
     this.field = field;
   }
 
-  @NotNull
   @Override
-  public Class<?> getType() {
-    return this.field.getType();
+  public <A extends Annotation> Optional<A> getAnnotation(@NotNull final Class<A> annotationClass) {
+    return Optional.ofNullable(this.field.getDeclaredAnnotation(annotationClass));
   }
 
   @NotNull
@@ -67,13 +70,40 @@ public final class FieldOf implements RefField {
 
   @NotNull
   @Override
+  public Field getRealField() {
+    return this.field;
+  }
+
+  @NotNull
+  @Override
+  public Class<?> getType() {
+    return this.field.getType();
+  }
+
+  @NotNull
+  @Override
   public RefFieldExecuted of(@Nullable final Object object) {
     return new FieldOf.FieldExecuted(object);
   }
 
   @Override
-  public <A extends Annotation> Optional<A> getAnnotation(@NotNull final Class<A> annotationClass) {
-    return Optional.ofNullable(this.field.getDeclaredAnnotation(annotationClass));
+  public boolean hasFinal() {
+    return Modifier.isFinal(this.field.getModifiers());
+  }
+
+  @Override
+  public boolean hasPrivate() {
+    return Modifier.isPrivate(this.field.getModifiers());
+  }
+
+  @Override
+  public boolean hasPublic() {
+    return Modifier.isPublic(this.field.getModifiers());
+  }
+
+  @Override
+  public boolean hasStatic() {
+    return Modifier.isStatic(this.field.getModifiers());
   }
 
   /**
@@ -99,12 +129,13 @@ public final class FieldOf implements RefField {
     @NotNull
     @Override
     public Optional<Object> getValue() {
-      final boolean accessible = FieldOf.this.field.isAccessible();
+      final var accessible = FieldOf.this.field.isAccessible();
       try {
         FieldOf.this.field.setAccessible(true);
         return Optional.ofNullable(FieldOf.this.field.get(this.object));
       } catch (final IllegalAccessException exception) {
-        throw new IllegalStateException(exception);
+        FieldOf.log.log(Level.SEVERE, "FieldExecuted#getValue()", exception);
+        return Optional.empty();
       } finally {
         FieldOf.this.field.setAccessible(accessible);
       }
@@ -117,7 +148,7 @@ public final class FieldOf implements RefField {
         FieldOf.this.field.setAccessible(true);
         FieldOf.this.field.set(this.object, value);
       } catch (final IllegalAccessException exception) {
-        throw new IllegalStateException(exception);
+        FieldOf.log.log(Level.SEVERE, "FieldExecuted#setValue(Object)", exception);
       } finally {
         FieldOf.this.field.setAccessible(accessible);
       }

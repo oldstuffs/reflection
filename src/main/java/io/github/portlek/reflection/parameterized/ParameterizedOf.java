@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Hasan Demirtaş
+ * Copyright (c) 2021 Hasan Demirtaş
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,6 +32,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * a class that allows you to use the given objects as parameter types.
+ *
+ * @param <T> type of the parameter.
  */
 public final class ParameterizedOf<T> implements RefParameterized<T> {
 

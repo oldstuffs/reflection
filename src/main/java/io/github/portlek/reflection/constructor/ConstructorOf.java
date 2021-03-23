@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Hasan Demirtaş
+ * Copyright (c) 2021 Hasan Demirtaş
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,10 @@ import io.github.portlek.reflection.RefConstructed;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.util.Optional;
+import java.util.logging.Level;
+import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -37,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> the result instance's type.
  */
+@Log
 public final class ConstructorOf<T> implements RefConstructed<T> {
 
   /**
@@ -54,22 +58,43 @@ public final class ConstructorOf<T> implements RefConstructed<T> {
     this.constructor = constructor;
   }
 
+  @NotNull
+  @Override
+  public Optional<T> create(@NotNull final Object... parameters) {
+    final var accessible = this.constructor.isAccessible();
+    try {
+      this.constructor.setAccessible(true);
+      return Optional.of(this.constructor.newInstance(parameters));
+    } catch (final IllegalAccessException | InstantiationException | InvocationTargetException exception) {
+      ConstructorOf.log.log(Level.SEVERE, "ConstructorOf#create(Object[])", exception);
+      return Optional.empty();
+    } finally {
+      this.constructor.setAccessible(accessible);
+    }
+  }
+
   @Override
   public <A extends Annotation> Optional<A> getAnnotation(@NotNull final Class<A> annotationClass) {
     return Optional.ofNullable(this.constructor.getDeclaredAnnotation(annotationClass));
   }
 
-  @NotNull
   @Override
-  public Optional<T> create(@NotNull final Object... parameters) {
-    final boolean accessible = this.constructor.isAccessible();
-    try {
-      this.constructor.setAccessible(true);
-      return Optional.of(this.constructor.newInstance(parameters));
-    } catch (final IllegalAccessException | InstantiationException | InvocationTargetException exception) {
-      throw new IllegalStateException(exception);
-    } finally {
-      this.constructor.setAccessible(accessible);
-    }
+  public boolean hasFinal() {
+    return Modifier.isFinal(this.constructor.getModifiers());
+  }
+
+  @Override
+  public boolean hasPrivate() {
+    return Modifier.isPrivate(this.constructor.getModifiers());
+  }
+
+  @Override
+  public boolean hasPublic() {
+    return Modifier.isPublic(this.constructor.getModifiers());
+  }
+
+  @Override
+  public boolean hasStatic() {
+    return Modifier.isStatic(this.constructor.getModifiers());
   }
 }

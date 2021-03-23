@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Hasan Demirtaş
+ * Copyright (c) 2021 Hasan Demirtaş
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,10 +33,11 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> the class type.
  */
+@SuppressWarnings("unchecked")
 public final class Primitive<T> implements Supplier<Class<T>> {
 
   /**
-   * the class
+   * the class.
    */
   @NotNull
   private final Class<T> clazz;
@@ -50,7 +51,6 @@ public final class Primitive<T> implements Supplier<Class<T>> {
     this.clazz = clazz;
   }
 
-  @SuppressWarnings("unchecked")
   @NotNull
   @Override
   public Class<T> get() {

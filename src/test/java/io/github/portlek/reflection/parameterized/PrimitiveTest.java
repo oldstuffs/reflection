@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Hasan Demirtaş
+ * Copyright (c) 2021 Hasan Demirtaş
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,23 +32,23 @@ import org.llorllale.cactoos.matchers.Assertion;
 
 final class PrimitiveTest {
 
-  private static final Supplier<Class<Integer>> INTEGER = new Primitive<>(int.class);
-
-  private static final Supplier<Class<Float>> FLOAT = new Primitive<>(float.class);
-
-  private static final Supplier<Class<Short>> SHORT = new Primitive<>(short.class);
-
-  private static final Supplier<Class<Character>> CHARACTER = new Primitive<>(char.class);
-
   private static final Supplier<Class<Boolean>> BOOLEAN = new Primitive<>(boolean.class);
 
   private static final Supplier<Class<Byte>> BYTE = new Primitive<>(byte.class);
 
-  private static final Supplier<Class<Long>> LONG = new Primitive<>(long.class);
-
-  private static final Supplier<Class<Void>> VOID = new Primitive<>(void.class);
+  private static final Supplier<Class<Character>> CHARACTER = new Primitive<>(char.class);
 
   private static final Supplier<Class<Double>> DOUBLE = new Primitive<>(double.class);
+
+  private static final Supplier<Class<Float>> FLOAT = new Primitive<>(float.class);
+
+  private static final Supplier<Class<Integer>> INTEGER = new Primitive<>(int.class);
+
+  private static final Supplier<Class<Long>> LONG = new Primitive<>(long.class);
+
+  private static final Supplier<Class<Short>> SHORT = new Primitive<>(short.class);
+
+  private static final Supplier<Class<Void>> VOID = new Primitive<>(void.class);
 
   @Test
   void get() {

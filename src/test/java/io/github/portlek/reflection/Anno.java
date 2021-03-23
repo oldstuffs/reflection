@@ -25,14 +25,14 @@
 
 package io.github.portlek.reflection;
 
-import java.util.Optional;
-import java.util.function.Function;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-/**
- * an interface to determine primitive class types.
- *
- * @param <T> the primitive class type.
- */
-public interface RefParameterized<T> extends Function<Function<Class<?>[], Optional<T>>, Optional<T>> {
+@Target({ElementType.FIELD, ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Anno {
 
+  String value();
 }

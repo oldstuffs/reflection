@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Hasan Demirtaş
+ * Copyright (c) 2021 Hasan Demirtaş
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,27 +25,36 @@
 
 package io.github.portlek.reflection.constructor;
 
-import io.github.portlek.reflection.RefClass;
 import io.github.portlek.reflection.RefConstructed;
 import io.github.portlek.reflection.clazz.ClassOf;
-import java.util.Optional;
 import org.hamcrest.core.IsInstanceOf;
+import org.hamcrest.core.IsNot;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.llorllale.cactoos.matchers.Assertion;
+import org.llorllale.cactoos.matchers.IsTrue;
 
 final class ConstructorOfTest {
 
+  @NotNull
+  private static final RefConstructed<ConstructorTest> CONSTRUCTOR;
+
+  static {
+    try {
+      CONSTRUCTOR = new ClassOf<>(ConstructorTest.class)
+        .getPrimitiveConstructor(String.class, int.class)
+        .orElseThrow(() ->
+          new NoSuchMethodException("Cannot find constructor!"));
+    } catch (final NoSuchMethodException exception) {
+      throw new RuntimeException(exception);
+    }
+  }
+
   @Test
   void create() throws NoSuchMethodException {
-    final RefClass<ConstructorOfTest.ConstructorTest> refClass = new ClassOf<>(ConstructorOfTest.ConstructorTest.class);
-    final Optional<RefConstructed<ConstructorOfTest.ConstructorTest>> optional =
-      refClass.getPrimitiveConstructor(String.class, int.class);
     new Assertion<>(
       "Cannot created object of the Constructed!",
-      optional
-        .orElseThrow(() ->
-          new NoSuchMethodException("Cannot find constructor!"))
+      ConstructorOfTest.CONSTRUCTOR
         .create("Hasan", 21)
         .orElseThrow(() ->
           new NoSuchMethodException("Couldn't create object from constructor!")),
@@ -53,12 +62,48 @@ final class ConstructorOfTest {
     ).affirm();
   }
 
+  @Test
+  void hasFinal() {
+    new Assertion<>(
+      "Cannot get the class's modifier correctly",
+      ConstructorOfTest.CONSTRUCTOR.hasFinal(),
+      new IsNot<>(new IsTrue())
+    ).affirm();
+  }
+
+  @Test
+  void hasPrivate() {
+    new Assertion<>(
+      "Cannot get the class's modifier correctly",
+      ConstructorOfTest.CONSTRUCTOR.hasPrivate(),
+      new IsTrue()
+    ).affirm();
+  }
+
+  @Test
+  void hasPublic() {
+    new Assertion<>(
+      "Cannot get the class's modifier correctly",
+      ConstructorOfTest.CONSTRUCTOR.hasPublic(),
+      new IsNot<>(new IsTrue())
+    ).affirm();
+  }
+
+  @Test
+  void hasStatic() {
+    new Assertion<>(
+      "Cannot get the class's modifier correctly",
+      ConstructorOfTest.CONSTRUCTOR.hasStatic(),
+      new IsNot<>(new IsTrue())
+    ).affirm();
+  }
+
   private static class ConstructorTest {
+
+    private final int age;
 
     @NotNull
     private final String name;
-
-    private final int age;
 
     private ConstructorTest(@NotNull final String text, final int age) {
       this.name = text;

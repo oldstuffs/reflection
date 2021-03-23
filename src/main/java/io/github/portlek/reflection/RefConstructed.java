@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Hasan Demirtaş
+ * Copyright (c) 2021 Hasan Demirtaş
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> the result instance's type.
  */
-public interface RefConstructed<T> extends RefAnnotated {
+public interface RefConstructed<T> extends RefAnnotated, RefModifiable {
 
   /**
    * creates a new instance from the given parameters.

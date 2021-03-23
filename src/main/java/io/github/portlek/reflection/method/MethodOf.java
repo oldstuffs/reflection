@@ -32,12 +32,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Optional;
+import java.util.logging.Level;
+import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * an implementation for {@link RefMethod}.
  */
+@Log
 public final class MethodOf implements RefMethod {
 
   /**
@@ -127,12 +130,13 @@ public final class MethodOf implements RefMethod {
     @NotNull
     @Override
     public Optional<Object> call(@NotNull final Object... parameters) {
-      final boolean accessible = MethodOf.this.method.isAccessible();
+      final var accessible = MethodOf.this.method.isAccessible();
       try {
         MethodOf.this.method.setAccessible(true);
         return Optional.ofNullable(MethodOf.this.method.invoke(this.object, parameters));
       } catch (final IllegalAccessException | InvocationTargetException exception) {
-        throw new IllegalStateException(exception);
+        MethodOf.log.log(Level.SEVERE, "MethodExecuted#call(Object[])", exception);
+        return Optional.empty();
       } finally {
         MethodOf.this.method.setAccessible(accessible);
       }

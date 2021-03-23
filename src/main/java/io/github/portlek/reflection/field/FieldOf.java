@@ -39,6 +39,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * an implementation for {@link RefField}.
  */
+@Log
 public final class FieldOf implements RefField {
 
   /**
@@ -108,7 +109,6 @@ public final class FieldOf implements RefField {
   /**
    * an implementation for {@link RefFieldExecuted}.
    */
-  @Log
   private final class FieldExecuted implements RefFieldExecuted {
 
     /**
@@ -129,12 +129,12 @@ public final class FieldOf implements RefField {
     @NotNull
     @Override
     public Optional<Object> getValue() {
-      final boolean accessible = FieldOf.this.field.isAccessible();
+      final var accessible = FieldOf.this.field.isAccessible();
       try {
         FieldOf.this.field.setAccessible(true);
         return Optional.ofNullable(FieldOf.this.field.get(this.object));
       } catch (final IllegalAccessException exception) {
-        FieldExecuted.log.log(Level.SEVERE, "FieldExecuted#getValue()", exception);
+        FieldOf.log.log(Level.SEVERE, "FieldExecuted#getValue()", exception);
         return Optional.empty();
       } finally {
         FieldOf.this.field.setAccessible(accessible);
@@ -148,7 +148,7 @@ public final class FieldOf implements RefField {
         FieldOf.this.field.setAccessible(true);
         FieldOf.this.field.set(this.object, value);
       } catch (final IllegalAccessException exception) {
-        FieldExecuted.log.log(Level.SEVERE, "FieldExecuted#setValue(Object)", exception);
+        FieldOf.log.log(Level.SEVERE, "FieldExecuted#setValue(Object)", exception);
       } finally {
         FieldOf.this.field.setAccessible(accessible);
       }

@@ -33,10 +33,11 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> the class type.
  */
+@SuppressWarnings("unchecked")
 public final class Primitive<T> implements Supplier<Class<T>> {
 
   /**
-   * the class
+   * the class.
    */
   @NotNull
   private final Class<T> clazz;
@@ -50,7 +51,6 @@ public final class Primitive<T> implements Supplier<Class<T>> {
     this.clazz = clazz;
   }
 
-  @SuppressWarnings("unchecked")
   @NotNull
   @Override
   public Class<T> get() {

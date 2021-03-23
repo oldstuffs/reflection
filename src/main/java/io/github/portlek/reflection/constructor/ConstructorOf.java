@@ -60,7 +60,7 @@ public final class ConstructorOf<T> implements RefConstructed<T> {
   @NotNull
   @Override
   public Optional<T> create(@NotNull final Object... parameters) {
-    final boolean accessible = this.constructor.isAccessible();
+    final var accessible = this.constructor.isAccessible();
     try {
       this.constructor.setAccessible(true);
       return Optional.of(this.constructor.newInstance(parameters));

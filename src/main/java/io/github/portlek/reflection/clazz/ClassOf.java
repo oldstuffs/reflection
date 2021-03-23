@@ -85,6 +85,7 @@ public final class ClassOf<T> implements RefClass<T> {
    *
    * @param className the class name to get its class.
    *
+   * @throws ClassNotFoundException if the given {@code className} not found.
    * @see Class#forName(String)
    */
   public ClassOf(@NotNull final String className) throws ClassNotFoundException {

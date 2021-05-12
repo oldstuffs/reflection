@@ -27,11 +27,13 @@ package io.github.portlek.reflection.parameterized;
 
 import io.github.portlek.reflection.RefClass;
 import java.util.function.Supplier;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * a class that converts the given objects into the {@link Class}.
  */
+@RequiredArgsConstructor
 public final class Converted implements Supplier<Class<?>[]> {
 
   /**
@@ -44,17 +46,6 @@ public final class Converted implements Supplier<Class<?>[]> {
    */
   @NotNull
   private final Object[] objects;
-
-  /**
-   * ctor.
-   *
-   * @param isPrimitive the is primitive.
-   * @param objects the objects.
-   */
-  public Converted(final boolean isPrimitive, @NotNull final Object[] objects) {
-    this.isPrimitive = isPrimitive;
-    this.objects = objects.clone();
-  }
 
   @NotNull
   @Override

@@ -28,6 +28,7 @@ package io.github.portlek.reflection.parameterized;
 import io.github.portlek.reflection.RefParameterized;
 import java.util.Optional;
 import java.util.function.Function;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -35,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> type of the parameter.
  */
+@RequiredArgsConstructor
 public final class ParameterizedOf<T> implements RefParameterized<T> {
 
   /**
@@ -42,15 +44,6 @@ public final class ParameterizedOf<T> implements RefParameterized<T> {
    */
   @NotNull
   private final Converted converted;
-
-  /**
-   * ctor.
-   *
-   * @param converted the converted.
-   */
-  public ParameterizedOf(@NotNull final Converted converted) {
-    this.converted = converted;
-  }
 
   /**
    * ctor.

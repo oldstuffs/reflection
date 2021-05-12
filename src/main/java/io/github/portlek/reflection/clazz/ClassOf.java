@@ -43,6 +43,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,6 +54,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @Log
 @SuppressWarnings("unchecked")
+@RequiredArgsConstructor
 public final class ClassOf<T> implements RefClass<T> {
 
   /**
@@ -60,15 +62,6 @@ public final class ClassOf<T> implements RefClass<T> {
    */
   @NotNull
   private final Class<T> clazz;
-
-  /**
-   * ctor.
-   *
-   * @param clazz the class.
-   */
-  public ClassOf(@NotNull final Class<T> clazz) {
-    this.clazz = clazz;
-  }
 
   /**
    * ctor.

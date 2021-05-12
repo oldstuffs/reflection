@@ -32,6 +32,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.Optional;
 import java.util.logging.Level;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
  * @param <T> the result instance's type.
  */
 @Log
+@RequiredArgsConstructor
 public final class ConstructorOf<T> implements RefConstructed<T> {
 
   /**
@@ -48,15 +50,6 @@ public final class ConstructorOf<T> implements RefConstructed<T> {
    */
   @NotNull
   private final Constructor<T> constructor;
-
-  /**
-   * ctor.
-   *
-   * @param constructor the constructor.
-   */
-  public ConstructorOf(@NotNull final Constructor<T> constructor) {
-    this.constructor = constructor;
-  }
 
   @NotNull
   @Override

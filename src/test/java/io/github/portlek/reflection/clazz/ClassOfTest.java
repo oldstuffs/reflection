@@ -28,9 +28,9 @@ package io.github.portlek.reflection.clazz;
 import io.github.portlek.reflection.Anno;
 import io.github.portlek.reflection.RefClass;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 import org.hamcrest.core.IsEqual;
 import org.hamcrest.core.IsNot;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.llorllale.cactoos.matchers.Assertion;
 import org.llorllale.cactoos.matchers.IsTrue;
@@ -234,7 +234,10 @@ final class ClassOfTest {
   void getDeclaredMethods() {
     new Assertion<>(
       "Cannot find declared methods",
-      ClassOfTest.CLASS.getDeclaredMethods().size(),
+      ClassOfTest.CLASS.getDeclaredMethods().stream()
+        .filter(refMethod -> !refMethod.getName().equals("$jacocoInit"))
+        .collect(Collectors.toSet())
+        .size(),
       new IsEqual<>(6)
     ).affirm();
   }
@@ -425,10 +428,9 @@ final class ClassOfTest {
 
     private final int age;
 
-    @NotNull
     private final String text;
 
-    TestClass(@NotNull final String text, final int age) {
+    TestClass(final String text, final int age) {
       this.text = text;
       this.age = age;
     }

@@ -26,6 +26,7 @@
 package io.github.portlek.reflection.parameterized;
 
 import java.util.function.Supplier;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -34,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
  * @param <T> the class type.
  */
 @SuppressWarnings("unchecked")
+@RequiredArgsConstructor
 public final class Primitive<T> implements Supplier<Class<T>> {
 
   /**
@@ -41,15 +43,6 @@ public final class Primitive<T> implements Supplier<Class<T>> {
    */
   @NotNull
   private final Class<T> clazz;
-
-  /**
-   * ctor.
-   *
-   * @param clazz the class.
-   */
-  public Primitive(@NotNull final Class<T> clazz) {
-    this.clazz = clazz;
-  }
 
   @NotNull
   @Override

@@ -25,8 +25,8 @@
 
 package io.github.portlek.reflection.parameterized;
 
+import java.util.Map;
 import java.util.Optional;
-import org.cactoos.map.MapEntry;
 import org.hamcrest.core.IsEqual;
 import org.junit.jupiter.api.Test;
 import org.llorllale.cactoos.matchers.Assertion;
@@ -42,10 +42,10 @@ final class ParameterizedOfTest {
     new Assertion<>(
       "Function doesn't give right classes and objects",
       parameter.apply(classes ->
-        Optional.of(new MapEntry<>((Class<String>) classes[0], (Class<Integer>) classes[1])))
+        Optional.of(Map.entry((Class<String>) classes[0], (Class<Integer>) classes[1])))
         .orElseThrow(() ->
           new RuntimeException("Something's wrong!")),
-      new IsEqual<>(new MapEntry<>(String.class, Integer.class))
+      new IsEqual<>(Map.entry(String.class, Integer.class))
     ).affirm();
   }
 }

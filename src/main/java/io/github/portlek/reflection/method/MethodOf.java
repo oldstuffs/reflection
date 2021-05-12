@@ -33,6 +33,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Optional;
 import java.util.logging.Level;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,6 +42,7 @@ import org.jetbrains.annotations.Nullable;
  * an implementation for {@link RefMethod}.
  */
 @Log
+@RequiredArgsConstructor
 public final class MethodOf implements RefMethod {
 
   /**
@@ -48,15 +50,6 @@ public final class MethodOf implements RefMethod {
    */
   @NotNull
   private final Method method;
-
-  /**
-   * ctor.
-   *
-   * @param method the method.
-   */
-  public MethodOf(@NotNull final Method method) {
-    this.method = method;
-  }
 
   @Override
   public <A extends Annotation> Optional<A> getAnnotation(@NotNull final Class<A> annotationClass) {
@@ -110,6 +103,7 @@ public final class MethodOf implements RefMethod {
   /**
    * an implementation for {@link RefMethodExecuted}.
    */
+  @RequiredArgsConstructor
   private final class MethodExecuted implements RefMethodExecuted {
 
     /**
@@ -117,15 +111,6 @@ public final class MethodOf implements RefMethod {
      */
     @Nullable
     private final Object object;
-
-    /**
-     * ctor.
-     *
-     * @param object the object.
-     */
-    MethodExecuted(@Nullable final Object object) {
-      this.object = object;
-    }
 
     @NotNull
     @Override

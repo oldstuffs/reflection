@@ -32,6 +32,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Optional;
 import java.util.logging.Level;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +41,7 @@ import org.jetbrains.annotations.Nullable;
  * an implementation for {@link RefField}.
  */
 @Log
+@RequiredArgsConstructor
 public final class FieldOf implements RefField {
 
   /**
@@ -47,15 +49,6 @@ public final class FieldOf implements RefField {
    */
   @NotNull
   private final Field field;
-
-  /**
-   * ctor.
-   *
-   * @param field the field.
-   */
-  public FieldOf(@NotNull final Field field) {
-    this.field = field;
-  }
 
   @Override
   public <A extends Annotation> Optional<A> getAnnotation(@NotNull final Class<A> annotationClass) {
@@ -109,6 +102,7 @@ public final class FieldOf implements RefField {
   /**
    * an implementation for {@link RefFieldExecuted}.
    */
+  @RequiredArgsConstructor
   private final class FieldExecuted implements RefFieldExecuted {
 
     /**
@@ -116,15 +110,6 @@ public final class FieldOf implements RefField {
      */
     @Nullable
     private final Object object;
-
-    /**
-     * ctor.
-     *
-     * @param object the object.
-     */
-    FieldExecuted(@Nullable final Object object) {
-      this.object = object;
-    }
 
     @NotNull
     @Override

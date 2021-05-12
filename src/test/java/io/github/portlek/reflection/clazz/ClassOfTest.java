@@ -43,12 +43,6 @@ final class ClassOfTest {
 
   private static final RefClass<ClassOfTest.TestClass> CLASS = new ClassOf<>(ClassOfTest.TestClass.class);
 
-  @SneakyThrows
-  @BeforeAll
-  static void fix() {
-    Class.forName("io.github.portlek.reflection.clazz.ClassOfTest$TestClass");
-  }
-
   @Test
   void findConstructor() {
     new Assertion<>(
@@ -435,10 +429,9 @@ final class ClassOfTest {
 
     private final int age;
 
-    @NotNull
     private final String text;
 
-    TestClass(@NotNull final String text, final int age) {
+    TestClass(final String text, final int age) {
       this.text = text;
       this.age = age;
     }

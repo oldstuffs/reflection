@@ -27,14 +27,9 @@ package io.github.portlek.reflection.clazz;
 
 import io.github.portlek.reflection.Anno;
 import io.github.portlek.reflection.RefClass;
-import io.github.portlek.reflection.RefMethod;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
-import lombok.SneakyThrows;
 import org.hamcrest.core.IsEqual;
 import org.hamcrest.core.IsNot;
-import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.llorllale.cactoos.matchers.Assertion;
 import org.llorllale.cactoos.matchers.IsTrue;

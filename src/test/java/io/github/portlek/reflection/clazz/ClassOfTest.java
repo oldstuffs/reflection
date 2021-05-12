@@ -235,7 +235,7 @@ final class ClassOfTest {
     new Assertion<>(
       "Cannot find declared methods",
       ClassOfTest.CLASS.getDeclaredMethods().stream()
-        .filter(refMethod -> refMethod.getName().equals("$jacocoInit"))
+        .filter(refMethod -> !refMethod.getName().equals("$jacocoInit"))
         .collect(Collectors.toSet())
         .size(),
       new IsEqual<>(6)

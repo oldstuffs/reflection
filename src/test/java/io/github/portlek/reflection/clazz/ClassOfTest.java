@@ -27,7 +27,6 @@ package io.github.portlek.reflection.clazz;
 
 import io.github.portlek.reflection.Anno;
 import io.github.portlek.reflection.RefClass;
-import io.github.portlek.reflection.RefMethod;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import org.hamcrest.core.IsEqual;
@@ -233,14 +232,12 @@ final class ClassOfTest {
 
   @Test
   void getDeclaredMethods() {
-    System.out.println(
-      ClassOfTest.CLASS.getDeclaredMethods().stream()
-        .map(RefMethod::getName)
-        .collect(Collectors.toSet())
-    );
     new Assertion<>(
       "Cannot find declared methods",
-      ClassOfTest.CLASS.getDeclaredMethods().size(),
+      ClassOfTest.CLASS.getDeclaredMethods().stream()
+        .filter(refMethod -> refMethod.getName().equals("$jacocoInit"))
+        .collect(Collectors.toSet())
+        .size(),
       new IsEqual<>(6)
     ).affirm();
   }

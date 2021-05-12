@@ -273,6 +273,14 @@ public final class ClassOf<T> implements RefClass<T> {
     return Modifier.isStatic(this.clazz.getModifiers());
   }
 
+  /**
+   * finds method by parameter type.
+   *
+   * @param primitive the primitive to get.
+   * @param types the types to get.
+   *
+   * @return method.
+   */
   @NotNull
   private Optional<RefMethod> findMethod0(final boolean primitive, @NotNull final Object... types) {
     final var parameter = new ParameterizedOf<>(primitive, types);
@@ -299,6 +307,14 @@ public final class ClassOf<T> implements RefClass<T> {
     return Optional.empty();
   }
 
+  /**
+   * gets constructor by parameter type.
+   *
+   * @param primitive the primitive to get.
+   * @param types the types to get.
+   *
+   * @return constructor
+   */
   @NotNull
   private Optional<RefConstructed<T>> getConstructor0(final boolean primitive, @NotNull final Object... types) {
     final var parameter = new ParameterizedOf<RefConstructed<T>>(primitive, types);
@@ -318,6 +334,15 @@ public final class ClassOf<T> implements RefClass<T> {
     });
   }
 
+  /**
+   * gets method by name.
+   *
+   * @param name the name to get.
+   * @param primitive the primitive to get.
+   * @param types the types to get.
+   *
+   * @return method.
+   */
   @NotNull
   private Optional<RefMethod> getMethod0(@NotNull final String name, final boolean primitive,
                                          @NotNull final Object... types) {

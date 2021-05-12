@@ -245,7 +245,7 @@ final class ClassOfTest {
     new Assertion<>(
       "Cannot find declared methods",
       ClassOfTest.CLASS.getDeclaredMethods().size(),
-      new IsEqual<>(7)
+      new IsEqual<>(6)
     ).affirm();
   }
 

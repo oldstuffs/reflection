@@ -27,6 +27,7 @@ package io.github.portlek.reflection;
 
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * an interface to determine {@link java.lang.reflect.Constructor}.
@@ -43,5 +44,5 @@ public interface RefConstructed<T> extends RefAnnotated, RefModifiable {
    * @return the new object.
    */
   @NotNull
-  Optional<T> create(@NotNull Object... parameters);
+  Optional<T> create(@Nullable Object... parameters);
 }

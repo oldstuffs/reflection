@@ -35,6 +35,7 @@ import java.util.logging.Level;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * an implementation for {@link RefConstructed}.
@@ -53,7 +54,7 @@ public final class ConstructorOf<T> implements RefConstructed<T> {
 
   @NotNull
   @Override
-  public Optional<T> create(@NotNull final Object... parameters) {
+  public Optional<T> create(@Nullable final Object... parameters) {
     final var accessible = this.constructor.isAccessible();
     try {
       this.constructor.setAccessible(true);

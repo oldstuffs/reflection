@@ -127,7 +127,7 @@ public final class FieldOf implements RefField {
     }
 
     @Override
-    public void setValue(@NotNull final Object value) {
+    public void setValue(@Nullable final Object value) {
       final boolean accessible = FieldOf.this.field.isAccessible();
       try {
         FieldOf.this.field.setAccessible(true);

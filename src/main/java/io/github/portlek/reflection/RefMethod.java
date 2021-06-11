@@ -43,7 +43,7 @@ public interface RefMethod extends RefMethodExecuted, RefAnnotated, RefModifiabl
    */
   @Override
   @NotNull
-  default Optional<Object> call(@NotNull final Object... parameters) {
+  default Optional<Object> call(@Nullable final Object... parameters) {
     return this.of(null).call(parameters);
   }
 

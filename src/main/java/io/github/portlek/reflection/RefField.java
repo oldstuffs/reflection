@@ -76,7 +76,7 @@ public interface RefField extends RefFieldExecuted, RefAnnotated, RefModifiable 
    * @param value object to set.
    */
   @Override
-  default void setValue(@NotNull final Object value) {
+  default void setValue(@Nullable final Object value) {
     this.of(null).setValue(value);
   }
 

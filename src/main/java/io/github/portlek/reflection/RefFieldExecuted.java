@@ -27,6 +27,7 @@ package io.github.portlek.reflection;
 
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * an interface to determine applied {@link java.lang.reflect.Field}.
@@ -46,5 +47,5 @@ public interface RefFieldExecuted {
    *
    * @param value the value to set.
    */
-  void setValue(@NotNull Object value);
+  void setValue(@Nullable Object value);
 }

@@ -114,7 +114,7 @@ public final class MethodOf implements RefMethod {
 
     @NotNull
     @Override
-    public Optional<Object> call(@NotNull final Object... parameters) {
+    public Optional<Object> call(@Nullable final Object... parameters) {
       final var accessible = MethodOf.this.method.isAccessible();
       try {
         MethodOf.this.method.setAccessible(true);
